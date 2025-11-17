@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKOREPOINT | School Management Platform</title>
+  <title>SKOREPOINT | School Report card generator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -135,7 +135,7 @@
       z-index: -1;
     }
 
-    /* Launch Screen Styles */
+    /* Launch Screen Styles - Centered and Responsive */
     .launch-screen {
       position: fixed;
       top: 0;
@@ -149,6 +149,7 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      padding: 20px;
     }
 
     @keyframes gradientShift {
@@ -161,6 +162,8 @@
       text-align: center;
       position: relative;
       z-index: 2;
+      max-width: 800px;
+      width: 100%;
     }
 
     .logo-wrapper {
@@ -175,7 +178,7 @@
     }
 
     .logo {
-      font-size: 80px;
+      font-size: clamp(40px, 8vw, 80px);
       font-weight: 800;
       color: white;
       text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -219,12 +222,13 @@
     }
 
     .tagline {
-      font-size: 24px;
+      font-size: clamp(18px, 4vw, 24px);
       color: rgba(255, 255, 255, 0.9);
       margin-bottom: 50px;
       animation: fadeIn 2s ease-in;
       font-weight: 300;
       letter-spacing: 2px;
+      line-height: 1.4;
     }
 
     @keyframes fadeIn {
@@ -233,7 +237,7 @@
     }
 
     .loader {
-      width: 200px;
+      width: min(200px, 80%);
       height: 6px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
@@ -268,7 +272,7 @@
 
     .loading-text {
       color: rgba(255, 255, 255, 0.8);
-      font-size: 16px;
+      font-size: clamp(14px, 3vw, 16px);
       margin-top: 20px;
       animation: pulse 1.5s ease-in-out infinite;
     }
@@ -376,24 +380,24 @@
     }
 
     .orbit-circle:nth-child(1) {
-      width: 300px;
-      height: 300px;
-      margin: -150px 0 0 -150px;
+      width: min(300px, 60vw);
+      height: min(300px, 60vw);
+      margin: calc(min(300px, 60vw) / -2) 0 0 calc(min(300px, 60vw) / -2);
       animation-duration: 15s;
     }
 
     .orbit-circle:nth-child(2) {
-      width: 500px;
-      height: 500px;
-      margin: -250px 0 0 -250px;
+      width: min(500px, 80vw);
+      height: min(500px, 80vw);
+      margin: calc(min(500px, 80vw) / -2) 0 0 calc(min(500px, 80vw) / -2);
       animation-duration: 20s;
       animation-direction: reverse;
     }
 
     .orbit-circle:nth-child(3) {
-      width: 700px;
-      height: 700px;
-      margin: -350px 0 0 -350px;
+      width: min(700px, 90vw);
+      height: min(700px, 90vw);
+      margin: calc(min(700px, 90vw) / -2) 0 0 calc(min(700px, 90vw) / -2);
       animation-duration: 25s;
     }
 
@@ -643,10 +647,12 @@
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid var(--gray);
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .dashboard-header h1 {
-      font-size: 32px;
+      font-size: clamp(24px, 5vw, 32px);
       background: var(--gradient);
       -webkit-background-clip: text;
       background-clip: text;
@@ -658,6 +664,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .user-info span {
@@ -681,7 +688,7 @@
 
     .dashboard-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       margin-bottom: 30px;
     }
@@ -762,7 +769,7 @@
     }
 
     .setup-header h1 {
-      font-size: 32px;
+      font-size: clamp(24px, 5vw, 32px);
       background: var(--gradient);
       -webkit-background-clip: text;
       background-clip: text;
@@ -773,12 +780,12 @@
 
     .setup-header p {
       color: #a0aec0;
-      font-size: 16px;
+      font-size: clamp(14px, 3vw, 16px);
     }
 
     .setup-options {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       margin-bottom: 30px;
     }
@@ -854,10 +861,12 @@
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid var(--gray);
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .management-header h2 {
-      font-size: 28px;
+      font-size: clamp(20px, 4vw, 28px);
       background: var(--gradient);
       -webkit-background-clip: text;
       background-clip: text;
@@ -1097,6 +1106,8 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      overflow-x: auto;
+      display: block;
     }
 
     .report-table th,
@@ -1285,6 +1296,7 @@
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .term-option {
@@ -1296,6 +1308,7 @@
       cursor: pointer;
       transition: var(--transition);
       border: 1px solid var(--gray);
+      min-width: 120px;
     }
 
     .term-option.active {
@@ -1349,6 +1362,40 @@
       .dashboard, .school-management, .school-setup {
         padding-bottom: 80px;
       }
+      
+      .logo {
+        letter-spacing: 3px;
+      }
+      
+      .tagline {
+        letter-spacing: 1px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 15px;
+      }
+      
+      .logo {
+        letter-spacing: 2px;
+      }
+      
+      .tagline {
+        letter-spacing: 0.5px;
+      }
+      
+      .dashboard-header h1, .management-header h2 {
+        font-size: 22px;
+      }
+      
+      .card, .setup-option {
+        padding: 20px;
+      }
+      
+      .card i, .setup-option i {
+        font-size: 35px;
+      }
     }
   </style>
 </head>
@@ -1378,7 +1425,7 @@
           <span>S</span><span>K</span><span>O</span><span>R</span><span>E</span><span>P</span><span>O</span><span>I</span><span>N</span><span>T</span>
         </div>
       </div>
-      <div class="tagline">School Management Platform</div>
+      <div class="tagline">Empowering teachers to save time with Report Card Generator</div>
       <div class="loader">
         <div class="loader-bar"></div>
       </div>
@@ -1504,7 +1551,7 @@
       </div>
       <div class="card" id="manageSchoolCard" style="display:none;">
         <i class="fas fa-cogs"></i>
-        <h3>Manage School</h3>
+        <h3>SCHOOL PORTAL ACCOUNT</h3>
         <p>Manage classes, students, and marks</p>
         <div id="schoolCardInfo" style="margin-top: 15px; text-align: center;">
           <img id="schoolCardLogo" class="school-logo" src="" alt="School Logo" style="display:none;">
@@ -1622,8 +1669,13 @@
   <!-- SCHOOL MANAGEMENT SECTION -->
   <div class="school-management" id="schoolManagementSection" style="display:none;">
     <div class="management-header">
-      <h2>School Management: <span id="managementSchoolName"></span></h2>
-      <div class="school-code">Code: <span id="managementSchoolCode"></span></div>
+      <div>
+        <h2>School Management: <span id="managementSchoolName"></span></h2>
+        <div class="school-code">Code: <span id="managementSchoolCode"></span></div>
+      </div>
+      <div id="schoolLogoContainer" style="display: none;">
+        <img id="managementSchoolLogo" class="school-logo" src="" alt="School Logo">
+      </div>
     </div>
 
     <div class="management-tabs" id="managementTabs" style="display:none;">
@@ -1864,7 +1916,7 @@
   <div class="mobile-nav-items">
     <a href="#" class="mobile-nav-item active" data-section="dashboard">
       <i class="fas fa-home"></i>
-      <span>Dashboard</span>
+      <span>Home</span>
     </a>
     <a href="#" class="mobile-nav-item" data-section="classes">
       <i class="fas fa-chalkboard"></i>
@@ -1928,6 +1980,8 @@
   const currentSchoolCode = document.getElementById('currentSchoolCode');
   const managementSchoolName = document.getElementById('managementSchoolName');
   const managementSchoolCode = document.getElementById('managementSchoolCode');
+  const managementSchoolLogo = document.getElementById('managementSchoolLogo');
+  const schoolLogoContainer = document.getElementById('schoolLogoContainer');
   
   // School card info
   const schoolCardName = document.getElementById('schoolCardName');
@@ -2041,6 +2095,10 @@
           schoolLogoUrl = currentSchool.logoUrl;
           schoolCardLogo.src = currentSchool.logoUrl;
           schoolCardLogo.style.display = 'block';
+          
+          // Also set the logo in the management section
+          managementSchoolLogo.src = currentSchool.logoUrl;
+          schoolLogoContainer.style.display = 'block';
         }
         
         // Load school data
@@ -2685,7 +2743,7 @@
   }
 
   // Export to PDF with individual student reports
-  function exportToPDF() {
+  async function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
@@ -2701,147 +2759,163 @@
       window.firebase.where('term', '==', term)
     );
     
-    window.firebase.getDocs(marksQuery).then(marksSnapshot => {
-      const allMarks = [];
-      
-      marksSnapshot.forEach(doc => {
-        allMarks.push({
-          id: doc.id,
-          ...doc.data()
-        });
+    const marksSnapshot = await window.firebase.getDocs(marksQuery);
+    const allMarks = [];
+    
+    marksSnapshot.forEach(doc => {
+      allMarks.push({
+        id: doc.id,
+        ...doc.data()
       });
+    });
 
-      // Filter based on selection
-      let filteredData = allMarks;
-      
-      if (classId) {
-        const classStudents = currentStudents.filter(s => s.classId === classId);
-        const studentIds = classStudents.map(s => s.id);
-        filteredData = filteredData.filter(mark => studentIds.includes(mark.studentId));
+    // Filter based on selection
+    let filteredData = allMarks;
+    
+    if (classId) {
+      const classStudents = currentStudents.filter(s => s.classId === classId);
+      const studentIds = classStudents.map(s => s.id);
+      filteredData = filteredData.filter(mark => studentIds.includes(mark.studentId));
+    }
+    
+    if (studentId) {
+      filteredData = filteredData.filter(mark => mark.studentId === studentId);
+    }
+
+    // Generate individual report for each student
+    for (let i = 0; i < filteredData.length; i++) {
+      const mark = filteredData[i];
+      if (i > 0) {
+        doc.addPage();
       }
       
-      if (studentId) {
-        filteredData = filteredData.filter(mark => mark.studentId === studentId);
-      }
-
-      // Generate individual report for each student
-      filteredData.forEach((mark, index) => {
-        if (index > 0) {
-          doc.addPage();
-        }
-        
-        const student = currentStudents.find(s => s.id === mark.studentId);
-        if (!student) return;
-        
-        const classObj = currentClasses.find(c => c.id === student.classId);
-        
-        // Add header with logo and school name
-        doc.setFontSize(20);
-        doc.setTextColor(67, 97, 238);
-        doc.text('SKOREPOINT', 20, 30);
-        doc.setFontSize(12);
-        doc.setTextColor(100, 100, 100);
-        doc.text('skorepoint.com', 20, 38);
-        doc.text('A product of SERUSOFT', 20, 45);
-        
-        // Add school logo if available
-        if (schoolLogoUrl) {
-          // In a real implementation, you would add the school logo here
-          // For now, we'll just add a placeholder
+      const student = currentStudents.find(s => s.id === mark.studentId);
+      if (!student) continue;
+      
+      const classObj = currentClasses.find(c => c.id === student.classId);
+      
+      // Add header with logo and school name
+      doc.setFontSize(20);
+      doc.setTextColor(67, 97, 238);
+      doc.text('SKOREPOINT', 20, 30);
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text('skorepoint.com', 20, 38);
+      doc.text('A product of SERUSOFT', 20, 45);
+      
+      // Add school logo if available
+      if (schoolLogoUrl) {
+        try {
+          // Create an image element to load the logo
+          const logoImg = new Image();
+          logoImg.crossOrigin = 'Anonymous';
+          logoImg.src = schoolLogoUrl;
+          
+          // Wait for the image to load
+          await new Promise((resolve) => {
+            logoImg.onload = resolve;
+            logoImg.onerror = resolve; // Continue even if image fails to load
+          });
+          
+          // Add the logo to the PDF
+          doc.addImage(logoImg, 'JPEG', 150, 20, 40, 40);
+        } catch (error) {
+          console.error('Error adding logo to PDF:', error);
+          // Fallback: Add a placeholder if logo fails to load
           doc.setFillColor(200, 200, 200);
           doc.rect(150, 20, 40, 40, 'F');
           doc.setTextColor(100, 100, 100);
           doc.text('School Logo', 155, 45);
         }
+      }
+      
+      // Add school name and info
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text(currentSchool.name, 105, 60, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text(`School Code: ${currentSchool.code}`, 105, 68, { align: 'center' });
+      
+      // Add student info
+      doc.setFontSize(14);
+      doc.text('STUDENT PROGRESS REPORT', 105, 110, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text(`Student Name: ${student.name}`, 20, 130);
+      doc.text(`Class: ${classObj ? classObj.name : 'N/A'}`, 20, 140);
+      doc.text(`Term: ${getTermLabel(term)}`, 20, 150);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 160);
+      
+      // Add table header
+      let yPos = 180;
+      doc.setFillColor(67, 97, 238);
+      doc.rect(20, yPos, 170, 10, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.text('SUBJECT', 25, yPos + 7);
+      doc.text('SCORE', 120, yPos + 7);
+      doc.text('GRADE', 150, yPos + 7);
+      
+      // Add subject rows
+      yPos += 10;
+      let totalMarks = 0;
+      let subjectCount = 0;
+      
+      currentSubjects.forEach(subject => {
+        const score = mark[subject.id] || 0;
+        totalMarks += score;
+        subjectCount++;
         
-        // Add school name and info
-        doc.setFontSize(16);
-        doc.setTextColor(0, 0, 0);
-        doc.text(currentSchool.name, 105, 60, { align: 'center' });
-        doc.setFontSize(12);
-        doc.text(`School Code: ${currentSchool.code}`, 105, 68, { align: 'center' });
-        
-        // Add student info
-        doc.setFontSize(14);
-        doc.text('STUDENT PROGRESS REPORT', 105, 110, { align: 'center' });
-        doc.setFontSize(12);
-        doc.text(`Student Name: ${student.name}`, 20, 130);
-        doc.text(`Class: ${classObj ? classObj.name : 'N/A'}`, 20, 140);
-        doc.text(`Term: ${getTermLabel(term)}`, 20, 150);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 160);
-        
-        // Add table header
-        let yPos = 180;
-        doc.setFillColor(67, 97, 238);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
-        doc.text('SUBJECT', 25, yPos + 7);
-        doc.text('SCORE', 120, yPos + 7);
-        doc.text('GRADE', 150, yPos + 7);
-        
-        // Add subject rows
-        yPos += 10;
-        let totalMarks = 0;
-        let subjectCount = 0;
-        
-        currentSubjects.forEach(subject => {
-          const score = mark[subject.id] || 0;
-          totalMarks += score;
-          subjectCount++;
-          
-          doc.setFillColor(240, 240, 240);
-          doc.rect(20, yPos, 170, 10, 'F');
-          doc.setTextColor(0, 0, 0);
-          doc.text(subject.name, 25, yPos + 7);
-          doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
-          
-          // Calculate grade based on school level
-          const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
-          doc.text(grade, 150, yPos + 7);
-          
-          yPos += 10;
-        });
-        
-        // Add total and average
-        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
-        yPos += 5;
-        doc.setFillColor(220, 220, 220);
+        doc.setFillColor(240, 240, 240);
         doc.rect(20, yPos, 170, 10, 'F');
         doc.setTextColor(0, 0, 0);
-        doc.text('TOTAL MARKS', 25, yPos + 7);
-        doc.text(totalMarks.toString(), 120, yPos + 7);
+        doc.text(subject.name, 25, yPos + 7);
+        doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
+        
+        // Calculate grade based on school level
+        const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
+        doc.text(grade, 150, yPos + 7);
         
         yPos += 10;
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.text('AVERAGE', 25, yPos + 7);
-        doc.text(average.toString(), 120, yPos + 7);
-        
-        // Add teacher remarks section
-        yPos += 20;
-        doc.setFontSize(12);
-        doc.text('Teacher\'s Remarks:', 20, yPos);
-        yPos += 10;
-        doc.setDrawColor(0, 0, 0);
-        doc.line(20, yPos, 190, yPos);
-        yPos += 15;
-        doc.line(20, yPos, 190, yPos);
-        yPos += 15;
-        doc.line(20, yPos, 190, yPos);
-        
-        yPos += 20;
-        doc.text('Head Teacher\'s Remarks:', 20, yPos);
-        yPos += 10;
-        doc.line(20, yPos, 190, yPos);
-        yPos += 15;
-        doc.line(20, yPos, 190, yPos);
-        yPos += 15;
-        doc.line(20, yPos, 190, yPos);
       });
       
-      // Save the PDF
-      doc.save(`SKOREPOINT_Reports_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
-    });
+      // Add total and average
+      const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
+      yPos += 5;
+      doc.setFillColor(220, 220, 220);
+      doc.rect(20, yPos, 170, 10, 'F');
+      doc.setTextColor(0, 0, 0);
+      doc.text('TOTAL MARKS', 25, yPos + 7);
+      doc.text(totalMarks.toString(), 120, yPos + 7);
+      
+      yPos += 10;
+      doc.rect(20, yPos, 170, 10, 'F');
+      doc.text('AVERAGE', 25, yPos + 7);
+      doc.text(average.toString(), 120, yPos + 7);
+      
+      // Add teacher remarks section
+      yPos += 20;
+      doc.setFontSize(12);
+      doc.text('Teacher\'s Remarks:', 20, yPos);
+      yPos += 10;
+      doc.setDrawColor(0, 0, 0);
+      doc.line(20, yPos, 190, yPos);
+      yPos += 15;
+      doc.line(20, yPos, 190, yPos);
+      yPos += 15;
+      doc.line(20, yPos, 190, yPos);
+      
+      yPos += 20;
+      doc.text('Head Teacher\'s Remarks:', 20, yPos);
+      yPos += 10;
+      doc.line(20, yPos, 190, yPos);
+      yPos += 15;
+      doc.line(20, yPos, 190, yPos);
+      yPos += 15;
+      doc.line(20, yPos, 190, yPos);
+    }
+    
+    // Save the PDF
+    doc.save(`SKOREPOINT_Reports_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
   }
 
   // Calculate grade based on score and school level
@@ -3050,6 +3124,10 @@
         schoolLogoUrl = currentSchool.logoUrl;
         schoolCardLogo.src = currentSchool.logoUrl;
         schoolCardLogo.style.display = 'block';
+        
+        // Also set the logo in the management section
+        managementSchoolLogo.src = currentSchool.logoUrl;
+        schoolLogoContainer.style.display = 'block';
       }
       
       // Show management tabs
@@ -3147,6 +3225,10 @@
         schoolLogoUrl = currentSchool.logoUrl;
         schoolCardLogo.src = currentSchool.logoUrl;
         schoolCardLogo.style.display = 'block';
+        
+        // Also set the logo in the management section
+        managementSchoolLogo.src = currentSchool.logoUrl;
+        schoolLogoContainer.style.display = 'block';
       }
       
       // Show management tabs
