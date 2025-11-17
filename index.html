@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKOREPOINT | School Report card generator</title>
+  <title>Skore Point | School Report Card Generator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1100,6 +1100,20 @@
       padding: 25px;
       box-shadow: var(--shadow);
       margin-top: 20px;
+      border: 2px solid var(--primary);
+      position: relative;
+    }
+
+    .report-preview::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border: 1px solid rgba(67, 97, 238, 0.3);
+      border-radius: 8px;
+      pointer-events: none;
     }
 
     .report-table {
@@ -1370,6 +1384,11 @@
       .tagline {
         letter-spacing: 1px;
       }
+      
+      /* Hide top navigation on mobile */
+      .dashboard-header .user-info {
+        display: none;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1397,6 +1416,42 @@
         font-size: 35px;
       }
     }
+    
+    /* Full-screen forms */
+    .full-screen-form {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--dark);
+      z-index: 2000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    
+    .full-screen-form .container {
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    
+    .close-form {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--error);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 2001;
+    }
   </style>
 </head>
 <body>
@@ -1422,7 +1477,7 @@
     <div class="launch-container">
       <div class="logo-wrapper">
         <div class="logo">
-          <span>S</span><span>K</span><span>O</span><span>R</span><span>E</span><span>P</span><span>O</span><span>I</span><span>N</span><span>T</span>
+          <span>S</span><span>k</span><span>o</span><span>r</span><span>e</span><span> </span><span>P</span><span>o</span><span>i</span><span>n</span><span>t</span>
         </div>
       </div>
       <div class="tagline">Empowering teachers to save time with Report Card Generator</div>
@@ -1436,7 +1491,7 @@
   <!-- LOGIN SECTION -->
   <div class="container" id="loginSection" style="display:none;">
     <div class="header">
-      <h1>SKOREPOINT</h1>
+      <h1>Skore Point</h1>
       <p>Teacher & Admin Login</p>
     </div>
 
@@ -1473,7 +1528,7 @@
   <!-- REGISTER SECTION -->
   <div class="container" id="registerSection" style="display:none;">
     <div class="header">
-      <h1>SKOREPOINT</h1>
+      <h1>Skore Point</h1>
       <p>Create Admin Account</p>
     </div>
 
@@ -1530,7 +1585,7 @@
   <!-- DASHBOARD SECTION -->
   <div class="dashboard" id="dashboardSection" style="display:none;">
     <div class="dashboard-header">
-      <h1>SKOREPOINT Dashboard</h1>
+      <h1>Skore Point Dashboard</h1>
       <div class="user-info">
         <img id="dashboardProfile" class="profile-picture" src="https://via.placeholder.com/40" alt="Profile" style="width: 40px; height: 40px;">
         <span id="userName">User Name</span>
@@ -1539,16 +1594,6 @@
     </div>
 
     <div class="dashboard-cards">
-      <div class="card" id="joinSchoolCard">
-        <i class="fas fa-school"></i>
-        <h3>Join a School</h3>
-        <p>Join an existing school using its unique code</p>
-      </div>
-      <div class="card" id="registerSchoolCard">
-        <i class="fas fa-plus-circle"></i>
-        <h3>Register a School</h3>
-        <p>Create a new school and get a unique code</p>
-      </div>
       <div class="card" id="manageSchoolCard" style="display:none;">
         <i class="fas fa-cogs"></i>
         <h3>SCHOOL PORTAL ACCOUNT</h3>
@@ -1558,6 +1603,16 @@
           <h4 id="schoolCardName"></h4>
           <p>Code: <span id="schoolCardCode"></span></p>
         </div>
+      </div>
+      <div class="card" id="joinSchoolCard">
+        <i class="fas fa-school"></i>
+        <h3>Join a School</h3>
+        <p>Join an existing school using its unique code</p>
+      </div>
+      <div class="card" id="registerSchoolCard">
+        <i class="fas fa-plus-circle"></i>
+        <h3>Register a School</h3>
+        <p>Create a new school and get a unique code</p>
       </div>
     </div>
 
@@ -1571,7 +1626,7 @@
   <div class="school-setup" id="schoolSetupSection" style="display:none;">
     <div class="setup-header">
       <h1>School Setup</h1>
-      <p>Choose how you want to proceed with SKOREPOINT</p>
+      <p>Choose how you want to proceed with Skore Point</p>
     </div>
 
     <div class="setup-options">
@@ -1586,9 +1641,12 @@
         <p>Create a new school and get a unique code</p>
       </div>
     </div>
+  </div>
 
-    <!-- Join School Form -->
-    <div class="container" id="joinSchoolForm" style="display:none;">
+  <!-- Join School Full Screen Form -->
+  <div class="full-screen-form" id="joinSchoolForm" style="display:none;">
+    <button class="close-form" id="closeJoinForm"><i class="fas fa-times"></i></button>
+    <div class="container">
       <div class="header">
         <h2>Join a School</h2>
         <p>Enter the school details to join</p>
@@ -1609,15 +1667,17 @@
           <input type="text" id="joinSchoolCode" placeholder="Enter school code" required>
         </div>
         <button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt"></i> Join School</button>
-        <button class="btn btn-secondary" type="button" id="backToSetup"><i class="fas fa-arrow-left"></i> Back</button>
       </form>
     </div>
+  </div>
 
-    <!-- Register School Form -->
-    <div class="container" id="registerSchoolForm" style="display:none;">
+  <!-- Register School Full Screen Form -->
+  <div class="full-screen-form" id="registerSchoolForm" style="display:none;">
+    <button class="close-form" id="closeRegisterForm"><i class="fas fa-times"></i></button>
+    <div class="container">
       <div class="header">
         <h2>Register a School</h2>
-        <p>Create a new school on SKOREPOINT</p>
+        <p>Create a new school on Skore Point</p>
       </div>
 
       <div id="registerSchoolError" class="alert error" style="display:none;">
@@ -1661,7 +1721,6 @@
           <input type="hidden" id="logoUrl">
         </div>
         <button class="btn btn-primary" type="submit"><i class="fas fa-plus-circle"></i> Register School</button>
-        <button class="btn btn-secondary" type="button" id="backToSetup2"><i class="fas fa-arrow-left"></i> Back</button>
       </form>
     </div>
   </div>
@@ -1962,8 +2021,8 @@
   const registerSchoolOption = document.getElementById('registerSchoolOption');
   const joinSchoolForm = document.getElementById('joinSchoolForm');
   const registerSchoolForm = document.getElementById('registerSchoolForm');
-  const backToSetup = document.getElementById('backToSetup');
-  const backToSetup2 = document.getElementById('backToSetup2');
+  const closeJoinForm = document.getElementById('closeJoinForm');
+  const closeRegisterForm = document.getElementById('closeRegisterForm');
   const logoutBtn = document.getElementById('logoutBtn');
   
   // Form elements
@@ -2023,7 +2082,7 @@
     // Show launch screen first
     showSection(launchScreen);
     
-    // After 3 seconds, check authentication and show appropriate section
+    // After 7 seconds, check authentication and show appropriate section
     setTimeout(() => {
       // Check if user is already logged in
       window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
@@ -2035,7 +2094,7 @@
           showSection(loginSection);
         }
       });
-    }, 3000);
+    }, 7000);
 
     // Setup event listeners
     setupEventListeners();
@@ -2118,13 +2177,13 @@
     // Navigation
     goRegister.onclick = () => showSection(registerSection);
     goLogin.onclick = () => showSection(loginSection);
-    joinSchoolCard.onclick = () => showSchoolSetup('join');
-    registerSchoolCard.onclick = () => showSchoolSetup('register');
+    joinSchoolCard.onclick = () => showJoinSchoolForm();
+    registerSchoolCard.onclick = () => showRegisterSchoolForm();
     manageSchoolCard.onclick = () => showSchoolManagement();
     joinSchoolOption.onclick = () => showJoinSchoolForm();
     registerSchoolOption.onclick = () => showRegisterSchoolForm();
-    backToSetup.onclick = () => showSchoolSetup();
-    backToSetup2.onclick = () => showSchoolSetup();
+    closeJoinForm.onclick = () => hideFullScreenForm();
+    closeRegisterForm.onclick = () => hideFullScreenForm();
     logoutBtn.onclick = () => logout();
 
     // Form submissions
@@ -2227,29 +2286,20 @@
     }
   }
 
-  // Show school setup section with options
-  function showSchoolSetup(mode) {
-    showSection(schoolSetupSection);
-    joinSchoolForm.style.display = 'none';
-    registerSchoolForm.style.display = 'none';
-    
-    if (mode === 'join') {
-      showJoinSchoolForm();
-    } else if (mode === 'register') {
-      showRegisterSchoolForm();
-    }
-  }
-
-  // Show join school form
+  // Show join school form in full screen
   function showJoinSchoolForm() {
     joinSchoolForm.style.display = 'block';
-    registerSchoolForm.style.display = 'none';
   }
 
-  // Show register school form
+  // Show register school form in full screen
   function showRegisterSchoolForm() {
     registerSchoolForm.style.display = 'block';
+  }
+
+  // Hide full screen form
+  function hideFullScreenForm() {
     joinSchoolForm.style.display = 'none';
+    registerSchoolForm.style.display = 'none';
   }
 
   // Show school management section
@@ -2797,7 +2847,7 @@
       // Add header with logo and school name
       doc.setFontSize(20);
       doc.setTextColor(67, 97, 238);
-      doc.text('SKOREPOINT', 20, 30);
+      doc.text('Skore Point', 20, 30);
       doc.setFontSize(12);
       doc.setTextColor(100, 100, 100);
       doc.text('skorepoint.com', 20, 38);
@@ -2915,7 +2965,7 @@
     }
     
     // Save the PDF
-    doc.save(`SKOREPOINT_Reports_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`Skore_Point_Reports_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
   }
 
   // Calculate grade based on score and school level
@@ -2959,7 +3009,7 @@
     
     // Create worksheet data
     const wsData = [
-      ['SKOREPOINT - Student Performance Report'],
+      ['Skore Point - Student Performance Report'],
       [`School: ${currentSchool.name}`],
       [`Generated on: ${new Date().toLocaleDateString()}`],
       [],
@@ -2979,7 +3029,7 @@
     XLSX.utils.book_append_sheet(wb, ws, 'Student Report');
     
     // Save the file
-    XLSX.writeFile(wb, `SKOREPOINT_Report_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.writeFile(wb, `Skore_Point_Report_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 
   // Handle login
@@ -3133,6 +3183,7 @@
       // Show management tabs
       managementTabs.style.display = 'flex';
       
+      hideFullScreenForm();
       showSection(dashboardSection);
     } catch (error) {
       console.error('Error joining school:', error);
@@ -3237,6 +3288,7 @@
       successBox.style.display = 'flex';
       
       setTimeout(() => {
+        hideFullScreenForm();
         showSection(dashboardSection);
       }, 2000);
     } catch (error) {
