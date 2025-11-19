@@ -1185,7 +1185,7 @@
       font-size: 20px;
     }
 
-    /* Mobile Navigation */
+    /* Mobile Navigation - Updated to match the image */
     .mobile-nav {
       display: none;
       position: fixed;
@@ -1211,10 +1211,13 @@
       text-decoration: none;
       font-size: 12px;
       transition: var(--transition);
+      padding: 5px 10px;
+      border-radius: 8px;
     }
 
     .mobile-nav-item.active {
       color: var(--primary);
+      background: rgba(67, 97, 238, 0.1);
     }
 
     .mobile-nav-item i {
@@ -1389,6 +1392,35 @@
       .dashboard-header .user-info {
         display: none;
       }
+      
+      /* Mobile dashboard cards */
+      .dashboard-cards {
+        gap: 15px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .card i {
+        font-size: 30px;
+      }
+      
+      .card h3 {
+        font-size: 18px;
+      }
+      
+      /* Mobile management tabs */
+      .management-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+      
+      .tab {
+        padding: 8px 15px;
+        font-size: 14px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1414,6 +1446,16 @@
       
       .card i, .setup-option i {
         font-size: 35px;
+      }
+      
+      /* Mobile nav adjustments */
+      .mobile-nav-item {
+        font-size: 10px;
+        padding: 5px;
+      }
+      
+      .mobile-nav-item i {
+        font-size: 18px;
       }
     }
     
@@ -1451,6 +1493,85 @@
       cursor: pointer;
       font-size: 18px;
       z-index: 2001;
+    }
+    
+    /* Secondary School Report Card with Two Tables */
+    .secondary-report-tables {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .secondary-report-tables {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .subject-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    .subject-table th,
+    .subject-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray);
+    }
+    
+    .subject-table th {
+      background: var(--gray);
+      font-weight: 600;
+    }
+    
+    .subject-table tr:hover {
+      background: rgba(67, 97, 238, 0.1);
+    }
+    
+    /* Mobile Dashboard Header */
+    .mobile-dashboard-header {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--gray);
+    }
+    
+    .mobile-dashboard-header h1 {
+      font-size: 20px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+    
+    .mobile-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .mobile-profile-picture {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+    
+    @media (max-width: 768px) {
+      .mobile-dashboard-header {
+        display: flex;
+      }
+      
+      .dashboard-header {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -1584,6 +1705,16 @@
 
   <!-- DASHBOARD SECTION -->
   <div class="dashboard" id="dashboardSection" style="display:none;">
+    <!-- Mobile Dashboard Header -->
+    <div class="mobile-dashboard-header">
+      <h1>Skore Point</h1>
+      <div class="mobile-user-info">
+        <img id="mobileDashboardProfile" class="mobile-profile-picture" src="https://via.placeholder.com/40" alt="Profile">
+        <button class="logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Desktop Dashboard Header -->
     <div class="dashboard-header">
       <h1>Skore Point Dashboard</h1>
       <div class="user-info">
@@ -1942,23 +2073,61 @@
 
       <div class="report-preview" id="reportPreview" style="display:none;">
         <h3>Report Preview</h3>
-        <table class="report-table" id="reportTable">
-          <thead>
-            <tr>
-              <th>Student Name</th>
-              <th>Class</th>
-              <th>Math</th>
-              <th>English</th>
-              <th>Science</th>
-              <th>Social Studies</th>
-              <th>Total</th>
-              <th>Average</th>
-            </tr>
-          </thead>
-          <tbody id="reportTableBody">
-            <!-- Report data will be populated here -->
-          </tbody>
-        </table>
+        
+        <!-- Primary School Report Table -->
+        <div id="primaryReportTable" style="display: none;">
+          <table class="report-table" id="primaryReportTableContent">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Class</th>
+                <th>Math</th>
+                <th>English</th>
+                <th>Science</th>
+                <th>Social Studies</th>
+                <th>Total</th>
+                <th>Average</th>
+              </tr>
+            </thead>
+            <tbody id="primaryReportTableBody">
+              <!-- Primary school report data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Secondary School Report Tables -->
+        <div id="secondaryReportTables" style="display: none;" class="secondary-report-tables">
+          <div>
+            <h4>Core Subjects</h4>
+            <table class="subject-table" id="coreSubjectsTable">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Score</th>
+                  <th>Grade</th>
+                </tr>
+              </thead>
+              <tbody id="coreSubjectsBody">
+                <!-- Core subjects will be populated here -->
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h4>Other Subjects</h4>
+            <table class="subject-table" id="otherSubjectsTable">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Score</th>
+                  <th>Grade</th>
+                </tr>
+              </thead>
+              <tbody id="otherSubjectsBody">
+                <!-- Other subjects will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       <div class="empty-state" id="reportsEmptyState">
@@ -2024,6 +2193,7 @@
   const closeJoinForm = document.getElementById('closeJoinForm');
   const closeRegisterForm = document.getElementById('closeRegisterForm');
   const logoutBtn = document.getElementById('logoutBtn');
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
   
   // Form elements
   const loginForm = document.getElementById('loginForm');
@@ -2066,8 +2236,8 @@
       'Physics', 'Geography', 'History & Political Education', 'Religious Education',
       'Islamic', 'Kiswahili', 'Entrepreneurship Education', 'Agriculture',
       'Computer / ICT Studies', 'Fine Art / Art & Design', 'Physical Education (PE)',
-      'Luganda', 'French', 'Arabic', 'Technology & Design', 'Nutrition & Food Technology',
-      'Performing Arts'
+      'Luganda', 'French',  'Technology & Design', 
+      
     ]
   };
 
@@ -2114,6 +2284,7 @@
         // Load profile picture if available
         if (userData.profilePicture) {
           document.getElementById('dashboardProfile').src = userData.profilePicture;
+          document.getElementById('mobileDashboardProfile').src = userData.profilePicture;
           userProfileUrl = userData.profilePicture;
         }
         
@@ -2185,6 +2356,7 @@
     closeJoinForm.onclick = () => hideFullScreenForm();
     closeRegisterForm.onclick = () => hideFullScreenForm();
     logoutBtn.onclick = () => logout();
+    mobileLogoutBtn.onclick = () => logout();
 
     // Form submissions
     loginForm.onsubmit = handleLogin;
@@ -2725,7 +2897,20 @@
 
   // Display report in table
   function displayReport(data) {
-    const tbody = document.getElementById('reportTableBody');
+    // Show appropriate report format based on school level
+    if (currentSchool.level === 'primary') {
+      displayPrimaryReport(data);
+    } else {
+      displaySecondaryReport(data);
+    }
+  }
+
+  // Display primary school report
+  function displayPrimaryReport(data) {
+    document.getElementById('primaryReportTable').style.display = 'block';
+    document.getElementById('secondaryReportTables').style.display = 'none';
+    
+    const tbody = document.getElementById('primaryReportTableBody');
     tbody.innerHTML = '';
     
     data.forEach(mark => {
@@ -2758,6 +2943,58 @@
         <td>${average}</td>
       `;
       tbody.appendChild(row);
+    });
+  }
+
+  // Display secondary school report with two tables
+  function displaySecondaryReport(data) {
+    document.getElementById('primaryReportTable').style.display = 'none';
+    document.getElementById('secondaryReportTables').style.display = 'grid';
+    
+    const coreSubjectsBody = document.getElementById('coreSubjectsBody');
+    const otherSubjectsBody = document.getElementById('otherSubjectsBody');
+    
+    coreSubjectsBody.innerHTML = '';
+    otherSubjectsBody.innerHTML = '';
+    
+    // Define core subjects for secondary school
+    const coreSubjects = ['English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 'Physics'];
+    
+    data.forEach(mark => {
+      const student = currentStudents.find(s => s.id === mark.studentId);
+      if (!student) return;
+      
+      // Display core subjects
+      coreSubjects.forEach(subjectName => {
+        const subject = currentSubjects.find(s => s.name === subjectName);
+        if (subject) {
+          const score = mark[subject.id] || 0;
+          const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
+          
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${subjectName}</td>
+            <td>${score > 0 ? score : '-'}</td>
+            <td>${grade}</td>
+          `;
+          coreSubjectsBody.appendChild(row);
+        }
+      });
+      
+      // Display other subjects
+      const otherSubjects = currentSubjects.filter(s => !coreSubjects.includes(s.name));
+      otherSubjects.forEach(subject => {
+        const score = mark[subject.id] || 0;
+        const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${subject.name}</td>
+          <td>${score > 0 ? score : '-'}</td>
+          <td>${grade}</td>
+        `;
+        otherSubjectsBody.appendChild(row);
+      });
     });
   }
 
@@ -2897,50 +3134,134 @@
       
       // Add table header
       let yPos = 180;
-      doc.setFillColor(67, 97, 238);
-      doc.rect(20, yPos, 170, 10, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(10);
-      doc.text('SUBJECT', 25, yPos + 7);
-      doc.text('SCORE', 120, yPos + 7);
-      doc.text('GRADE', 150, yPos + 7);
       
-      // Add subject rows
-      yPos += 10;
-      let totalMarks = 0;
-      let subjectCount = 0;
-      
-      currentSubjects.forEach(subject => {
-        const score = mark[subject.id] || 0;
-        totalMarks += score;
-        subjectCount++;
+      if (currentSchool.level === 'primary') {
+        // Primary school report format
+        doc.setFillColor(67, 97, 238);
+        doc.rect(20, yPos, 170, 10, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text('SUBJECT', 25, yPos + 7);
+        doc.text('SCORE', 120, yPos + 7);
+        doc.text('GRADE', 150, yPos + 7);
         
-        doc.setFillColor(240, 240, 240);
+        // Add subject rows
+        yPos += 10;
+        let totalMarks = 0;
+        let subjectCount = 0;
+        
+        currentSubjects.forEach(subject => {
+          const score = mark[subject.id] || 0;
+          totalMarks += score;
+          subjectCount++;
+          
+          doc.setFillColor(240, 240, 240);
+          doc.rect(20, yPos, 170, 10, 'F');
+          doc.setTextColor(0, 0, 0);
+          doc.text(subject.name, 25, yPos + 7);
+          doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
+          
+          // Calculate grade based on school level
+          const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
+          doc.text(grade, 150, yPos + 7);
+          
+          yPos += 10;
+        });
+        
+        // Add total and average
+        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
+        yPos += 5;
+        doc.setFillColor(220, 220, 220);
         doc.rect(20, yPos, 170, 10, 'F');
         doc.setTextColor(0, 0, 0);
-        doc.text(subject.name, 25, yPos + 7);
-        doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
-        
-        // Calculate grade based on school level
-        const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
-        doc.text(grade, 150, yPos + 7);
+        doc.text('TOTAL MARKS', 25, yPos + 7);
+        doc.text(totalMarks.toString(), 120, yPos + 7);
         
         yPos += 10;
-      });
-      
-      // Add total and average
-      const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
-      yPos += 5;
-      doc.setFillColor(220, 220, 220);
-      doc.rect(20, yPos, 170, 10, 'F');
-      doc.setTextColor(0, 0, 0);
-      doc.text('TOTAL MARKS', 25, yPos + 7);
-      doc.text(totalMarks.toString(), 120, yPos + 7);
-      
-      yPos += 10;
-      doc.rect(20, yPos, 170, 10, 'F');
-      doc.text('AVERAGE', 25, yPos + 7);
-      doc.text(average.toString(), 120, yPos + 7);
+        doc.rect(20, yPos, 170, 10, 'F');
+        doc.text('AVERAGE', 25, yPos + 7);
+        doc.text(average.toString(), 120, yPos + 7);
+      } else {
+        // Secondary school report format with two tables
+        // Core subjects table
+        doc.setFillColor(67, 97, 238);
+        doc.rect(20, yPos, 80, 10, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text('CORE SUBJECTS', 25, yPos + 7);
+        
+        doc.setFillColor(67, 97, 238);
+        doc.rect(110, yPos, 80, 10, 'F');
+        doc.text('OTHER SUBJECTS', 115, yPos + 7);
+        
+        yPos += 10;
+        
+        // Define core subjects for secondary school
+        const coreSubjects = ['English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 'Physics'];
+        
+        // Get the maximum number of rows needed
+        const maxRows = Math.max(coreSubjects.length, currentSubjects.length - coreSubjects.length);
+        
+        for (let j = 0; j < maxRows; j++) {
+          // Core subjects column
+          if (j < coreSubjects.length) {
+            const subjectName = coreSubjects[j];
+            const subject = currentSubjects.find(s => s.name === subjectName);
+            if (subject) {
+              const score = mark[subject.id] || 0;
+              const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
+              
+              doc.setFillColor(j % 2 === 0 ? 240 : 220, 240, 240);
+              doc.rect(20, yPos, 80, 10, 'F');
+              doc.setTextColor(0, 0, 0);
+              doc.text(subjectName, 25, yPos + 7);
+              doc.text(score > 0 ? `${score} (${grade})` : '-', 25, yPos + 14);
+            }
+          }
+          
+          // Other subjects column
+          const otherSubjects = currentSubjects.filter(s => !coreSubjects.includes(s.name));
+          if (j < otherSubjects.length) {
+            const subject = otherSubjects[j];
+            const score = mark[subject.id] || 0;
+            const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
+            
+            doc.setFillColor(j % 2 === 0 ? 240 : 220, 240, 240);
+            doc.rect(110, yPos, 80, 10, 'F');
+            doc.setTextColor(0, 0, 0);
+            doc.text(subject.name, 115, yPos + 7);
+            doc.text(score > 0 ? `${score} (${grade})` : '-', 115, yPos + 14);
+          }
+          
+          yPos += 20;
+        }
+        
+        // Calculate total and average
+        let totalMarks = 0;
+        let subjectCount = 0;
+        
+        currentSubjects.forEach(subject => {
+          const score = mark[subject.id] || 0;
+          if (score > 0) {
+            totalMarks += score;
+            subjectCount++;
+          }
+        });
+        
+        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
+        
+        yPos += 10;
+        doc.setFillColor(220, 220, 220);
+        doc.rect(20, yPos, 170, 10, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.text('TOTAL MARKS', 25, yPos + 7);
+        doc.text(totalMarks.toString(), 120, yPos + 7);
+        
+        yPos += 10;
+        doc.rect(20, yPos, 170, 10, 'F');
+        doc.text('AVERAGE', 25, yPos + 7);
+        doc.text(average.toString(), 120, yPos + 7);
+      }
       
       // Add teacher remarks section
       yPos += 20;
