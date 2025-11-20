@@ -88,6 +88,7 @@
   </script>
 
   <style>
+    /* Your existing CSS styles remain exactly the same */
     :root {
       --primary: #4361ee;
       --primary-dark: #3a56d4;
@@ -2226,7 +2227,6 @@
   const registerForm = document.getElementById('registerForm');
   const joinSchoolFormFields = document.getElementById('joinSchoolFormFields');
   const registerSchoolFormFields = document.getElementById('registerSchoolFormFields');
-  const addClassForm = document.getElementById('addClassForm');
   const addSubjectForm = document.getElementById('addSubjectForm');
   
   // User info
@@ -2262,8 +2262,7 @@
       'Physics', 'Geography', 'History & Political Education', 'Religious Education',
       'Islamic', 'Kiswahili', 'Entrepreneurship Education', 'Agriculture',
       'Computer / ICT Studies', 'Fine Art / Art & Design', 'Physical Education (PE)',
-      'Luganda', 'French',  'Technology & Design', 
-      
+      'Luganda', 'French',  'Technology & Design'
     ]
   };
 
@@ -2284,7 +2283,7 @@
     // Show launch screen first
     showSection(launchScreen);
     
-    // After 7 seconds, check authentication and show appropriate section
+    // After 3 seconds, check authentication and show appropriate section
     setTimeout(() => {
       // Check if user is already logged in
       window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
@@ -2296,7 +2295,7 @@
           showSection(loginSection);
         }
       });
-    }, 7000);
+    }, 3000);
 
     // Setup event listeners
     setupEventListeners();
@@ -2853,6 +2852,7 @@
   // Populate class selector in reports
   async function populateReportClassSelector() {
     const select = document.getElementById('reportClassSelect');
+    // Clear existing options except first one
     while (select.options.length > 1) {
       select.remove(1);
     }
@@ -3386,7 +3386,7 @@
     ];
     
     // Add data rows
-    Array.from(document.querySelectorAll('#reportTableBody tr')).forEach(tr => {
+    Array.from(document.querySelectorAll('#primaryReportTableBody tr')).forEach(tr => {
       const row = Array.from(tr.querySelectorAll('td')).map(td => td.textContent);
       wsData.push(row);
     });
@@ -3727,8 +3727,6 @@
       
       const querySnapshot = await window.firebase.getDocs(classesQuery);
       currentClasses = [];
-      const classList = document.getElementById('classList');
-      classList.innerHTML = '';
       
       querySnapshot.forEach(doc => {
         const classData = {
@@ -3737,6 +3735,9 @@
         };
         currentClasses.push(classData);
       });
+      
+      // Populate class selectors after loading classes
+      populateClassSelectors();
     } catch (error) {
       console.error('Error loading classes:', error);
     }
@@ -3832,32 +3833,23 @@
     const reportClassSelect = document.getElementById('reportClassSelect');
     
     // Clear existing options except the first one
-    while (studentClassSelect.options.length > 1) {
-      studentClassSelect.remove(1);
-    }
-    while (marksClassSelect.options.length > 1) {
-      marksClassSelect.remove(1);
-    }
-    while (reportClassSelect.options.length > 1) {
-      reportClassSelect.remove(1);
-    }
+    const selectors = [studentClassSelect, marksClassSelect, reportClassSelect];
     
-    // Add classes to selectors
+    selectors.forEach(select => {
+      // Keep only the first option
+      while (select.options.length > 1) {
+        select.remove(1);
+      }
+    });
+    
+    // Add classes to all selectors
     currentClasses.forEach(classObj => {
-      const option1 = document.createElement('option');
-      option1.value = classObj.id;
-      option1.textContent = classObj.name;
-      studentClassSelect.appendChild(option1);
-      
-      const option2 = document.createElement('option');
-      option2.value = classObj.id;
-      option2.textContent = classObj.name;
-      marksClassSelect.appendChild(option2);
-      
-      const option3 = document.createElement('option');
-      option3.value = classObj.id;
-      option3.textContent = classObj.name;
-      reportClassSelect.appendChild(option3);
+      selectors.forEach(select => {
+        const option = document.createElement('option');
+        option.value = classObj.id;
+        option.textContent = classObj.name;
+        select.appendChild(option);
+      });
     });
     
     // Add event listeners
