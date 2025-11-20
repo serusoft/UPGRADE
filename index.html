@@ -1869,31 +1869,57 @@
     </div>
 
     <div class="management-tabs" id="managementTabs" style="display:none;">
-      <div class="tab active" data-tab="classes">Classes</div>
+      <div class="tab active" data-tab="guide">Guide User</div>
       <div class="tab" data-tab="students">Students</div>
       <div class="tab" data-tab="subjects">Subjects</div>
       <div class="tab" data-tab="marks">Enter Marks</div>
       <div class="tab" data-tab="reports">Reports</div>
     </div>
 
-    <!-- Classes Tab -->
-    <div class="tab-content active" id="classesTab">
+    <!-- Guide User Tab -->
+    <div class="tab-content active" id="guideTab">
       <div class="container">
         <div class="header">
-          <h3>Manage Classes</h3>
-          <p>Create and manage classes in your school</p>
+          <h3>Welcome to Skore Point!</h3>
+          <p>Follow this guide to get started with your school management</p>
         </div>
 
-        <form id="addClassForm">
-          <div class="form-group">
-            <label><i class="fas fa-chalkboard"></i> Class Name</label>
-            <input type="text" id="className" placeholder="e.g., Grade 5A, Form 3, etc." required>
+        <div class="marks-entry">
+          <h3>Step-by-Step Guide</h3>
+          
+          <div style="margin-bottom: 20px;">
+            <h4>1. Default Classes</h4>
+            <p>Your school has been automatically set up with default classes:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+              <li id="primaryClasses" style="display: none;">Primary One, Primary Two, Primary Three, Primary Four, Primary Five, Primary Six, Primary Seven</li>
+              <li id="secondaryClasses" style="display: none;">Senior One, Senior Two, Senior Three, Senior Four, Senior Five, Senior Six</li>
+            </ul>
           </div>
-          <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add Class</button>
-        </form>
 
-        <div class="class-list" id="classList">
-          <!-- Classes will be populated here -->
+          <div style="margin-bottom: 20px;">
+            <h4>2. Add Students</h4>
+            <p>Go to the <strong>Students</strong> tab to upload your student lists using Excel files.</p>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <h4>3. Manage Subjects</h4>
+            <p>Visit the <strong>Subjects</strong> tab to view and manage your school's subjects.</p>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <h4>4. Enter Marks</h4>
+            <p>Use the <strong>Enter Marks</strong> tab to input student performance data.</p>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <h4>5. Generate Reports</h4>
+            <p>Finally, go to the <strong>Reports</strong> tab to view and export student performance reports.</p>
+          </div>
+
+          <div style="background: var(--primary); padding: 15px; border-radius: 8px; margin-top: 20px;">
+            <h4 style="color: white;">Need Help?</h4>
+            <p style="color: rgba(255,255,255,0.8);">Contact support at support@skorepoint.com or visit our help center.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -2146,9 +2172,9 @@
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
-    <a href="#" class="mobile-nav-item" data-section="classes">
-      <i class="fas fa-chalkboard"></i>
-      <span>Classes</span>
+    <a href="#" class="mobile-nav-item" data-section="guide">
+      <i class="fas fa-question-circle"></i>
+      <span>Guide</span>
     </a>
     <a href="#" class="mobile-nav-item" data-section="students">
       <i class="fas fa-users"></i>
@@ -2239,6 +2265,12 @@
       'Luganda', 'French',  'Technology & Design', 
       
     ]
+  };
+
+  // Default classes for different school levels
+  const DEFAULT_CLASSES = {
+    primary: ['Primary One', 'Primary Two', 'Primary Three', 'Primary Four', 'Primary Five', 'Primary Six', 'Primary Seven'],
+    secondary: ['Senior One', 'Senior Two', 'Senior Three', 'Senior Four', 'Senior Five', 'Senior Six']
   };
 
   // Grading scales
@@ -2363,7 +2395,6 @@
     registerForm.onsubmit = handleRegister;
     joinSchoolFormFields.onsubmit = handleJoinSchool;
     registerSchoolFormFields.onsubmit = handleRegisterSchool;
-    addClassForm.onsubmit = handleAddClass;
     addSubjectForm.onsubmit = handleAddSubject;
 
     // Password toggles
@@ -2552,9 +2583,24 @@
           setupMarksEntry();
         } else if (tab.dataset.tab === 'reports') {
           setupReportsTab();
+        } else if (tab.dataset.tab === 'guide') {
+          showGuideContent();
         }
       });
     });
+  }
+
+  // Show guide content based on school level
+  function showGuideContent() {
+    if (currentSchool) {
+      if (currentSchool.level === 'primary') {
+        document.getElementById('primaryClasses').style.display = 'block';
+        document.getElementById('secondaryClasses').style.display = 'none';
+      } else {
+        document.getElementById('primaryClasses').style.display = 'none';
+        document.getElementById('secondaryClasses').style.display = 'block';
+      }
+    }
   }
 
   // Setup mobile navigation
@@ -2598,6 +2644,8 @@
               setupMarksEntry();
             } else if (section === 'reports') {
               setupReportsTab();
+            } else if (section === 'guide') {
+              showGuideContent();
             }
           }
         }
@@ -3505,7 +3553,9 @@
       managementTabs.style.display = 'flex';
       
       hideFullScreenForm();
-      showSection(dashboardSection);
+      
+      // Refresh the window to ensure all data is loaded properly
+      window.location.reload();
     } catch (error) {
       console.error('Error joining school:', error);
       errorBox.querySelector('span').textContent = 'Error joining school. Please try again.';
@@ -3571,6 +3621,19 @@
         );
       }
       
+      // Add default classes based on school level
+      const defaultClasses = DEFAULT_CLASSES[schoolLevel];
+      for (const className of defaultClasses) {
+        await window.firebase.addDoc(
+          window.firebase.collection(window.firebase.db, 'classes'),
+          {
+            name: className,
+            schoolId: schoolRef.id,
+            createdAt: new Date()
+          }
+        );
+      }
+      
       // Set current school
       currentSchool = {
         id: schoolRef.id,
@@ -3629,32 +3692,6 @@
     return result;
   }
 
-  // Handle adding a class
-  async function handleAddClass(e) {
-    e.preventDefault();
-    const className = document.getElementById('className').value;
-    
-    try {
-      // Add class to school
-      await window.firebase.addDoc(
-        window.firebase.collection(window.firebase.db, 'classes'),
-        {
-          name: className,
-          schoolId: currentSchool.id,
-          createdAt: new Date()
-        }
-      );
-      
-      // Clear form and reload classes
-      document.getElementById('className').value = '';
-      loadClasses();
-      populateClassSelectors();
-    } catch (error) {
-      console.error('Error adding class:', error);
-      alert('Error adding class. Please try again.');
-    }
-  }
-
   // Handle adding a subject
   async function handleAddSubject(e) {
     e.preventDefault();
@@ -3699,19 +3736,6 @@
           ...doc.data()
         };
         currentClasses.push(classData);
-        
-        // Add to UI
-        const classCard = document.createElement('div');
-        classCard.className = 'class-card';
-        classCard.innerHTML = `
-          <h4>${classData.name}</h4>
-          <p>Created: ${classData.createdAt.toDate().toLocaleDateString()}</p>
-          <div class="card-actions">
-            <button class="btn btn-success" onclick="viewClass('${doc.id}')"><i class="fas fa-eye"></i> View</button>
-            <button class="btn btn-danger" onclick="deleteClass('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
-          </div>
-        `;
-        classList.appendChild(classCard);
       });
     } catch (error) {
       console.error('Error loading classes:', error);
