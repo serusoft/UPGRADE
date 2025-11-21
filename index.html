@@ -88,7 +88,6 @@
   </script>
 
   <style>
-    /* Your existing CSS styles remain exactly the same */
     :root {
       --primary: #4361ee;
       --primary-dark: #3a56d4;
@@ -1734,6 +1733,14 @@
           <img id="schoolCardLogo" class="school-logo" src="" alt="School Logo" style="display:none;">
           <h4 id="schoolCardName"></h4>
           <p>Code: <span id="schoolCardCode"></span></p>
+          <div style="margin-top: 15px;">
+            <button class="btn btn-success" id="openSchoolPortalBtn" style="margin-bottom: 10px;">
+              <i class="fas fa-door-open"></i> Open School Portal
+            </button>
+            <button class="btn btn-danger" id="closeSchoolPortalBtn" style="display: none;">
+              <i class="fas fa-door-closed"></i> Close School Portal
+            </button>
+          </div>
         </div>
       </div>
       <div class="card" id="joinSchoolCard">
@@ -1870,57 +1877,31 @@
     </div>
 
     <div class="management-tabs" id="managementTabs" style="display:none;">
-      <div class="tab active" data-tab="guide">Guide User</div>
+      <div class="tab active" data-tab="classes">Classes</div>
       <div class="tab" data-tab="students">Students</div>
       <div class="tab" data-tab="subjects">Subjects</div>
       <div class="tab" data-tab="marks">Enter Marks</div>
       <div class="tab" data-tab="reports">Reports</div>
     </div>
 
-    <!-- Guide User Tab -->
-    <div class="tab-content active" id="guideTab">
+    <!-- Classes Tab -->
+    <div class="tab-content active" id="classesTab">
       <div class="container">
         <div class="header">
-          <h3>Welcome to Skore Point!</h3>
-          <p>Follow this guide to get started with your school management</p>
+          <h3>Manage Classes</h3>
+          <p>Create and manage classes in your school</p>
         </div>
 
-        <div class="marks-entry">
-          <h3>Step-by-Step Guide</h3>
-          
-          <div style="margin-bottom: 20px;">
-            <h4>1. Default Classes</h4>
-            <p>Your school has been automatically set up with default classes:</p>
-            <ul style="margin-left: 20px; margin-top: 10px;">
-              <li id="primaryClasses" style="display: none;">Primary One, Primary Two, Primary Three, Primary Four, Primary Five, Primary Six, Primary Seven</li>
-              <li id="secondaryClasses" style="display: none;">Senior One, Senior Two, Senior Three, Senior Four, Senior Five, Senior Six</li>
-            </ul>
+        <form id="addClassForm">
+          <div class="form-group">
+            <label><i class="fas fa-chalkboard"></i> Class Name</label>
+            <input type="text" id="className" placeholder="e.g., Grade 5A, Form 3, etc." required>
           </div>
+          <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add Class</button>
+        </form>
 
-          <div style="margin-bottom: 20px;">
-            <h4>2. Add Students</h4>
-            <p>Go to the <strong>Students</strong> tab to upload your student lists using Excel files.</p>
-          </div>
-
-          <div style="margin-bottom: 20px;">
-            <h4>3. Manage Subjects</h4>
-            <p>Visit the <strong>Subjects</strong> tab to view and manage your school's subjects.</p>
-          </div>
-
-          <div style="margin-bottom: 20px;">
-            <h4>4. Enter Marks</h4>
-            <p>Use the <strong>Enter Marks</strong> tab to input student performance data.</p>
-          </div>
-
-          <div style="margin-bottom: 20px;">
-            <h4>5. Generate Reports</h4>
-            <p>Finally, go to the <strong>Reports</strong> tab to view and export student performance reports.</p>
-          </div>
-
-          <div style="background: var(--primary); padding: 15px; border-radius: 8px; margin-top: 20px;">
-            <h4 style="color: white;">Need Help?</h4>
-            <p style="color: rgba(255,255,255,0.8);">Contact support at support@skorepoint.com or visit our help center.</p>
-          </div>
+        <div class="class-list" id="classList">
+          <!-- Classes will be populated here -->
         </div>
       </div>
     </div>
@@ -2173,9 +2154,9 @@
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
-    <a href="#" class="mobile-nav-item" data-section="guide">
-      <i class="fas fa-question-circle"></i>
-      <span>Guide</span>
+    <a href="#" class="mobile-nav-item" data-section="classes">
+      <i class="fas fa-chalkboard"></i>
+      <span>Classes</span>
     </a>
     <a href="#" class="mobile-nav-item" data-section="students">
       <i class="fas fa-users"></i>
@@ -2227,6 +2208,7 @@
   const registerForm = document.getElementById('registerForm');
   const joinSchoolFormFields = document.getElementById('joinSchoolFormFields');
   const registerSchoolFormFields = document.getElementById('registerSchoolFormFields');
+  const addClassForm = document.getElementById('addClassForm');
   const addSubjectForm = document.getElementById('addSubjectForm');
   
   // User info
@@ -2243,6 +2225,10 @@
   const schoolCardCode = document.getElementById('schoolCardCode');
   const schoolCardLogo = document.getElementById('schoolCardLogo');
   
+  // Portal buttons
+  const openSchoolPortalBtn = document.getElementById('openSchoolPortalBtn');
+  const closeSchoolPortalBtn = document.getElementById('closeSchoolPortalBtn');
+  
   // Global variables
   let currentUser = null;
   let currentSchool = null;
@@ -2253,6 +2239,7 @@
   let currentMarks = {};
   let schoolLogoUrl = null;
   let userProfileUrl = null;
+  let isSchoolPortalOpen = false;
 
   // Default subjects for different school levels
   const DEFAULT_SUBJECTS = {
@@ -2262,15 +2249,16 @@
       'Physics', 'Geography', 'History & Political Education', 'Religious Education',
       'Islamic', 'Kiswahili', 'Entrepreneurship Education', 'Agriculture',
       'Computer / ICT Studies', 'Fine Art / Art & Design', 'Physical Education (PE)',
-      'Luganda', 'French',  'Technology & Design'
+      'Luganda', 'French',  'Technology & Design', 
+      
     ]
   };
 
-  // Default classes for different school levels
-  const DEFAULT_CLASSES = {
-    primary: ['Primary One', 'Primary Two', 'Primary Three', 'Primary Four', 'Primary Five', 'Primary Six', 'Primary Seven'],
-    secondary: ['Senior One', 'Senior Two', 'Senior Three', 'Senior Four', 'Senior Five', 'Senior Six']
-  };
+  // Default classes for secondary schools
+  const DEFAULT_SECONDARY_CLASSES = [
+    'Senior One', 'Senior Two', 'Senior Three', 'Senior Four',
+    'Senior Five', 'Senior Six'
+  ];
 
   // Grading scales
   const GRADING_SCALES = {
@@ -2283,7 +2271,7 @@
     // Show launch screen first
     showSection(launchScreen);
     
-    // After 3 seconds, check authentication and show appropriate section
+    // After 7 seconds, check authentication and show appropriate section
     setTimeout(() => {
       // Check if user is already logged in
       window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
@@ -2295,7 +2283,7 @@
           showSection(loginSection);
         }
       });
-    }, 3000);
+    }, 7000);
 
     // Setup event listeners
     setupEventListeners();
@@ -2389,11 +2377,16 @@
     logoutBtn.onclick = () => logout();
     mobileLogoutBtn.onclick = () => logout();
 
+    // Portal buttons
+    openSchoolPortalBtn.onclick = openSchoolPortal;
+    closeSchoolPortalBtn.onclick = closeSchoolPortal;
+
     // Form submissions
     loginForm.onsubmit = handleLogin;
     registerForm.onsubmit = handleRegister;
     joinSchoolFormFields.onsubmit = handleJoinSchool;
     registerSchoolFormFields.onsubmit = handleRegisterSchool;
+    addClassForm.onsubmit = handleAddClass;
     addSubjectForm.onsubmit = handleAddSubject;
 
     // Password toggles
@@ -2425,6 +2418,53 @@
 
     // Mobile navigation
     setupMobileNavigation();
+  }
+
+  // Open School Portal
+  function openSchoolPortal() {
+    isSchoolPortalOpen = true;
+    
+    // Hide join and register cards
+    joinSchoolCard.style.display = 'none';
+    registerSchoolCard.style.display = 'none';
+    
+    // Show close portal button and hide open portal button
+    openSchoolPortalBtn.style.display = 'none';
+    closeSchoolPortalBtn.style.display = 'block';
+    
+    // Show action options in bottom nav
+    mobileNav.style.display = 'block';
+    
+    // Show management tabs if they exist
+    if (managementTabs) {
+      managementTabs.style.display = 'flex';
+    }
+    
+    // Load students when marks tab is active
+    if (document.getElementById('marksTab').classList.contains('active')) {
+      setupMarksEntry();
+    }
+  }
+
+  // Close School Portal
+  function closeSchoolPortal() {
+    isSchoolPortalOpen = false;
+    
+    // Show join and register cards
+    joinSchoolCard.style.display = 'block';
+    registerSchoolCard.style.display = 'block';
+    
+    // Show open portal button and hide close portal button
+    openSchoolPortalBtn.style.display = 'block';
+    closeSchoolPortalBtn.style.display = 'none';
+    
+    // Hide action options in bottom nav
+    mobileNav.style.display = 'none';
+    
+    // Hide management tabs
+    if (managementTabs) {
+      managementTabs.style.display = 'none';
+    }
   }
 
   // Open Cloudinary upload widget
@@ -2480,8 +2520,8 @@
     });
     section.style.display = 'block';
     
-    // Show/hide mobile nav based on section
-    if (section === dashboardSection || section === schoolManagementSection) {
+    // Show/hide mobile nav based on section and portal status
+    if ((section === dashboardSection || section === schoolManagementSection) && isSchoolPortalOpen) {
       mobileNav.style.display = 'block';
     } else {
       mobileNav.style.display = 'none';
@@ -2582,24 +2622,9 @@
           setupMarksEntry();
         } else if (tab.dataset.tab === 'reports') {
           setupReportsTab();
-        } else if (tab.dataset.tab === 'guide') {
-          showGuideContent();
         }
       });
     });
-  }
-
-  // Show guide content based on school level
-  function showGuideContent() {
-    if (currentSchool) {
-      if (currentSchool.level === 'primary') {
-        document.getElementById('primaryClasses').style.display = 'block';
-        document.getElementById('secondaryClasses').style.display = 'none';
-      } else {
-        document.getElementById('primaryClasses').style.display = 'none';
-        document.getElementById('secondaryClasses').style.display = 'block';
-      }
-    }
   }
 
   // Setup mobile navigation
@@ -2643,8 +2668,6 @@
               setupMarksEntry();
             } else if (section === 'reports') {
               setupReportsTab();
-            } else if (section === 'guide') {
-              showGuideContent();
             }
           }
         }
@@ -2717,10 +2740,36 @@
         document.getElementById('currentStudentInfo').style.display = 'none';
         selectedStudentId = null;
         document.getElementById('saveMarksBtn').disabled = true;
+        
+        // Load students for the selected class
+        loadStudentsForMarks(classSelect.value);
       } else {
         marksSection.style.display = 'none';
       }
     });
+  }
+
+  // Load students for marks entry
+  async function loadStudentsForMarks(classId) {
+    try {
+      const studentsQuery = window.firebase.query(
+        window.firebase.collection(window.firebase.db, 'students'),
+        window.firebase.where('classId', '==', classId)
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(studentsQuery);
+      currentStudents = [];
+      
+      querySnapshot.forEach(doc => {
+        const studentData = {
+          id: doc.id,
+          ...doc.data()
+        };
+        currentStudents.push(studentData);
+      });
+    } catch (error) {
+      console.error('Error loading students for marks:', error);
+    }
   }
 
   // Generate mark input fields based on subjects
@@ -2852,7 +2901,6 @@
   // Populate class selector in reports
   async function populateReportClassSelector() {
     const select = document.getElementById('reportClassSelect');
-    // Clear existing options except first one
     while (select.options.length > 1) {
       select.remove(1);
     }
@@ -3386,7 +3434,7 @@
     ];
     
     // Add data rows
-    Array.from(document.querySelectorAll('#primaryReportTableBody tr')).forEach(tr => {
+    Array.from(document.querySelectorAll('#reportTableBody tr')).forEach(tr => {
       const row = Array.from(tr.querySelectorAll('td')).map(td => td.textContent);
       wsData.push(row);
     });
@@ -3553,9 +3601,7 @@
       managementTabs.style.display = 'flex';
       
       hideFullScreenForm();
-      
-      // Refresh the window to ensure all data is loaded properly
-      window.location.reload();
+      showSection(dashboardSection);
     } catch (error) {
       console.error('Error joining school:', error);
       errorBox.querySelector('span').textContent = 'Error joining school. Please try again.';
@@ -3621,17 +3667,18 @@
         );
       }
       
-      // Add default classes based on school level
-      const defaultClasses = DEFAULT_CLASSES[schoolLevel];
-      for (const className of defaultClasses) {
-        await window.firebase.addDoc(
-          window.firebase.collection(window.firebase.db, 'classes'),
-          {
-            name: className,
-            schoolId: schoolRef.id,
-            createdAt: new Date()
-          }
-        );
+      // Add default classes for secondary schools
+      if (schoolLevel === 'secondary') {
+        for (const className of DEFAULT_SECONDARY_CLASSES) {
+          await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'classes'),
+            {
+              name: className,
+              schoolId: schoolRef.id,
+              createdAt: new Date()
+            }
+          );
+        }
       }
       
       // Set current school
@@ -3692,6 +3739,32 @@
     return result;
   }
 
+  // Handle adding a class
+  async function handleAddClass(e) {
+    e.preventDefault();
+    const className = document.getElementById('className').value;
+    
+    try {
+      // Add class to school
+      await window.firebase.addDoc(
+        window.firebase.collection(window.firebase.db, 'classes'),
+        {
+          name: className,
+          schoolId: currentSchool.id,
+          createdAt: new Date()
+        }
+      );
+      
+      // Clear form and reload classes
+      document.getElementById('className').value = '';
+      loadClasses();
+      populateClassSelectors();
+    } catch (error) {
+      console.error('Error adding class:', error);
+      alert('Error adding class. Please try again.');
+    }
+  }
+
   // Handle adding a subject
   async function handleAddSubject(e) {
     e.preventDefault();
@@ -3727,6 +3800,8 @@
       
       const querySnapshot = await window.firebase.getDocs(classesQuery);
       currentClasses = [];
+      const classList = document.getElementById('classList');
+      classList.innerHTML = '';
       
       querySnapshot.forEach(doc => {
         const classData = {
@@ -3734,10 +3809,20 @@
           ...doc.data()
         };
         currentClasses.push(classData);
+        
+        // Add to UI
+        const classCard = document.createElement('div');
+        classCard.className = 'class-card';
+        classCard.innerHTML = `
+          <h4>${classData.name}</h4>
+          <p>Created: ${classData.createdAt.toDate().toLocaleDateString()}</p>
+          <div class="card-actions">
+            <button class="btn btn-success" onclick="viewClass('${doc.id}')"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-danger" onclick="deleteClass('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
+          </div>
+        `;
+        classList.appendChild(classCard);
       });
-      
-      // Populate class selectors after loading classes
-      populateClassSelectors();
     } catch (error) {
       console.error('Error loading classes:', error);
     }
@@ -3833,23 +3918,32 @@
     const reportClassSelect = document.getElementById('reportClassSelect');
     
     // Clear existing options except the first one
-    const selectors = [studentClassSelect, marksClassSelect, reportClassSelect];
+    while (studentClassSelect.options.length > 1) {
+      studentClassSelect.remove(1);
+    }
+    while (marksClassSelect.options.length > 1) {
+      marksClassSelect.remove(1);
+    }
+    while (reportClassSelect.options.length > 1) {
+      reportClassSelect.remove(1);
+    }
     
-    selectors.forEach(select => {
-      // Keep only the first option
-      while (select.options.length > 1) {
-        select.remove(1);
-      }
-    });
-    
-    // Add classes to all selectors
+    // Add classes to selectors
     currentClasses.forEach(classObj => {
-      selectors.forEach(select => {
-        const option = document.createElement('option');
-        option.value = classObj.id;
-        option.textContent = classObj.name;
-        select.appendChild(option);
-      });
+      const option1 = document.createElement('option');
+      option1.value = classObj.id;
+      option1.textContent = classObj.name;
+      studentClassSelect.appendChild(option1);
+      
+      const option2 = document.createElement('option');
+      option2.value = classObj.id;
+      option2.textContent = classObj.name;
+      marksClassSelect.appendChild(option2);
+      
+      const option3 = document.createElement('option');
+      option3.value = classObj.id;
+      option3.textContent = classObj.name;
+      reportClassSelect.appendChild(option3);
     });
     
     // Add event listeners
@@ -3920,6 +4014,7 @@
       await window.firebase.signOut(window.firebase.auth);
       currentUser = null;
       currentSchool = null;
+      isSchoolPortalOpen = false;
       showSection(loginSection);
     } catch (error) {
       console.error('Error signing out:', error);
