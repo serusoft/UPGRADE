@@ -8,85 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-  
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Import Firebase functions
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword, 
-      signOut,
-      onAuthStateChanged,
-      updateProfile
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      getDocs, 
-      query, 
-      where, 
-      doc, 
-      setDoc,
-      getDoc,
-      updateDoc,
-      deleteDoc,
-      arrayUnion
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { 
-      getStorage,
-      ref,
-      uploadBytes,
-      getDownloadURL
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyASIdYdW94ZJQXsc6BN9Bc28eou0yjPE1U",
-      authDomain: "upgrade-16092.firebaseapp.com",
-      projectId: "upgrade-16092",
-      storageBucket: "upgrade-16092.firebasestorage.app",
-      messagingSenderId: "466381827996",
-      appId: "1:466381827996:web:6f030e68c526e734a26259",
-      measurementId: "G-RGCH68RJ8H"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    // Make Firebase available globally
-    window.firebase = { 
-      auth, 
-      db, 
-      storage,
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword, 
-      signOut, 
-      onAuthStateChanged, 
-      updateProfile,
-      collection, 
-      addDoc, 
-      getDocs, 
-      query, 
-      where, 
-      doc, 
-      setDoc, 
-      getDoc, 
-      updateDoc,
-      deleteDoc,
-      arrayUnion,
-      ref,
-      uploadBytes,
-      getDownloadURL
-    };
-  </script>
-
   <style>
     :root {
       --primary: #4361ee;
@@ -135,7 +56,7 @@
       z-index: -1;
     }
 
-    /* Launch Screen Styles - Centered and Responsive */
+    /* Launch Screen Styles */
     .launch-screen {
       position: fixed;
       top: 0;
@@ -280,125 +201,6 @@
     @keyframes pulse {
       0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
-    }
-
-    /* Floating particles */
-    .particle {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: rise 10s infinite ease-in;
-    }
-
-    @keyframes rise {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
-    .particle:nth-child(1) {
-      width: 10px;
-      height: 10px;
-      left: 10%;
-      animation-delay: 0s;
-      animation-duration: 8s;
-    }
-
-    .particle:nth-child(2) {
-      width: 15px;
-      height: 15px;
-      left: 20%;
-      animation-delay: 2s;
-      animation-duration: 10s;
-    }
-
-    .particle:nth-child(3) {
-      width: 8px;
-      height: 8px;
-      left: 30%;
-      animation-delay: 4s;
-      animation-duration: 7s;
-    }
-
-    .particle:nth-child(4) {
-      width: 12px;
-      height: 12px;
-      left: 50%;
-      animation-delay: 1s;
-      animation-duration: 9s;
-    }
-
-    .particle:nth-child(5) {
-      width: 10px;
-      height: 10px;
-      left: 70%;
-      animation-delay: 3s;
-      animation-duration: 8s;
-    }
-
-    .particle:nth-child(6) {
-      width: 14px;
-      height: 14px;
-      left: 80%;
-      animation-delay: 5s;
-      animation-duration: 11s;
-    }
-
-    .particle:nth-child(7) {
-      width: 9px;
-      height: 9px;
-      left: 90%;
-      animation-delay: 2.5s;
-      animation-duration: 7.5s;
-    }
-
-    /* Orbit circles */
-    .orbit {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .orbit-circle {
-      position: absolute;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      animation: rotate 20s linear infinite;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .orbit-circle:nth-child(1) {
-      width: min(300px, 60vw);
-      height: min(300px, 60vw);
-      margin: calc(min(300px, 60vw) / -2) 0 0 calc(min(300px, 60vw) / -2);
-      animation-duration: 15s;
-    }
-
-    .orbit-circle:nth-child(2) {
-      width: min(500px, 80vw);
-      height: min(500px, 80vw);
-      margin: calc(min(500px, 80vw) / -2) 0 0 calc(min(500px, 80vw) / -2);
-      animation-duration: 20s;
-      animation-direction: reverse;
-    }
-
-    .orbit-circle:nth-child(3) {
-      width: min(700px, 90vw);
-      height: min(700px, 90vw);
-      margin: calc(min(700px, 90vw) / -2) 0 0 calc(min(700px, 90vw) / -2);
-      animation-duration: 25s;
     }
 
     /* Main App Styles */
@@ -755,97 +557,6 @@
       object-fit: contain;
     }
 
-    /* School Registration/Join Styles */
-    .school-setup {
-      display: none;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .setup-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .setup-header h1 {
-      font-size: clamp(24px, 5vw, 32px);
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .setup-header p {
-      color: #a0aec0;
-      font-size: clamp(14px, 3vw, 16px);
-    }
-
-    .setup-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .setup-option {
-      background: var(--card-gradient);
-      border-radius: 12px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: var(--transition);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .setup-option::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--gradient);
-      opacity: 0;
-      transition: var(--transition);
-    }
-
-    .setup-option:hover::before {
-      opacity: 0.05;
-    }
-
-    .setup-option:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .setup-option i {
-      font-size: 50px;
-      margin-bottom: 20px;
-      color: var(--primary-light);
-      position: relative;
-      z-index: 1;
-    }
-
-    .setup-option h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .setup-option p {
-      color: #a0aec0;
-      font-size: 14px;
-      position: relative;
-      z-index: 1;
-    }
-
     /* School Management Styles */
     .school-management {
       display: none;
@@ -1185,152 +896,118 @@
       font-size: 20px;
     }
 
-    /* Mobile Navigation - Updated to match the image */
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--darker);
-      border-top: 1px solid var(--gray);
-      padding: 10px;
-      z-index: 100;
+    /* A4 Report Card Styles */
+    .a4-report-card {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      color: black;
+      padding: 20mm;
+      margin: 20px auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      position: relative;
+      box-sizing: border-box;
     }
 
-    .mobile-nav-items {
+    .report-header {
       display: flex;
-      justify-content: space-around;
-    }
-
-    .mobile-nav-item {
-      display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      color: #a0aec0;
-      text-decoration: none;
-      font-size: 12px;
-      transition: var(--transition);
-      padding: 5px 10px;
-      border-radius: 8px;
-    }
-
-    .mobile-nav-item.active {
-      color: var(--primary);
-      background: rgba(67, 97, 238, 0.1);
-    }
-
-    .mobile-nav-item i {
-      font-size: 20px;
-      margin-bottom: 5px;
-    }
-
-    /* Logo Upload */
-    .logo-upload {
-      border: 2px dashed var(--gray);
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
       margin-bottom: 20px;
-      cursor: pointer;
-      transition: var(--transition);
+      border-bottom: 2px solid #4361ee;
+      padding-bottom: 15px;
     }
 
-    .logo-upload:hover {
-      border-color: var(--primary);
-    }
-
-    .logo-upload i {
-      font-size: 40px;
-      margin-bottom: 15px;
-      color: var(--primary-light);
-    }
-
-    .logo-upload p {
-      color: #a0aec0;
-      margin-bottom: 10px;
-    }
-
-    .logo-preview {
-      max-width: 150px;
-      max-height: 150px;
-      margin: 0 auto 15px;
-      display: none;
-    }
-
-    .logo-preview img {
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 8px;
-    }
-
-    /* Subject Management */
-    .subjects-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .subject-card {
-      background: var(--card-gradient);
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: var(--transition);
-    }
-
-    .subject-card h4 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .subject-card p {
-      color: #a0aec0;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
-    /* Profile Picture */
-    .profile-picture {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 20px;
-      display: block;
-      border: 3px solid var(--primary);
-    }
-
-    .profile-upload {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    /* Term Selection */
-    .term-selection {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .term-option {
+    .school-info {
       flex: 1;
-      padding: 15px;
-      text-align: center;
-      background: var(--dark);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: var(--transition);
-      border: 1px solid var(--gray);
+    }
+
+    .school-logo-report {
+      max-width: 80px;
+      max-height: 80px;
+    }
+
+    .student-info {
+      margin-bottom: 20px;
+    }
+
+    .student-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .student-detail {
+      display: flex;
+    }
+
+    .detail-label {
+      font-weight: bold;
       min-width: 120px;
     }
 
-    .term-option.active {
-      background: var(--primary);
-      border-color: var(--primary);
+    .performance-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .performance-table th,
+    .performance-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .performance-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    .summary-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .remarks-section {
+      margin-top: 30px;
+    }
+
+    .remarks-line {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 10px;
+      min-height: 20px;
+    }
+
+    .close-portal-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--error);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 100;
     }
 
     @keyframes fadeIn {
@@ -1345,7 +1022,7 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      .dashboard-cards, .setup-options {
+      .dashboard-cards {
         grid-template-columns: 1fr;
       }
       
@@ -1371,206 +1048,14 @@
       .report-table td {
         padding: 8px;
       }
-
-      .mobile-nav {
-        display: block;
-      }
-
-      .dashboard, .school-management, .school-setup {
-        padding-bottom: 80px;
+      
+      .a4-report-card {
+        width: 100%;
+        padding: 10mm;
       }
       
-      .logo {
-        letter-spacing: 3px;
-      }
-      
-      .tagline {
-        letter-spacing: 1px;
-      }
-      
-      /* Hide top navigation on mobile */
-      .dashboard-header .user-info {
-        display: none;
-      }
-      
-      /* Mobile dashboard cards */
-      .dashboard-cards {
-        gap: 15px;
-      }
-      
-      .card {
-        padding: 20px;
-      }
-      
-      .card i {
-        font-size: 30px;
-      }
-      
-      .card h3 {
-        font-size: 18px;
-      }
-      
-      /* Mobile management tabs */
-      .management-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 5px;
-      }
-      
-      .tab {
-        padding: 8px 15px;
-        font-size: 14px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .container {
-        padding: 25px 15px;
-      }
-      
-      .logo {
-        letter-spacing: 2px;
-      }
-      
-      .tagline {
-        letter-spacing: 0.5px;
-      }
-      
-      .dashboard-header h1, .management-header h2 {
-        font-size: 22px;
-      }
-      
-      .card, .setup-option {
-        padding: 20px;
-      }
-      
-      .card i, .setup-option i {
-        font-size: 35px;
-      }
-      
-      /* Mobile nav adjustments */
-      .mobile-nav-item {
-        font-size: 10px;
-        padding: 5px;
-      }
-      
-      .mobile-nav-item i {
-        font-size: 18px;
-      }
-    }
-    
-    /* Full-screen forms */
-    .full-screen-form {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--dark);
-      z-index: 2000;
-      overflow-y: auto;
-      padding: 20px;
-    }
-    
-    .full-screen-form .container {
-      max-width: 500px;
-      margin: 20px auto;
-    }
-    
-    .close-form {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--error);
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 18px;
-      z-index: 2001;
-    }
-    
-    /* Secondary School Report Card with Two Tables */
-    .secondary-report-tables {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 20px;
-    }
-    
-    @media (max-width: 768px) {
-      .secondary-report-tables {
+      .student-details {
         grid-template-columns: 1fr;
-      }
-    }
-    
-    .subject-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    
-    .subject-table th,
-    .subject-table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid var(--gray);
-    }
-    
-    .subject-table th {
-      background: var(--gray);
-      font-weight: 600;
-    }
-    
-    .subject-table tr:hover {
-      background: rgba(67, 97, 238, 0.1);
-    }
-    
-    /* Mobile Dashboard Header */
-    .mobile-dashboard-header {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--gray);
-    }
-    
-    .mobile-dashboard-header h1 {
-      font-size: 20px;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-    }
-    
-    .mobile-user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .mobile-profile-picture {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--primary);
-    }
-    
-    @media (max-width: 768px) {
-      .mobile-dashboard-header {
-        display: flex;
-      }
-      
-      .dashboard-header {
-        display: none;
       }
     }
   </style>
@@ -1578,23 +1063,6 @@
 <body>
   <!-- LAUNCH SCREEN -->
   <div class="launch-screen" id="launchScreen">
-    <!-- Floating particles -->
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-
-    <!-- Orbit circles -->
-    <div class="orbit">
-      <div class="orbit-circle"></div>
-      <div class="orbit-circle"></div>
-      <div class="orbit-circle"></div>
-    </div>
-
-    <!-- Main content -->
     <div class="launch-container">
       <div class="logo-wrapper">
         <div class="logo">
@@ -1662,12 +1130,6 @@
       <span>Account created successfully! Redirecting...</span>
     </div>
 
-    <div class="profile-upload">
-      <img id="profilePreview" class="profile-picture" src="https://via.placeholder.com/100" alt="Profile Preview">
-      <button type="button" class="btn btn-secondary" id="uploadProfileBtn"><i class="fas fa-camera"></i> Upload Profile Picture</button>
-      <input type="hidden" id="profilePictureUrl">
-    </div>
-
     <form id="registerForm">
       <div class="form-group">
         <label><i class="fas fa-user"></i> Full Name</label>
@@ -1676,10 +1138,6 @@
       <div class="form-group">
         <label><i class="fas fa-envelope"></i> Email</label>
         <input type="email" id="regEmail" placeholder="Enter email address" required>
-      </div>
-      <div class="form-group">
-        <label><i class="fas fa-book"></i> Subject</label>
-        <input type="text" id="regSubject" placeholder="Enter your subject" required>
       </div>
       <div class="form-group">
         <label><i class="fas fa-lock"></i> Password</label>
@@ -1705,181 +1163,42 @@
 
   <!-- DASHBOARD SECTION -->
   <div class="dashboard" id="dashboardSection" style="display:none;">
-    <!-- Mobile Dashboard Header -->
-    <div class="mobile-dashboard-header">
-      <h1>Skore Point</h1>
-      <div class="mobile-user-info">
-        <img id="mobileDashboardProfile" class="mobile-profile-picture" src="https://via.placeholder.com/40" alt="Profile">
-        <button class="logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i></button>
-      </div>
-    </div>
-
-    <!-- Desktop Dashboard Header -->
     <div class="dashboard-header">
       <h1>Skore Point Dashboard</h1>
       <div class="user-info">
-        <img id="dashboardProfile" class="profile-picture" src="https://via.placeholder.com/40" alt="Profile" style="width: 40px; height: 40px;">
         <span id="userName">User Name</span>
         <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
     </div>
 
     <div class="dashboard-cards">
-      <div class="card" id="manageSchoolCard" style="display:none;">
+      <div class="card" id="manageSchoolCard">
         <i class="fas fa-cogs"></i>
-        <h3>SCHOOL PORTAL ACCOUNT</h3>
+        <h3>Manage School</h3>
         <p>Manage classes, students, and marks</p>
-        <div id="schoolCardInfo" style="margin-top: 15px; text-align: center;">
-          <img id="schoolCardLogo" class="school-logo" src="" alt="School Logo" style="display:none;">
-          <h4 id="schoolCardName"></h4>
-          <p>Code: <span id="schoolCardCode"></span></p>
-          <div style="margin-top: 15px;">
-            <button class="btn btn-success" id="openSchoolPortalBtn" style="margin-bottom: 10px;">
-              <i class="fas fa-door-open"></i> Open School Portal
-            </button>
-            <button class="btn btn-danger" id="closeSchoolPortalBtn" style="display: none;">
-              <i class="fas fa-door-closed"></i> Close School Portal
-            </button>
-          </div>
-        </div>
       </div>
-      <div class="card" id="joinSchoolCard">
-        <i class="fas fa-school"></i>
-        <h3>Join a School</h3>
-        <p>Join an existing school using its unique code</p>
+      <div class="card" id="generateReportCard">
+        <i class="fas fa-file-pdf"></i>
+        <h3>Generate Report Cards</h3>
+        <p>Create A4 report cards for students</p>
       </div>
-      <div class="card" id="registerSchoolCard">
-        <i class="fas fa-plus-circle"></i>
-        <h3>Register a School</h3>
-        <p>Create a new school and get a unique code</p>
-      </div>
-    </div>
-
-    <div id="schoolInfo" style="display:none;">
-      <h2>Your School: <span id="currentSchoolName"></span></h2>
-      <p>School Code: <span id="currentSchoolCode"></span></p>
-    </div>
-  </div>
-
-  <!-- SCHOOL SETUP SECTION -->
-  <div class="school-setup" id="schoolSetupSection" style="display:none;">
-    <div class="setup-header">
-      <h1>School Setup</h1>
-      <p>Choose how you want to proceed with Skore Point</p>
-    </div>
-
-    <div class="setup-options">
-      <div class="setup-option" id="joinSchoolOption">
-        <i class="fas fa-user-plus"></i>
-        <h3>Join a School</h3>
-        <p>Join an existing school using its unique code</p>
-      </div>
-      <div class="setup-option" id="registerSchoolOption">
-        <i class="fas fa-school"></i>
-        <h3>Register a School</h3>
-        <p>Create a new school and get a unique code</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Join School Full Screen Form -->
-  <div class="full-screen-form" id="joinSchoolForm" style="display:none;">
-    <button class="close-form" id="closeJoinForm"><i class="fas fa-times"></i></button>
-    <div class="container">
-      <div class="header">
-        <h2>Join a School</h2>
-        <p>Enter the school details to join</p>
-      </div>
-
-      <div id="joinSchoolError" class="alert error" style="display:none;">
-        <i class="fas fa-exclamation-circle"></i>
-        <span></span>
-      </div>
-
-      <form id="joinSchoolFormFields">
-        <div class="form-group">
-          <label><i class="fas fa-school"></i> School Name</label>
-          <input type="text" id="joinSchoolName" placeholder="Enter school name" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-key"></i> School Code</label>
-          <input type="text" id="joinSchoolCode" placeholder="Enter school code" required>
-        </div>
-        <button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt"></i> Join School</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Register School Full Screen Form -->
-  <div class="full-screen-form" id="registerSchoolForm" style="display:none;">
-    <button class="close-form" id="closeRegisterForm"><i class="fas fa-times"></i></button>
-    <div class="container">
-      <div class="header">
-        <h2>Register a School</h2>
-        <p>Create a new school on Skore Point</p>
-      </div>
-
-      <div id="registerSchoolError" class="alert error" style="display:none;">
-        <i class="fas fa-exclamation-circle"></i>
-        <span></span>
-      </div>
-      <div id="registerSchoolSuccess" class="alert success" style="display:none;">
-        <i class="fas fa-check-circle"></i>
-        <span>School registered successfully!</span>
-      </div>
-
-      <form id="registerSchoolFormFields">
-        <div class="form-group">
-          <label><i class="fas fa-school"></i> School Name</label>
-          <input type="text" id="registerSchoolName" placeholder="Enter school name" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-map-marker-alt"></i> School Location</label>
-          <input type="text" id="registerSchoolLocation" placeholder="Enter school location" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-phone"></i> School Phone</label>
-          <input type="tel" id="registerSchoolPhone" placeholder="Enter school phone number" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-graduation-cap"></i> School Level</label>
-          <select id="registerSchoolLevel" required>
-            <option value="">Select School Level</option>
-            <option value="primary">Primary School</option>
-            <option value="secondary">Secondary School</option>
-          </select>
-        </div>
-        <div class="logo-upload" id="logoUploadArea">
-          <i class="fas fa-image"></i>
-          <p>Upload School Logo</p>
-          <span>Click to upload. Recommended size: 200x200px</span>
-          <div class="logo-preview" id="logoPreview">
-            <img id="logoPreviewImg" src="" alt="Logo Preview">
-          </div>
-          <button type="button" class="btn btn-secondary" id="uploadLogoBtn"><i class="fas fa-upload"></i> Upload Logo</button>
-          <input type="hidden" id="logoUrl">
-        </div>
-        <button class="btn btn-primary" type="submit"><i class="fas fa-plus-circle"></i> Register School</button>
-      </form>
     </div>
   </div>
 
   <!-- SCHOOL MANAGEMENT SECTION -->
   <div class="school-management" id="schoolManagementSection" style="display:none;">
+    <button class="close-portal-btn" id="closePortalBtn">
+      <i class="fas fa-times"></i>
+    </button>
+    
     <div class="management-header">
-      <div>
-        <h2>School Management: <span id="managementSchoolName"></span></h2>
-        <div class="school-code">Code: <span id="managementSchoolCode"></span></div>
-      </div>
-      <div id="schoolLogoContainer" style="display: none;">
-        <img id="managementSchoolLogo" class="school-logo" src="" alt="School Logo">
-      </div>
+      <h2>School Management</h2>
+      <div class="school-code">Code: <span id="managementSchoolCode">SCHOOL123</span></div>
     </div>
 
-    <div class="management-tabs" id="managementTabs" style="display:none;">
+    <div class="management-tabs">
       <div class="tab active" data-tab="classes">Classes</div>
       <div class="tab" data-tab="students">Students</div>
-      <div class="tab" data-tab="subjects">Subjects</div>
       <div class="tab" data-tab="marks">Enter Marks</div>
       <div class="tab" data-tab="reports">Reports</div>
     </div>
@@ -1911,7 +1230,7 @@
       <div class="container">
         <div class="header">
           <h3>Manage Students</h3>
-          <p>Upload and manage student lists</p>
+          <p>Add and manage student information</p>
         </div>
 
         <div class="form-group">
@@ -1921,47 +1240,16 @@
           </select>
         </div>
 
-        <div class="file-upload" id="studentUploadArea">
-          <i class="fas fa-file-excel"></i>
-          <p>Upload Excel File with Student Names</p>
-          <span>Click or drag & drop to upload. First column should contain student names.</span>
-          <input type="file" id="studentFile" accept=".xlsx,.xls" style="display:none;">
-        </div>
-
-        <div id="studentUploadError" class="alert error" style="display:none;">
-          <i class="fas fa-exclamation-circle"></i>
-          <span></span>
-        </div>
-
-        <div id="studentUploadSuccess" class="alert success" style="display:none;">
-          <i class="fas fa-check-circle"></i>
-          <span>Students uploaded successfully!</span>
-        </div>
+        <form id="addStudentForm">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Student Name</label>
+            <input type="text" id="studentName" placeholder="Enter student name" required>
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add Student</button>
+        </form>
 
         <div class="student-list" id="studentList">
           <!-- Students will be populated here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Subjects Tab -->
-    <div class="tab-content" id="subjectsTab">
-      <div class="container">
-        <div class="header">
-          <h3>Manage Subjects</h3>
-          <p>Add and manage subjects for your school</p>
-        </div>
-
-        <form id="addSubjectForm">
-          <div class="form-group">
-            <label><i class="fas fa-book"></i> Subject Name</label>
-            <input type="text" id="subjectName" placeholder="Enter subject name" required>
-          </div>
-          <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add Subject</button>
-        </form>
-
-        <div class="subjects-list" id="subjectsList">
-          <!-- Subjects will be populated here -->
         </div>
       </div>
     </div>
@@ -1985,9 +1273,9 @@
           <label><i class="fas fa-calendar-alt"></i> Term</label>
           <select id="termSelect" required>
             <option value="">Select Term</option>
-            <option value="beginning">Beginning of Term</option>
-            <option value="mid">Mid Term</option>
-            <option value="end">End of Term</option>
+            <option value="1">Term 1</option>
+            <option value="2">Term 2</option>
+            <option value="3" selected>Term 3</option>
           </select>
         </div>
 
@@ -1996,95 +1284,91 @@
           
           <div class="form-group student-selector">
             <label><i class="fas fa-user"></i> Student Name</label>
-            <input type="text" id="studentSearch" placeholder="Start typing student name..." autocomplete="off">
-            <div class="student-suggestions" id="studentSuggestions">
-              <!-- Student suggestions will appear here -->
-            </div>
+            <select id="studentSelect">
+              <option value="">Select a student</option>
+            </select>
           </div>
 
-        <div id="currentStudentInfo" style="display:none; margin-bottom: 20px; padding: 15px; background: var(--gray); border-radius: 8px;">
-          <h4>Selected Student: <span id="selectedStudentName"></span></h4>
-          <p style="font-size: 14px; color: #a0aec0; margin-top: 5px;">Enter marks for each subject below</p>
-        </div>
+          <div id="currentStudentInfo" style="display:none; margin-bottom: 20px; padding: 15px; background: var(--gray); border-radius: 8px;">
+            <h4>Selected Student: <span id="selectedStudentName"></span></h4>
+            <p style="font-size: 14px; color: #a0aec0; margin-top: 5px;">Enter marks for each subject below</p>
+          </div>
 
-        <div class="marks-grid" id="marksGrid">
-          <!-- Mark inputs will be generated here -->
-        </div>
+          <div class="marks-grid" id="marksGrid">
+            <!-- Mark inputs will be generated here -->
+          </div>
 
-        <div id="marksAlert" class="alert" style="display:none;">
-          <i class="fas fa-info-circle"></i>
-          <span></span>
-        </div>
+          <div id="marksAlert" class="alert" style="display:none;">
+            <i class="fas fa-info-circle"></i>
+            <span></span>
+          </div>
 
-        <button class="btn btn-primary" id="saveMarksBtn" disabled><i class="fas fa-save"></i> Save Marks</button>
+          <button class="btn btn-primary" id="saveMarksBtn" disabled><i class="fas fa-save"></i> Save Marks</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Reports Tab -->
-  <div class="tab-content" id="reportsTab">
-    <div class="container">
-      <div class="header">
-        <h3>Generate Reports</h3>
-        <p>View and export student performance reports</p>
-      </div>
+    <!-- Reports Tab -->
+    <div class="tab-content" id="reportsTab">
+      <div class="container">
+        <div class="header">
+          <h3>Generate Reports</h3>
+          <p>View and export student performance reports</p>
+        </div>
 
-      <div class="report-filters">
-        <h4 style="margin-bottom: 15px;">Report Filters</h4>
-        <div class="filter-grid">
-          <div class="form-group">
-            <label><i class="fas fa-chalkboard"></i> Select Class</label>
-            <select id="reportClassSelect">
-              <option value="">All Classes</option>
-            </select>
+        <div class="report-filters">
+          <h4 style="margin-bottom: 15px;">Report Filters</h4>
+          <div class="filter-grid">
+            <div class="form-group">
+              <label><i class="fas fa-chalkboard"></i> Select Class</label>
+              <select id="reportClassSelect">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Select Student</label>
+              <select id="reportStudentSelect">
+                <option value="">All Students</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-calendar-alt"></i> Select Term</label>
+              <select id="reportTermSelect">
+                <option value="1">Term 1</option>
+                <option value="2">Term 2</option>
+                <option value="3" selected>Term 3</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label><i class="fas fa-user"></i> Select Student</label>
-            <select id="reportStudentSelect">
-              <option value="">All Students</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-calendar-alt"></i> Select Term</label>
-            <select id="reportTermSelect">
-              <option value="beginning">Beginning of Term</option>
-              <option value="mid">Mid Term</option>
-              <option value="end" selected>End of Term</option>
-            </select>
+          <div class="report-actions">
+            <button class="btn btn-primary" id="generateReportBtn"><i class="fas fa-chart-bar"></i> Generate Report</button>
+            <button class="btn btn-success" id="exportPDFBtn"><i class="fas fa-file-pdf"></i> Export PDF</button>
           </div>
         </div>
-        <div class="report-actions">
-          <button class="btn btn-primary" id="generateReportBtn"><i class="fas fa-chart-bar"></i> Generate Report</button>
-          <button class="btn btn-success" id="exportPDFBtn"><i class="fas fa-file-pdf"></i> Export PDF</button>
-          <button class="btn btn-warning" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Export Excel</button>
-        </div>
-      </div>
 
-      <div class="stats-grid" id="statsGrid" style="display:none;">
-        <div class="stat-card">
-          <h4>Total Students</h4>
-          <p id="statTotalStudents">0</p>
+        <div class="stats-grid" id="statsGrid" style="display:none;">
+          <div class="stat-card">
+            <h4>Total Students</h4>
+            <p id="statTotalStudents">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Average Score</h4>
+            <p id="statAvgScore">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Highest Score</h4>
+            <p id="statHighScore">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Lowest Score</h4>
+            <p id="statLowScore">0</p>
+          </div>
         </div>
-        <div class="stat-card">
-          <h4>Average Score</h4>
-          <p id="statAvgScore">0</p>
-        </div>
-        <div class="stat-card">
-          <h4>Highest Score</h4>
-          <p id="statHighScore">0</p>
-        </div>
-        <div class="stat-card">
-          <h4>Lowest Score</h4>
-          <p id="statLowScore">0</p>
-        </div>
-      </div>
 
-      <div class="report-preview" id="reportPreview" style="display:none;">
-        <h3>Report Preview</h3>
-        
-        <!-- Primary School Report Table -->
-        <div id="primaryReportTable" style="display: none;">
-          <table class="report-table" id="primaryReportTableContent">
+        <div class="report-preview" id="reportPreview" style="display:none;">
+          <h3>Report Preview</h3>
+          
+          <table class="report-table" id="reportTable">
             <thead>
               <tr>
                 <th>Student Name</th>
@@ -2095,713 +1379,324 @@
                 <th>Social Studies</th>
                 <th>Total</th>
                 <th>Average</th>
+                <th>Grade</th>
               </tr>
             </thead>
-            <tbody id="primaryReportTableBody">
-              <!-- Primary school report data will be populated here -->
+            <tbody id="reportTableBody">
+              <!-- Report data will be populated here -->
             </tbody>
           </table>
         </div>
-        
-        <!-- Secondary School Report Tables -->
-        <div id="secondaryReportTables" style="display: none;" class="secondary-report-tables">
-          <div>
-            <h4>Core Subjects</h4>
-            <table class="subject-table" id="coreSubjectsTable">
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>Score</th>
-                  <th>Grade</th>
-                </tr>
-              </thead>
-              <tbody id="coreSubjectsBody">
-                <!-- Core subjects will be populated here -->
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <h4>Other Subjects</h4>
-            <table class="subject-table" id="otherSubjectsTable">
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>Score</th>
-                  <th>Grade</th>
-                </tr>
-              </thead>
-              <tbody id="otherSubjectsBody">
-                <!-- Other subjects will be populated here -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
 
-      <div class="empty-state" id="reportsEmptyState">
-        <i class="fas fa-chart-line"></i>
-        <h3>No Data Available</h3>
-        <p>Please add students and marks to generate reports</p>
+        <div class="empty-state" id="reportsEmptyState">
+          <i class="fas fa-chart-line"></i>
+          <h3>No Data Available</h3>
+          <p>Please add students and marks to generate reports</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- MOBILE NAVIGATION -->
-<div class="mobile-nav" id="mobileNav" style="display:none;">
-  <div class="mobile-nav-items">
-    <a href="#" class="mobile-nav-item active" data-section="dashboard">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="classes">
-      <i class="fas fa-chalkboard"></i>
-      <span>Classes</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="students">
-      <i class="fas fa-users"></i>
-      <span>Students</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="marks">
-      <i class="fas fa-edit"></i>
-      <span>Marks</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="reports">
-      <i class="fas fa-chart-bar"></i>
-      <span>Reports</span>
-    </a>
+  <!-- A4 REPORT CARD -->
+  <div class="a4-report-card" id="a4ReportCard" style="display:none;">
+    <div class="report-header">
+      <div class="school-info">
+        <h1>Skore Point</h1>
+        <p>A product of SERUSOFT</p>
+        <p>STEM PLUS</p>
+        <p>School Code: <span id="reportSchoolCode">6QWAAI</span></p>
+      </div>
+      <div>
+        <img src="" alt="School Logo" class="school-logo-report" id="reportSchoolLogo">
+      </div>
+    </div>
+
+    <div class="student-info">
+      <h2>STUDENT PROGRESS REPORT</h2>
+      <div class="student-details">
+        <div class="student-detail">
+          <span class="detail-label">Student Name:</span>
+          <span id="reportStudentName">junju</span>
+        </div>
+        <div class="student-detail">
+          <span class="detail-label">Class:</span>
+          <span id="reportStudentClass">Primary Four</span>
+        </div>
+        <div class="student-detail">
+          <span class="detail-label">Date:</span>
+          <span id="reportDate">11/23/2025</span>
+        </div>
+        <div class="student-detail">
+          <span class="detail-label">Term:</span>
+          <span id="reportTerm">END OF TERM 3</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="performance-table">
+      <thead>
+        <tr>
+          <th>SUBJECT</th>
+          <th>SCORE</th>
+          <th>GRADE</th>
+        </tr>
+      </thead>
+      <tbody id="performanceTableBody">
+        <!-- Performance data will be populated here -->
+      </tbody>
+    </table>
+
+    <table class="summary-table">
+      <tr>
+        <th>TOTAL MARKS</th>
+        <th>AVERAGE MARK</th>
+        <th>AGGREGATES</th>
+        <th>FINAL GRADE/DIVISION</th>
+      </tr>
+      <tr>
+        <td id="summaryTotalMarks">290</td>
+        <td id="summaryAverageMark">73</td>
+        <td id="summaryAggregates">13</td>
+        <td id="summaryFinalGrade">2</td>
+      </tr>
+    </table>
+
+    <div class="remarks-section">
+      <h3>Class Teacher's Remarks:</h3>
+      <div class="remarks-line"></div>
+      <div class="remarks-line"></div>
+      <div class="remarks-line"></div>
+      
+      <h3>Head Teacher Remarks:</h3>
+      <div class="remarks-line"></div>
+      <div class="remarks-line"></div>
+      <div class="remarks-line"></div>
+      
+      <p style="margin-top: 20px; text-align: center;">
+        <strong>NEXT TERM BEGINS ON ............./................./......................</strong>
+      </p>
+    </div>
   </div>
-</div>
 
-<script>
-  // Cloudinary Configuration
-  const CLOUDINARY_CLOUD_NAME = 'dbtucc6v2';
-  const CLOUDINARY_UPLOAD_PRESET = 'gradeforcus';
-
-  // DOM Elements
-  const launchScreen = document.getElementById('launchScreen');
-  const loginSection = document.getElementById('loginSection');
-  const registerSection = document.getElementById('registerSection');
-  const dashboardSection = document.getElementById('dashboardSection');
-  const schoolSetupSection = document.getElementById('schoolSetupSection');
-  const schoolManagementSection = document.getElementById('schoolManagementSection');
-  const mobileNav = document.getElementById('mobileNav');
-  const managementTabs = document.getElementById('managementTabs');
-  
-  // Navigation buttons
-  const goRegister = document.getElementById('goRegister');
-  const goLogin = document.getElementById('goLogin');
-  const joinSchoolCard = document.getElementById('joinSchoolCard');
-  const registerSchoolCard = document.getElementById('registerSchoolCard');
-  const manageSchoolCard = document.getElementById('manageSchoolCard');
-  const joinSchoolOption = document.getElementById('joinSchoolOption');
-  const registerSchoolOption = document.getElementById('registerSchoolOption');
-  const joinSchoolForm = document.getElementById('joinSchoolForm');
-  const registerSchoolForm = document.getElementById('registerSchoolForm');
-  const closeJoinForm = document.getElementById('closeJoinForm');
-  const closeRegisterForm = document.getElementById('closeRegisterForm');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-  
-  // Form elements
-  const loginForm = document.getElementById('loginForm');
-  const registerForm = document.getElementById('registerForm');
-  const joinSchoolFormFields = document.getElementById('joinSchoolFormFields');
-  const registerSchoolFormFields = document.getElementById('registerSchoolFormFields');
-  const addClassForm = document.getElementById('addClassForm');
-  const addSubjectForm = document.getElementById('addSubjectForm');
-  
-  // User info
-  const userName = document.getElementById('userName');
-  const currentSchoolName = document.getElementById('currentSchoolName');
-  const currentSchoolCode = document.getElementById('currentSchoolCode');
-  const managementSchoolName = document.getElementById('managementSchoolName');
-  const managementSchoolCode = document.getElementById('managementSchoolCode');
-  const managementSchoolLogo = document.getElementById('managementSchoolLogo');
-  const schoolLogoContainer = document.getElementById('schoolLogoContainer');
-  
-  // School card info
-  const schoolCardName = document.getElementById('schoolCardName');
-  const schoolCardCode = document.getElementById('schoolCardCode');
-  const schoolCardLogo = document.getElementById('schoolCardLogo');
-  
-  // Portal buttons
-  const openSchoolPortalBtn = document.getElementById('openSchoolPortalBtn');
-  const closeSchoolPortalBtn = document.getElementById('closeSchoolPortalBtn');
-  
-  // Global variables
-  let currentUser = null;
-  let currentSchool = null;
-  let currentClasses = [];
-  let currentStudents = [];
-  let currentSubjects = [];
-  let selectedStudentId = null;
-  let currentMarks = {};
-  let schoolLogoUrl = null;
-  let userProfileUrl = null;
-  let isSchoolPortalOpen = false;
-
-  // Default subjects for different school levels
-  const DEFAULT_SUBJECTS = {
-    primary: ['Mathematics', 'English', 'Integrated Science', 'Social Studies'],
-    secondary: [
-      'English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 
-      'Physics', 'Geography', 'History & Political Education', 'Religious Education',
-      'Islamic', 'Kiswahili', 'Entrepreneurship Education', 'Agriculture',
-      'Computer / ICT Studies', 'Fine Art / Art & Design', 'Physical Education (PE)',
-      'Luganda', 'French',  'Technology & Design', 
-      
-    ]
-  };
-
-  // Default classes for secondary schools
-  const DEFAULT_SECONDARY_CLASSES = [
-    'Senior One', 'Senior Two', 'Senior Three', 'Senior Four',
-    'Senior Five', 'Senior Six'
-  ];
-
-  // Grading scales
-  const GRADING_SCALES = {
-    primary: ['D1', 'D2', 'C3', 'C4', 'C5', 'C6', 'P7', 'P8', 'F9'],
-    secondary: ['A', 'B', 'C', 'D', 'E']
-  };
-
-  // Initialize the app
-  document.addEventListener('DOMContentLoaded', () => {
-    // Show launch screen first
-    showSection(launchScreen);
+  <script>
+    // DOM Elements
+    const launchScreen = document.getElementById('launchScreen');
+    const loginSection = document.getElementById('loginSection');
+    const registerSection = document.getElementById('registerSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const schoolManagementSection = document.getElementById('schoolManagementSection');
+    const a4ReportCard = document.getElementById('a4ReportCard');
     
-    // After 7 seconds, check authentication and show appropriate section
-    setTimeout(() => {
-      // Check if user is already logged in
-      window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
-        if (user) {
-          currentUser = user;
-          loadUserData(user.uid);
-          showSection(dashboardSection);
-        } else {
-          showSection(loginSection);
-        }
-      });
-    }, 7000);
-
-    // Setup event listeners
-    setupEventListeners();
-  });
-
-  // Load user data from Firestore
-  async function loadUserData(userId) {
-    try {
-      const userDoc = await window.firebase.getDoc(
-        window.firebase.doc(window.firebase.db, 'users', userId)
-      );
-      
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        userName.textContent = userData.name || userData.email;
-        
-        // Load profile picture if available
-        if (userData.profilePicture) {
-          document.getElementById('dashboardProfile').src = userData.profilePicture;
-          document.getElementById('mobileDashboardProfile').src = userData.profilePicture;
-          userProfileUrl = userData.profilePicture;
-        }
-        
-        // Check if user has a school
-        if (userData.schoolId) {
-          await loadSchoolData(userData.schoolId);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading user data:', error);
-    }
-  }
-
-  // Load school data from Firestore
-  async function loadSchoolData(schoolId) {
-    try {
-      const schoolDoc = await window.firebase.getDoc(
-        window.firebase.doc(window.firebase.db, 'schools', schoolId)
-      );
-      
-      if (schoolDoc.exists()) {
-        currentSchool = {
-          id: schoolDoc.id,
-          ...schoolDoc.data()
-        };
-        
-        currentSchoolName.textContent = currentSchool.name;
-        currentSchoolCode.textContent = currentSchool.code;
-        document.getElementById('schoolInfo').style.display = 'block';
-        manageSchoolCard.style.display = 'block';
-        
-        // Update school card info
-        schoolCardName.textContent = currentSchool.name;
-        schoolCardCode.textContent = currentSchool.code;
-        
-        // Load school logo if available
-        if (currentSchool.logoUrl) {
-          schoolLogoUrl = currentSchool.logoUrl;
-          schoolCardLogo.src = currentSchool.logoUrl;
-          schoolCardLogo.style.display = 'block';
-          
-          // Also set the logo in the management section
-          managementSchoolLogo.src = currentSchool.logoUrl;
-          schoolLogoContainer.style.display = 'block';
-        }
-        
-        // Load school data
-        await loadClasses();
-        await loadSubjects();
-        
-        // Show management tabs
-        managementTabs.style.display = 'flex';
-      }
-    } catch (error) {
-      console.error('Error loading school data:', error);
-    }
-  }
-
-  // Setup all event listeners
-  function setupEventListeners() {
-    // Navigation
-    goRegister.onclick = () => showSection(registerSection);
-    goLogin.onclick = () => showSection(loginSection);
-    joinSchoolCard.onclick = () => showJoinSchoolForm();
-    registerSchoolCard.onclick = () => showRegisterSchoolForm();
-    manageSchoolCard.onclick = () => showSchoolManagement();
-    joinSchoolOption.onclick = () => showJoinSchoolForm();
-    registerSchoolOption.onclick = () => showRegisterSchoolForm();
-    closeJoinForm.onclick = () => hideFullScreenForm();
-    closeRegisterForm.onclick = () => hideFullScreenForm();
-    logoutBtn.onclick = () => logout();
-    mobileLogoutBtn.onclick = () => logout();
-
-    // Portal buttons
-    openSchoolPortalBtn.onclick = openSchoolPortal;
-    closeSchoolPortalBtn.onclick = closeSchoolPortal;
-
-    // Form submissions
-    loginForm.onsubmit = handleLogin;
-    registerForm.onsubmit = handleRegister;
-    joinSchoolFormFields.onsubmit = handleJoinSchool;
-    registerSchoolFormFields.onsubmit = handleRegisterSchool;
-    addClassForm.onsubmit = handleAddClass;
-    addSubjectForm.onsubmit = handleAddSubject;
-
-    // Password toggles
-    setupPasswordToggles();
-
-    // File upload
-    setupFileUpload();
-
-    // Logo upload
-    document.getElementById('uploadLogoBtn').onclick = () => openCloudinaryUpload('logo');
+    // Navigation buttons
+    const goRegister = document.getElementById('goRegister');
+    const goLogin = document.getElementById('goLogin');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const closePortalBtn = document.getElementById('closePortalBtn');
+    const manageSchoolCard = document.getElementById('manageSchoolCard');
+    const generateReportCard = document.getElementById('generateReportCard');
     
-    // Profile picture upload
-    document.getElementById('uploadProfileBtn').onclick = () => openCloudinaryUpload('profile');
-
-    // Tab switching
-    setupTabs();
-
-    // Student search
-    setupStudentSearch();
-
-    // Marks saving
-    document.getElementById('saveMarksBtn').onclick = handleSaveMarks;
-
-    // Report generation
-    document.getElementById('generateReportBtn').onclick = generateReport;
-    document.getElementById('exportPDFBtn').onclick = exportToPDF;
-    document.getElementById('exportExcelBtn').onclick = exportToExcel;
-    document.getElementById('reportClassSelect').onchange = updateStudentDropdown;
-
-    // Mobile navigation
-    setupMobileNavigation();
-  }
-
-  // Open School Portal
-  function openSchoolPortal() {
-    isSchoolPortalOpen = true;
+    // Form elements
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const addClassForm = document.getElementById('addClassForm');
+    const addStudentForm = document.getElementById('addStudentForm');
     
-    // Hide join and register cards
-    joinSchoolCard.style.display = 'none';
-    registerSchoolCard.style.display = 'none';
+    // User info
+    const userName = document.getElementById('userName');
     
-    // Show close portal button and hide open portal button
-    openSchoolPortalBtn.style.display = 'none';
-    closeSchoolPortalBtn.style.display = 'block';
-    
-    // Show action options in bottom nav
-    mobileNav.style.display = 'block';
-    
-    // Show management tabs if they exist
-    if (managementTabs) {
-      managementTabs.style.display = 'flex';
-    }
-    
-    // Load students when marks tab is active
-    if (document.getElementById('marksTab').classList.contains('active')) {
-      setupMarksEntry();
-    }
-  }
+    // Global variables
+    let currentUser = null;
+    let currentClasses = [];
+    let currentStudents = [];
+    let currentMarks = {};
+    let selectedStudentId = null;
 
-  // Close School Portal
-  function closeSchoolPortal() {
-    isSchoolPortalOpen = false;
-    
-    // Show join and register cards
-    joinSchoolCard.style.display = 'block';
-    registerSchoolCard.style.display = 'block';
-    
-    // Show open portal button and hide close portal button
-    openSchoolPortalBtn.style.display = 'block';
-    closeSchoolPortalBtn.style.display = 'none';
-    
-    // Hide action options in bottom nav
-    mobileNav.style.display = 'none';
-    
-    // Hide management tabs
-    if (managementTabs) {
-      managementTabs.style.display = 'none';
-    }
-  }
+    // Default subjects
+    const DEFAULT_SUBJECTS = ['Mathematics', 'English', 'Integrated Science', 'Social Studies'];
 
-  // Open Cloudinary upload widget
-  function openCloudinaryUpload(type) {
-    const widget = cloudinary.createUploadWidget({
-      cloudName: CLOUDINARY_CLOUD_NAME,
-      uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-      sources: ['local', 'url'],
-      multiple: false,
-      maxFiles: 1,
-      cropping: type === 'profile',
-      croppingAspectRatio: type === 'profile' ? 1 : null,
-      showAdvancedOptions: false,
-      styles: {
-        palette: {
-          window: "#1C1C1C",
-          sourceBg: "#2D2D2D",
-          windowBorder: "#4A4A4A",
-          tabIcon: "#FFFFFF",
-          inactiveTabIcon: "#8E8E8E",
-          menuIcons: "#FFFFFF",
-          link: "#4361EE",
-          action: "#4361EE",
-          inProgress: "#4361EE",
-          complete: "#38A169",
-          error: "#E53E3E",
-          textDark: "#121212",
-          textLight: "#FFFFFF"
-        }
-      }
-    }, (error, result) => {
-      if (!error && result && result.event === "success") {
-        if (type === 'logo') {
-          document.getElementById('logoPreviewImg').src = result.info.secure_url;
-          document.getElementById('logoPreview').style.display = 'block';
-          document.getElementById('logoUrl').value = result.info.secure_url;
-          schoolLogoUrl = result.info.secure_url;
-        } else if (type === 'profile') {
-          document.getElementById('profilePreview').src = result.info.secure_url;
-          document.getElementById('profilePictureUrl').value = result.info.secure_url;
-          userProfileUrl = result.info.secure_url;
-        }
-      }
-    });
-    
-    widget.open();
-  }
-
-  // Show specific section and hide others
-  function showSection(section) {
-    [launchScreen, loginSection, registerSection, dashboardSection, schoolSetupSection, schoolManagementSection].forEach(sec => {
-      sec.style.display = 'none';
-    });
-    section.style.display = 'block';
-    
-    // Show/hide mobile nav based on section and portal status
-    if ((section === dashboardSection || section === schoolManagementSection) && isSchoolPortalOpen) {
-      mobileNav.style.display = 'block';
-    } else {
-      mobileNav.style.display = 'none';
-    }
-  }
-
-  // Show join school form in full screen
-  function showJoinSchoolForm() {
-    joinSchoolForm.style.display = 'block';
-  }
-
-  // Show register school form in full screen
-  function showRegisterSchoolForm() {
-    registerSchoolForm.style.display = 'block';
-  }
-
-  // Hide full screen form
-  function hideFullScreenForm() {
-    joinSchoolForm.style.display = 'none';
-    registerSchoolForm.style.display = 'none';
-  }
-
-  // Show school management section
-  async function showSchoolManagement() {
-    showSection(schoolManagementSection);
-    managementSchoolName.textContent = currentSchool.name;
-    managementSchoolCode.textContent = currentSchool.code;
-    
-    // Show management tabs only if school is managed
-    if (currentSchool) {
-      managementTabs.style.display = 'flex';
-    }
-    
-    await loadClasses();
-    await loadSubjects();
-    populateClassSelectors();
-  }
-
-  // Setup password visibility toggles
-  function setupPasswordToggles() {
-    const togglePassword = (btn, field) => {
-      btn.addEventListener('click', () => {
-        const type = field.type === 'password' ? 'text' : 'password';
-        field.type = type;
-        btn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-      });
+    // Grading scales
+    const GRADING_SCALES = {
+      primary: ['D1', 'D2', 'C3', 'C4', 'C5', 'C6', 'P7', 'P8', 'F9']
     };
 
-    togglePassword(document.getElementById('loginToggle'), document.getElementById('loginPassword'));
-    togglePassword(document.getElementById('registerToggle'), document.getElementById('regPassword'));
-    togglePassword(document.getElementById('confirmToggle'), document.getElementById('confirmPassword'));
-  }
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show launch screen first
+      showSection(launchScreen);
+      
+      // After 3 seconds, show login section
+      setTimeout(() => {
+        showSection(loginSection);
+      }, 3000);
 
-  // Setup file upload for students
-  function setupFileUpload() {
-    const uploadArea = document.getElementById('studentUploadArea');
-    const fileInput = document.getElementById('studentFile');
-
-    uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.style.borderColor = 'var(--primary)';
-    });
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.style.borderColor = 'var(--gray)';
-    });
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.style.borderColor = 'var(--gray)';
-      if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        handleStudentUpload();
-      }
+      // Setup event listeners
+      setupEventListeners();
     });
 
-    fileInput.addEventListener('change', handleStudentUpload);
-  }
+    // Setup all event listeners
+    function setupEventListeners() {
+      // Navigation
+      goRegister.onclick = () => showSection(registerSection);
+      goLogin.onclick = () => showSection(loginSection);
+      logoutBtn.onclick = () => logout();
+      closePortalBtn.onclick = () => showSection(dashboardSection);
+      manageSchoolCard.onclick = () => showSchoolManagement();
+      generateReportCard.onclick = () => generateSampleReport();
 
-  // Setup tab switching
-  function setupTabs() {
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Remove active class from all tabs and contents
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        // Add active class to clicked tab and corresponding content
-        tab.classList.add('active');
-        document.getElementById(`${tab.dataset.tab}Tab`).classList.add('active');
-        
-        // Load data for the active tab
-        if (tab.dataset.tab === 'students') {
-          loadStudents();
-        } else if (tab.dataset.tab === 'subjects') {
-          loadSubjects();
-        } else if (tab.dataset.tab === 'marks') {
-          setupMarksEntry();
-        } else if (tab.dataset.tab === 'reports') {
-          setupReportsTab();
-        }
+      // Form submissions
+      loginForm.onsubmit = handleLogin;
+      registerForm.onsubmit = handleRegister;
+      addClassForm.onsubmit = handleAddClass;
+      addStudentForm.onsubmit = handleAddStudent;
+
+      // Password toggles
+      setupPasswordToggles();
+
+      // Tab switching
+      setupTabs();
+
+      // Student selection for marks
+      document.getElementById('marksClassSelect').addEventListener('change', setupMarksEntry);
+      document.getElementById('studentSelect').addEventListener('change', handleStudentSelection);
+
+      // Marks saving
+      document.getElementById('saveMarksBtn').onclick = handleSaveMarks;
+
+      // Report generation
+      document.getElementById('generateReportBtn').onclick = generateReport;
+      document.getElementById('exportPDFBtn').onclick = exportToPDF;
+      document.getElementById('reportClassSelect').addEventListener('change', updateStudentDropdown);
+    }
+
+    // Show specific section and hide others
+    function showSection(section) {
+      [launchScreen, loginSection, registerSection, dashboardSection, schoolManagementSection, a4ReportCard].forEach(sec => {
+        sec.style.display = 'none';
       });
-    });
-  }
+      section.style.display = 'block';
+    }
 
-  // Setup mobile navigation
-  function setupMobileNavigation() {
-    const navItems = document.querySelectorAll('.mobile-nav-item');
-    
-    navItems.forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // Remove active class from all items
-        navItems.forEach(navItem => navItem.classList.remove('active'));
-        
-        // Add active class to clicked item
-        item.classList.add('active');
-        
-        const section = item.dataset.section;
-        
-        if (section === 'dashboard') {
-          showSection(dashboardSection);
-        } else {
-          // Switch to school management and activate the corresponding tab
-          showSection(schoolManagementSection);
-          
+    // Show school management section
+    function showSchoolManagement() {
+      showSection(schoolManagementSection);
+      loadClasses();
+      populateClassSelectors();
+    }
+
+    // Setup password visibility toggles
+    function setupPasswordToggles() {
+      const togglePassword = (btn, field) => {
+        btn.addEventListener('click', () => {
+          const type = field.type === 'password' ? 'text' : 'password';
+          field.type = type;
+          btn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+      };
+
+      togglePassword(document.getElementById('loginToggle'), document.getElementById('loginPassword'));
+      togglePassword(document.getElementById('registerToggle'), document.getElementById('regPassword'));
+      togglePassword(document.getElementById('confirmToggle'), document.getElementById('confirmPassword'));
+    }
+
+    // Setup tab switching
+    function setupTabs() {
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
           // Remove active class from all tabs and contents
           document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
           document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
           
-          // Add active class to the selected tab and content
-          const tab = document.querySelector(`.tab[data-tab="${section}"]`);
-          if (tab) {
-            tab.classList.add('active');
-            document.getElementById(`${section}Tab`).classList.add('active');
-            
-            // Load data for the active tab
-            if (section === 'students') {
-              loadStudents();
-            } else if (section === 'subjects') {
-              loadSubjects();
-            } else if (section === 'marks') {
-              setupMarksEntry();
-            } else if (section === 'reports') {
-              setupReportsTab();
-            }
+          // Add active class to clicked tab and corresponding content
+          tab.classList.add('active');
+          document.getElementById(`${tab.dataset.tab}Tab`).classList.add('active');
+          
+          // Load data for the active tab
+          if (tab.dataset.tab === 'students') {
+            loadStudents();
+          } else if (tab.dataset.tab === 'marks') {
+            setupMarksEntry();
+          } else if (tab.dataset.tab === 'reports') {
+            setupReportsTab();
           }
-        }
-      });
-    });
-  }
-
-  // Setup student search for marks entry
-  function setupStudentSearch() {
-    const studentSearch = document.getElementById('studentSearch');
-    const suggestions = document.getElementById('studentSuggestions');
-
-    studentSearch.addEventListener('input', () => {
-      const searchTerm = studentSearch.value.toLowerCase();
-      const classId = document.getElementById('marksClassSelect').value;
-      
-      if (!classId || searchTerm.length < 2) {
-        suggestions.style.display = 'none';
-        return;
-      }
-
-      // Filter students by class and search term
-      const filteredStudents = currentStudents.filter(student => 
-        student.classId === classId && 
-        student.name.toLowerCase().includes(searchTerm)
-      );
-
-      // Display suggestions
-      suggestions.innerHTML = '';
-      if (filteredStudents.length > 0) {
-        filteredStudents.forEach(student => {
-          const div = document.createElement('div');
-          div.className = 'student-suggestion';
-          div.textContent = student.name;
-          div.addEventListener('click', async () => {
-            studentSearch.value = student.name;
-            suggestions.style.display = 'none';
-            selectedStudentId = student.id;
-            document.getElementById('selectedStudentName').textContent = student.name;
-            document.getElementById('currentStudentInfo').style.display = 'block';
-            document.getElementById('saveMarksBtn').disabled = false;
-            await loadStudentMarks(student.id);
-          });
-          suggestions.appendChild(div);
         });
-        suggestions.style.display = 'block';
-      } else {
-        suggestions.style.display = 'none';
-      }
-    });
+      });
+    }
 
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!studentSearch.contains(e.target) && !suggestions.contains(e.target)) {
-        suggestions.style.display = 'none';
-      }
-    });
-  }
-
-  // Setup marks entry section
-  function setupMarksEntry() {
-    const classSelect = document.getElementById('marksClassSelect');
-    const marksSection = document.getElementById('marksEntrySection');
-    
-    classSelect.addEventListener('change', () => {
+    // Setup marks entry section
+    function setupMarksEntry() {
+      const classSelect = document.getElementById('marksClassSelect');
+      const marksSection = document.getElementById('marksEntrySection');
+      const studentSelect = document.getElementById('studentSelect');
+      
       if (classSelect.value) {
         marksSection.style.display = 'block';
         generateMarkInputs();
-        document.getElementById('studentSearch').value = '';
+        
+        // Populate student dropdown
+        studentSelect.innerHTML = '<option value="">Select a student</option>';
+        const classStudents = currentStudents.filter(student => student.classId === classSelect.value);
+        classStudents.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student.id;
+          option.textContent = student.name;
+          studentSelect.appendChild(option);
+        });
+        
         document.getElementById('currentStudentInfo').style.display = 'none';
         selectedStudentId = null;
         document.getElementById('saveMarksBtn').disabled = true;
-        
-        // Load students for the selected class
-        loadStudentsForMarks(classSelect.value);
       } else {
         marksSection.style.display = 'none';
       }
-    });
-  }
-
-  // Load students for marks entry
-  async function loadStudentsForMarks(classId) {
-    try {
-      const studentsQuery = window.firebase.query(
-        window.firebase.collection(window.firebase.db, 'students'),
-        window.firebase.where('classId', '==', classId)
-      );
-      
-      const querySnapshot = await window.firebase.getDocs(studentsQuery);
-      currentStudents = [];
-      
-      querySnapshot.forEach(doc => {
-        const studentData = {
-          id: doc.id,
-          ...doc.data()
-        };
-        currentStudents.push(studentData);
-      });
-    } catch (error) {
-      console.error('Error loading students for marks:', error);
     }
-  }
 
-  // Generate mark input fields based on subjects
-  function generateMarkInputs() {
-    const marksGrid = document.getElementById('marksGrid');
-    marksGrid.innerHTML = '';
-    
-    currentSubjects.forEach(subject => {
-      const div = document.createElement('div');
-      div.className = 'mark-input';
-      div.innerHTML = `
-        <label>${subject.name}</label>
-        <input type="number" min="0" max="100" placeholder="0-100" data-subject="${subject.id}">
-      `;
-      marksGrid.appendChild(div);
-    });
-  }
-
-  // Load student marks if they exist
-  async function loadStudentMarks(studentId) {
-    try {
-      const term = document.getElementById('termSelect').value;
-      const marksDoc = await window.firebase.getDoc(
-        window.firebase.doc(window.firebase.db, 'marks', `${studentId}_${term}`)
-      );
+    // Handle student selection for marks entry
+    function handleStudentSelection() {
+      const studentSelect = document.getElementById('studentSelect');
+      const studentId = studentSelect.value;
       
-      if (marksDoc.exists()) {
-        const marks = marksDoc.data();
-        currentSubjects.forEach(subject => {
-          const input = document.querySelector(`input[data-subject="${subject.id}"]`);
-          if (input && marks[subject.id] !== undefined) {
-            input.value = marks[subject.id];
+      if (studentId) {
+        selectedStudentId = studentId;
+        const student = currentStudents.find(s => s.id === studentId);
+        document.getElementById('selectedStudentName').textContent = student.name;
+        document.getElementById('currentStudentInfo').style.display = 'block';
+        document.getElementById('saveMarksBtn').disabled = false;
+        loadStudentMarks(studentId);
+      } else {
+        document.getElementById('currentStudentInfo').style.display = 'none';
+        selectedStudentId = null;
+        document.getElementById('saveMarksBtn').disabled = true;
+      }
+    }
+
+    // Generate mark input fields based on subjects
+    function generateMarkInputs() {
+      const marksGrid = document.getElementById('marksGrid');
+      marksGrid.innerHTML = '';
+      
+      DEFAULT_SUBJECTS.forEach(subject => {
+        const div = document.createElement('div');
+        div.className = 'mark-input';
+        div.innerHTML = `
+          <label>${subject}</label>
+          <input type="number" min="0" max="100" placeholder="0-100" data-subject="${subject}">
+        `;
+        marksGrid.appendChild(div);
+      });
+    }
+
+    // Load student marks if they exist
+    function loadStudentMarks(studentId) {
+      const term = document.getElementById('termSelect').value;
+      const marksKey = `${studentId}_${term}`;
+      
+      if (currentMarks[marksKey]) {
+        const marks = currentMarks[marksKey];
+        DEFAULT_SUBJECTS.forEach(subject => {
+          const input = document.querySelector(`input[data-subject="${subject}"]`);
+          if (input && marks[subject] !== undefined) {
+            input.value = marks[subject];
           } else {
             input.value = '';
           }
@@ -2812,163 +1707,116 @@
           input.value = '';
         });
       }
-    } catch (error) {
-      console.error('Error loading marks:', error);
-    }
-  }
-
-  // Handle saving marks
-  async function handleSaveMarks() {
-    if (!selectedStudentId) {
-      showMarksAlert('Please select a student first', 'error');
-      return;
     }
 
-    const term = document.getElementById('termSelect').value;
-    if (!term) {
-      showMarksAlert('Please select a term', 'error');
-      return;
-    }
-
-    const marks = {};
-    let hasMarks = false;
-    
-    currentSubjects.forEach(subject => {
-      const input = document.querySelector(`input[data-subject="${subject.id}"]`);
-      const value = parseInt(input.value);
-      if (!isNaN(value) && value >= 0 && value <= 100) {
-        marks[subject.id] = value;
-        hasMarks = true;
+    // Handle saving marks
+    function handleSaveMarks() {
+      if (!selectedStudentId) {
+        showMarksAlert('Please select a student first', 'error');
+        return;
       }
-    });
 
-    if (!hasMarks) {
-      showMarksAlert('Please enter at least one mark', 'warning');
-      return;
-    }
+      const term = document.getElementById('termSelect').value;
+      if (!term) {
+        showMarksAlert('Please select a term', 'error');
+        return;
+      }
 
-    try {
-      // Save marks to Firestore
-      await window.firebase.setDoc(
-        window.firebase.doc(window.firebase.db, 'marks', `${selectedStudentId}_${term}`),
-        {
-          studentId: selectedStudentId,
-          schoolId: currentSchool.id,
-          term: term,
-          ...marks,
-          updatedAt: new Date()
+      const marks = {};
+      let hasMarks = false;
+      
+      DEFAULT_SUBJECTS.forEach(subject => {
+        const input = document.querySelector(`input[data-subject="${subject}"]`);
+        const value = parseInt(input.value);
+        if (!isNaN(value) && value >= 0 && value <= 100) {
+          marks[subject] = value;
+          hasMarks = true;
         }
-      );
-
-      showMarksAlert('Marks saved successfully!', 'success');
-      
-      // Clear form after a delay
-      setTimeout(() => {
-        document.getElementById('studentSearch').value = '';
-        document.getElementById('currentStudentInfo').style.display = 'none';
-        selectedStudentId = null;
-        document.getElementById('saveMarksBtn').disabled = true;
-        document.querySelectorAll('.mark-input input').forEach(input => {
-          input.value = '';
-        });
-      }, 1500);
-    } catch (error) {
-      console.error('Error saving marks:', error);
-      showMarksAlert('Error saving marks. Please try again.', 'error');
-    }
-  }
-
-  // Show alert in marks section
-  function showMarksAlert(message, type) {
-    const alert = document.getElementById('marksAlert');
-    alert.className = `alert ${type}`;
-    alert.querySelector('span').textContent = message;
-    alert.style.display = 'flex';
-    
-    setTimeout(() => {
-      alert.style.display = 'none';
-    }, 3000);
-  }
-
-  // Setup reports tab
-  async function setupReportsTab() {
-    await populateReportClassSelector();
-    document.getElementById('reportsEmptyState').style.display = 'block';
-    document.getElementById('reportPreview').style.display = 'none';
-    document.getElementById('statsGrid').style.display = 'none';
-  }
-
-  // Populate class selector in reports
-  async function populateReportClassSelector() {
-    const select = document.getElementById('reportClassSelect');
-    while (select.options.length > 1) {
-      select.remove(1);
-    }
-    
-    currentClasses.forEach(classObj => {
-      const option = document.createElement('option');
-      option.value = classObj.id;
-      option.textContent = classObj.name;
-      select.appendChild(option);
-    });
-  }
-
-  // Update student dropdown based on selected class
-  async function updateStudentDropdown() {
-    const classId = document.getElementById('reportClassSelect').value;
-    const select = document.getElementById('reportStudentSelect');
-    
-    // Clear existing options except first one
-    while (select.options.length > 1) {
-      select.remove(1);
-    }
-    
-    if (!classId) return;
-    
-    const classStudents = currentStudents.filter(s => s.classId === classId);
-    classStudents.forEach(student => {
-      const option = document.createElement('option');
-      option.value = student.id;
-      option.textContent = student.name;
-      select.appendChild(option);
-    });
-  }
-
-  // Generate report
-  async function generateReport() {
-    const classId = document.getElementById('reportClassSelect').value;
-    const studentId = document.getElementById('reportStudentSelect').value;
-    const term = document.getElementById('reportTermSelect').value;
-    
-    try {
-      // Get all marks from Firestore
-      const marksQuery = window.firebase.query(
-        window.firebase.collection(window.firebase.db, 'marks'),
-        window.firebase.where('schoolId', '==', currentSchool.id),
-        window.firebase.where('term', '==', term)
-      );
-      
-      const marksSnapshot = await window.firebase.getDocs(marksQuery);
-      const allMarks = [];
-      
-      marksSnapshot.forEach(doc => {
-        allMarks.push({
-          id: doc.id,
-          ...doc.data()
-        });
       });
 
-      // Filter based on selection
-      let filteredData = allMarks;
+      if (!hasMarks) {
+        showMarksAlert('Please enter at least one mark', 'warning');
+        return;
+      }
+
+      // Save marks to local storage (in a real app, this would be saved to a database)
+      const marksKey = `${selectedStudentId}_${term}`;
+      currentMarks[marksKey] = marks;
+
+      showMarksAlert('Marks saved successfully!', 'success');
+    }
+
+    // Show alert in marks section
+    function showMarksAlert(message, type) {
+      const alert = document.getElementById('marksAlert');
+      alert.className = `alert ${type}`;
+      alert.querySelector('span').textContent = message;
+      alert.style.display = 'flex';
+      
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 3000);
+    }
+
+    // Setup reports tab
+    function setupReportsTab() {
+      populateReportClassSelector();
+      document.getElementById('reportsEmptyState').style.display = 'block';
+      document.getElementById('reportPreview').style.display = 'none';
+      document.getElementById('statsGrid').style.display = 'none';
+    }
+
+    // Populate class selector in reports
+    function populateReportClassSelector() {
+      const select = document.getElementById('reportClassSelect');
+      while (select.options.length > 1) {
+        select.remove(1);
+      }
+      
+      currentClasses.forEach(classObj => {
+        const option = document.createElement('option');
+        option.value = classObj.id;
+        option.textContent = classObj.name;
+        select.appendChild(option);
+      });
+    }
+
+    // Update student dropdown based on selected class
+    function updateStudentDropdown() {
+      const classId = document.getElementById('reportClassSelect').value;
+      const select = document.getElementById('reportStudentSelect');
+      
+      // Clear existing options except first one
+      while (select.options.length > 1) {
+        select.remove(1);
+      }
+      
+      if (!classId) return;
+      
+      const classStudents = currentStudents.filter(s => s.classId === classId);
+      classStudents.forEach(student => {
+        const option = document.createElement('option');
+        option.value = student.id;
+        option.textContent = student.name;
+        select.appendChild(option);
+      });
+    }
+
+    // Generate report
+    function generateReport() {
+      const classId = document.getElementById('reportClassSelect').value;
+      const studentId = document.getElementById('reportStudentSelect').value;
+      const term = document.getElementById('reportTermSelect').value;
+      
+      // Filter data based on selection
+      let filteredData = currentStudents;
       
       if (classId) {
-        const classStudents = currentStudents.filter(s => s.classId === classId);
-        const studentIds = classStudents.map(s => s.id);
-        filteredData = filteredData.filter(mark => studentIds.includes(mark.studentId));
+        filteredData = filteredData.filter(student => student.classId === classId);
       }
       
       if (studentId) {
-        filteredData = filteredData.filter(mark => mark.studentId === studentId);
+        filteredData = filteredData.filter(student => student.id === studentId);
       }
 
       if (filteredData.length === 0) {
@@ -2979,417 +1827,91 @@
       }
 
       // Display report
-      displayReport(filteredData);
-      calculateStatistics(filteredData);
+      displayReport(filteredData, term);
+      calculateStatistics(filteredData, term);
       
       document.getElementById('reportsEmptyState').style.display = 'none';
       document.getElementById('reportPreview').style.display = 'block';
       document.getElementById('statsGrid').style.display = 'grid';
-    } catch (error) {
-      console.error('Error generating report:', error);
-      alert('Error generating report. Please try again.');
     }
-  }
 
-  // Display report in table
-  function displayReport(data) {
-    // Show appropriate report format based on school level
-    if (currentSchool.level === 'primary') {
-      displayPrimaryReport(data);
-    } else {
-      displaySecondaryReport(data);
-    }
-  }
-
-  // Display primary school report
-  function displayPrimaryReport(data) {
-    document.getElementById('primaryReportTable').style.display = 'block';
-    document.getElementById('secondaryReportTables').style.display = 'none';
-    
-    const tbody = document.getElementById('primaryReportTableBody');
-    tbody.innerHTML = '';
-    
-    data.forEach(mark => {
-      const student = currentStudents.find(s => s.id === mark.studentId);
-      if (!student) return;
+    // Display report in table
+    function displayReport(students, term) {
+      const tbody = document.getElementById('reportTableBody');
+      tbody.innerHTML = '';
       
-      const classObj = currentClasses.find(c => c.id === student.classId);
-      
-      let total = 0;
-      let count = 0;
-      
-      currentSubjects.forEach(subject => {
-        if (mark[subject.id] !== undefined) {
-          total += mark[subject.id];
-          count++;
-        }
-      });
-      
-      const average = count > 0 ? Math.round(total / count) : 0;
-      
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${student.name}</td>
-        <td>${classObj ? classObj.name : 'N/A'}</td>
-        <td>${mark.Mathematics || '-'}</td>
-        <td>${mark.English || '-'}</td>
-        <td>${mark.Science || '-'}</td>
-        <td>${mark['Social Studies'] || '-'}</td>
-        <td>${total}</td>
-        <td>${average}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  // Display secondary school report with two tables
-  function displaySecondaryReport(data) {
-    document.getElementById('primaryReportTable').style.display = 'none';
-    document.getElementById('secondaryReportTables').style.display = 'grid';
-    
-    const coreSubjectsBody = document.getElementById('coreSubjectsBody');
-    const otherSubjectsBody = document.getElementById('otherSubjectsBody');
-    
-    coreSubjectsBody.innerHTML = '';
-    otherSubjectsBody.innerHTML = '';
-    
-    // Define core subjects for secondary school
-    const coreSubjects = ['English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 'Physics'];
-    
-    data.forEach(mark => {
-      const student = currentStudents.find(s => s.id === mark.studentId);
-      if (!student) return;
-      
-      // Display core subjects
-      coreSubjects.forEach(subjectName => {
-        const subject = currentSubjects.find(s => s.name === subjectName);
-        if (subject) {
-          const score = mark[subject.id] || 0;
-          const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
-          
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${subjectName}</td>
-            <td>${score > 0 ? score : '-'}</td>
-            <td>${grade}</td>
-          `;
-          coreSubjectsBody.appendChild(row);
-        }
-      });
-      
-      // Display other subjects
-      const otherSubjects = currentSubjects.filter(s => !coreSubjects.includes(s.name));
-      otherSubjects.forEach(subject => {
-        const score = mark[subject.id] || 0;
-        const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
+      students.forEach(student => {
+        const classObj = currentClasses.find(c => c.id === student.classId);
+        const marksKey = `${student.id}_${term}`;
+        const marks = currentMarks[marksKey] || {};
+        
+        let total = 0;
+        let count = 0;
+        
+        DEFAULT_SUBJECTS.forEach(subject => {
+          if (marks[subject] !== undefined) {
+            total += marks[subject];
+            count++;
+          }
+        });
+        
+        const average = count > 0 ? Math.round(total / count) : 0;
+        const grade = calculateGrade(average);
         
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${subject.name}</td>
-          <td>${score > 0 ? score : '-'}</td>
+          <td>${student.name}</td>
+          <td>${classObj ? classObj.name : 'N/A'}</td>
+          <td>${marks.Mathematics || '-'}</td>
+          <td>${marks.English || '-'}</td>
+          <td>${marks['Integrated Science'] || '-'}</td>
+          <td>${marks['Social Studies'] || '-'}</td>
+          <td>${total}</td>
+          <td>${average}</td>
           <td>${grade}</td>
         `;
-        otherSubjectsBody.appendChild(row);
+        tbody.appendChild(row);
       });
-    });
-  }
-
-  // Calculate statistics
-  function calculateStatistics(data) {
-    let totalStudents = data.length;
-    let allScores = [];
-    
-    data.forEach(mark => {
-      let total = 0;
-      let count = 0;
-      
-      currentSubjects.forEach(subject => {
-        if (mark[subject.id] !== undefined) {
-          total += mark[subject.id];
-          count++;
-        }
-      });
-      
-      if (count > 0) {
-        allScores.push(total / count);
-      }
-    });
-    
-    const avgScore = allScores.length > 0 ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length) : 0;
-    const highScore = allScores.length > 0 ? Math.round(Math.max(...allScores)) : 0;
-    const lowScore = allScores.length > 0 ? Math.round(Math.min(...allScores)) : 0;
-    
-    document.getElementById('statTotalStudents').textContent = totalStudents;
-    document.getElementById('statAvgScore').textContent = avgScore;
-    document.getElementById('statHighScore').textContent = highScore;
-    document.getElementById('statLowScore').textContent = lowScore;
-  }
-
-  // Export to PDF with individual student reports
-  async function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Get the selected class and student
-    const classId = document.getElementById('reportClassSelect').value;
-    const studentId = document.getElementById('reportStudentSelect').value;
-    const term = document.getElementById('reportTermSelect').value;
-    
-    // Get all marks from Firestore
-    const marksQuery = window.firebase.query(
-      window.firebase.collection(window.firebase.db, 'marks'),
-      window.firebase.where('schoolId', '==', currentSchool.id),
-      window.firebase.where('term', '==', term)
-    );
-    
-    const marksSnapshot = await window.firebase.getDocs(marksQuery);
-    const allMarks = [];
-    
-    marksSnapshot.forEach(doc => {
-      allMarks.push({
-        id: doc.id,
-        ...doc.data()
-      });
-    });
-
-    // Filter based on selection
-    let filteredData = allMarks;
-    
-    if (classId) {
-      const classStudents = currentStudents.filter(s => s.classId === classId);
-      const studentIds = classStudents.map(s => s.id);
-      filteredData = filteredData.filter(mark => studentIds.includes(mark.studentId));
-    }
-    
-    if (studentId) {
-      filteredData = filteredData.filter(mark => mark.studentId === studentId);
     }
 
-    // Generate individual report for each student
-    for (let i = 0; i < filteredData.length; i++) {
-      const mark = filteredData[i];
-      if (i > 0) {
-        doc.addPage();
-      }
+    // Calculate statistics
+    function calculateStatistics(students, term) {
+      let totalStudents = students.length;
+      let allScores = [];
       
-      const student = currentStudents.find(s => s.id === mark.studentId);
-      if (!student) continue;
-      
-      const classObj = currentClasses.find(c => c.id === student.classId);
-      
-      // Add header with logo and school name
-      doc.setFontSize(20);
-      doc.setTextColor(67, 97, 238);
-      doc.text('Skore Point', 20, 30);
-      doc.setFontSize(12);
-      doc.setTextColor(100, 100, 100);
-      doc.text('skorepoint.com', 20, 38);
-      doc.text('A product of SERUSOFT', 20, 45);
-      
-      // Add school logo if available
-      if (schoolLogoUrl) {
-        try {
-          // Create an image element to load the logo
-          const logoImg = new Image();
-          logoImg.crossOrigin = 'Anonymous';
-          logoImg.src = schoolLogoUrl;
-          
-          // Wait for the image to load
-          await new Promise((resolve) => {
-            logoImg.onload = resolve;
-            logoImg.onerror = resolve; // Continue even if image fails to load
-          });
-          
-          // Add the logo to the PDF
-          doc.addImage(logoImg, 'JPEG', 150, 20, 40, 40);
-        } catch (error) {
-          console.error('Error adding logo to PDF:', error);
-          // Fallback: Add a placeholder if logo fails to load
-          doc.setFillColor(200, 200, 200);
-          doc.rect(150, 20, 40, 40, 'F');
-          doc.setTextColor(100, 100, 100);
-          doc.text('School Logo', 155, 45);
-        }
-      }
-      
-      // Add school name and info
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text(currentSchool.name, 105, 60, { align: 'center' });
-      doc.setFontSize(12);
-      doc.text(`School Code: ${currentSchool.code}`, 105, 68, { align: 'center' });
-      
-      // Add student info
-      doc.setFontSize(14);
-      doc.text('STUDENT PROGRESS REPORT', 105, 110, { align: 'center' });
-      doc.setFontSize(12);
-      doc.text(`Student Name: ${student.name}`, 20, 130);
-      doc.text(`Class: ${classObj ? classObj.name : 'N/A'}`, 20, 140);
-      doc.text(`Term: ${getTermLabel(term)}`, 20, 150);
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 160);
-      
-      // Add table header
-      let yPos = 180;
-      
-      if (currentSchool.level === 'primary') {
-        // Primary school report format
-        doc.setFillColor(67, 97, 238);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
-        doc.text('SUBJECT', 25, yPos + 7);
-        doc.text('SCORE', 120, yPos + 7);
-        doc.text('GRADE', 150, yPos + 7);
+      students.forEach(student => {
+        const marksKey = `${student.id}_${term}`;
+        const marks = currentMarks[marksKey] || {};
         
-        // Add subject rows
-        yPos += 10;
-        let totalMarks = 0;
-        let subjectCount = 0;
+        let total = 0;
+        let count = 0;
         
-        currentSubjects.forEach(subject => {
-          const score = mark[subject.id] || 0;
-          totalMarks += score;
-          subjectCount++;
-          
-          doc.setFillColor(240, 240, 240);
-          doc.rect(20, yPos, 170, 10, 'F');
-          doc.setTextColor(0, 0, 0);
-          doc.text(subject.name, 25, yPos + 7);
-          doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
-          
-          // Calculate grade based on school level
-          const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
-          doc.text(grade, 150, yPos + 7);
-          
-          yPos += 10;
-        });
-        
-        // Add total and average
-        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
-        yPos += 5;
-        doc.setFillColor(220, 220, 220);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(0, 0, 0);
-        doc.text('TOTAL MARKS', 25, yPos + 7);
-        doc.text(totalMarks.toString(), 120, yPos + 7);
-        
-        yPos += 10;
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.text('AVERAGE', 25, yPos + 7);
-        doc.text(average.toString(), 120, yPos + 7);
-      } else {
-        // Secondary school report format with two tables
-        // Core subjects table
-        doc.setFillColor(67, 97, 238);
-        doc.rect(20, yPos, 80, 10, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
-        doc.text('CORE SUBJECTS', 25, yPos + 7);
-        
-        doc.setFillColor(67, 97, 238);
-        doc.rect(110, yPos, 80, 10, 'F');
-        doc.text('OTHER SUBJECTS', 115, yPos + 7);
-        
-        yPos += 10;
-        
-        // Define core subjects for secondary school
-        const coreSubjects = ['English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 'Physics'];
-        
-        // Get the maximum number of rows needed
-        const maxRows = Math.max(coreSubjects.length, currentSubjects.length - coreSubjects.length);
-        
-        for (let j = 0; j < maxRows; j++) {
-          // Core subjects column
-          if (j < coreSubjects.length) {
-            const subjectName = coreSubjects[j];
-            const subject = currentSubjects.find(s => s.name === subjectName);
-            if (subject) {
-              const score = mark[subject.id] || 0;
-              const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
-              
-              doc.setFillColor(j % 2 === 0 ? 240 : 220, 240, 240);
-              doc.rect(20, yPos, 80, 10, 'F');
-              doc.setTextColor(0, 0, 0);
-              doc.text(subjectName, 25, yPos + 7);
-              doc.text(score > 0 ? `${score} (${grade})` : '-', 25, yPos + 14);
-            }
-          }
-          
-          // Other subjects column
-          const otherSubjects = currentSubjects.filter(s => !coreSubjects.includes(s.name));
-          if (j < otherSubjects.length) {
-            const subject = otherSubjects[j];
-            const score = mark[subject.id] || 0;
-            const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
-            
-            doc.setFillColor(j % 2 === 0 ? 240 : 220, 240, 240);
-            doc.rect(110, yPos, 80, 10, 'F');
-            doc.setTextColor(0, 0, 0);
-            doc.text(subject.name, 115, yPos + 7);
-            doc.text(score > 0 ? `${score} (${grade})` : '-', 115, yPos + 14);
-          }
-          
-          yPos += 20;
-        }
-        
-        // Calculate total and average
-        let totalMarks = 0;
-        let subjectCount = 0;
-        
-        currentSubjects.forEach(subject => {
-          const score = mark[subject.id] || 0;
-          if (score > 0) {
-            totalMarks += score;
-            subjectCount++;
+        DEFAULT_SUBJECTS.forEach(subject => {
+          if (marks[subject] !== undefined) {
+            total += marks[subject];
+            count++;
           }
         });
         
-        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
-        
-        yPos += 10;
-        doc.setFillColor(220, 220, 220);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(0, 0, 0);
-        doc.text('TOTAL MARKS', 25, yPos + 7);
-        doc.text(totalMarks.toString(), 120, yPos + 7);
-        
-        yPos += 10;
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.text('AVERAGE', 25, yPos + 7);
-        doc.text(average.toString(), 120, yPos + 7);
-      }
+        if (count > 0) {
+          allScores.push(total / count);
+        }
+      });
       
-      // Add teacher remarks section
-      yPos += 20;
-      doc.setFontSize(12);
-      doc.text('Teacher\'s Remarks:', 20, yPos);
-      yPos += 10;
-      doc.setDrawColor(0, 0, 0);
-      doc.line(20, yPos, 190, yPos);
-      yPos += 15;
-      doc.line(20, yPos, 190, yPos);
-      yPos += 15;
-      doc.line(20, yPos, 190, yPos);
+      const avgScore = allScores.length > 0 ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length) : 0;
+      const highScore = allScores.length > 0 ? Math.round(Math.max(...allScores)) : 0;
+      const lowScore = allScores.length > 0 ? Math.round(Math.min(...allScores)) : 0;
       
-      yPos += 20;
-      doc.text('Head Teacher\'s Remarks:', 20, yPos);
-      yPos += 10;
-      doc.line(20, yPos, 190, yPos);
-      yPos += 15;
-      doc.line(20, yPos, 190, yPos);
-      yPos += 15;
-      doc.line(20, yPos, 190, yPos);
+      document.getElementById('statTotalStudents').textContent = totalStudents;
+      document.getElementById('statAvgScore').textContent = avgScore;
+      document.getElementById('statHighScore').textContent = highScore;
+      document.getElementById('statLowScore').textContent = lowScore;
     }
-    
-    // Save the PDF
-    doc.save(`Skore_Point_Reports_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
-  }
 
-  // Calculate grade based on score and school level
-  function calculateGrade(score, level) {
-    const gradingScale = GRADING_SCALES[level];
-    
-    if (level === 'primary') {
+    // Calculate grade based on score
+    function calculateGrade(score) {
+      const gradingScale = GRADING_SCALES.primary;
+      
       if (score >= 90) return gradingScale[0]; // D1
       if (score >= 80) return gradingScale[1]; // D2
       if (score >= 70) return gradingScale[2]; // C3
@@ -3399,682 +1921,302 @@
       if (score >= 30) return gradingScale[6]; // P7
       if (score >= 20) return gradingScale[7]; // P8
       return gradingScale[8]; // F9
-    } else {
-      // Secondary school grading
-      if (score >= 80) return gradingScale[0]; // A
-      if (score >= 70) return gradingScale[1]; // B
-      if (score >= 60) return gradingScale[2]; // C
-      if (score >= 50) return gradingScale[3]; // D
-      return gradingScale[4]; // E
-    }
-  }
-
-  // Get term label
-  function getTermLabel(term) {
-    switch(term) {
-      case 'beginning': return 'Beginning of Term';
-      case 'mid': return 'Mid Term';
-      case 'end': return 'End of Term';
-      default: return 'Unknown Term';
-    }
-  }
-
-  // Export to Excel
-  function exportToExcel() {
-    // Create workbook
-    const wb = XLSX.utils.book_new();
-    
-    // Create worksheet data
-    const wsData = [
-      ['Skore Point - Student Performance Report'],
-      [`School: ${currentSchool.name}`],
-      [`Generated on: ${new Date().toLocaleDateString()}`],
-      [],
-      ['Student Name', 'Class', 'Math', 'English', 'Science', 'Social Studies', 'Total', 'Average']
-    ];
-    
-    // Add data rows
-    Array.from(document.querySelectorAll('#reportTableBody tr')).forEach(tr => {
-      const row = Array.from(tr.querySelectorAll('td')).map(td => td.textContent);
-      wsData.push(row);
-    });
-    
-    // Create worksheet
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
-    
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Student Report');
-    
-    // Save the file
-    XLSX.writeFile(wb, `Skore_Point_Report_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.xlsx`);
-  }
-
-  // Handle login
-  async function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const loading = document.getElementById('loginLoading');
-    const errorBox = document.getElementById('loginError');
-
-    loading.style.display = 'block';
-    errorBox.style.display = 'none';
-
-    try {
-      await window.firebase.signInWithEmailAndPassword(
-        window.firebase.auth, email, password
-      );
-      // User is signed in, onAuthStateChanged will handle the rest
-    } catch (error) {
-      loading.style.display = 'none';
-      errorBox.querySelector('span').textContent = error.message;
-      errorBox.style.display = 'flex';
-    }
-  }
-
-  // Handle registration
-  async function handleRegister(e) {
-    e.preventDefault();
-    const name = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
-    const subject = document.getElementById('regSubject').value;
-    const password = document.getElementById('regPassword').value;
-    const confirm = document.getElementById('confirmPassword').value;
-    const error = document.getElementById('registerError');
-    const success = document.getElementById('registerSuccess');
-    const loading = document.getElementById('registerLoading');
-
-    error.style.display = 'none';
-    success.style.display = 'none';
-
-    if (password !== confirm) {
-      error.querySelector('span').textContent = 'Passwords do not match.';
-      error.style.display = 'flex';
-      return;
     }
 
-    if (password.length < 6) {
-      error.querySelector('span').textContent = 'Password must be at least 6 characters.';
-      error.style.display = 'flex';
-      return;
-    }
-
-    loading.style.display = 'block';
-    
-    try {
-      const userCredential = await window.firebase.createUserWithEmailAndPassword(
-        window.firebase.auth, email, password
-      );
+    // Export to PDF
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
       
-      // Update user profile with name
-      await window.firebase.updateProfile(window.firebase.auth.currentUser, {
-        displayName: name
+      // Get the HTML content of the A4 report card
+      const reportCard = document.getElementById('a4ReportCard');
+      
+      // Add the report card content to the PDF
+      doc.html(reportCard, {
+        callback: function(doc) {
+          doc.save('student_report_card.pdf');
+        },
+        x: 0,
+        y: 0,
+        width: 210, // A4 width in mm
+        windowWidth: 800 // Window width in px
+      });
+    }
+
+    // Generate a sample report card
+    function generateSampleReport() {
+      // Set sample data
+      document.getElementById('reportStudentName').textContent = 'junju';
+      document.getElementById('reportStudentClass').textContent = 'Primary Four';
+      document.getElementById('reportDate').textContent = '11/23/2025';
+      document.getElementById('reportTerm').textContent = 'END OF TERM 3';
+      
+      // Set sample performance data
+      const performanceData = [
+        { subject: 'Social Studies', score: 80, grade: 'D2' },
+        { subject: 'English', score: 67, grade: 'C4' },
+        { subject: 'Mathematics', score: 88, grade: 'D2' },
+        { subject: 'Integrated Science', score: 55, grade: 'C5' }
+      ];
+      
+      const performanceTableBody = document.getElementById('performanceTableBody');
+      performanceTableBody.innerHTML = '';
+      
+      performanceData.forEach(data => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${data.subject}</td>
+          <td>${data.score}</td>
+          <td>${data.grade}</td>
+        `;
+        performanceTableBody.appendChild(row);
       });
       
-      // Create user document in Firestore
-      await window.firebase.setDoc(
-        window.firebase.doc(window.firebase.db, 'users', userCredential.user.uid),
-        {
-          name: name,
-          email: email,
-          subject: subject,
-          profilePicture: userProfileUrl,
-          role: 'admin', // Set as admin by default
-          createdAt: new Date()
-        }
-      );
+      // Set summary data
+      document.getElementById('summaryTotalMarks').textContent = '290';
+      document.getElementById('summaryAverageMark').textContent = '73';
+      document.getElementById('summaryAggregates').textContent = '13';
+      document.getElementById('summaryFinalGrade').textContent = '2';
       
-      loading.style.display = 'none';
-      success.style.display = 'flex';
-      
-      setTimeout(() => {
-        showSection(dashboardSection);
-      }, 2000);
-    } catch (error) {
-      loading.style.display = 'none';
-      error.querySelector('span').textContent = error.message;
-      error.style.display = 'flex';
+      // Show the A4 report card
+      showSection(a4ReportCard);
     }
-  }
 
-  // Handle joining a school
-  async function handleJoinSchool(e) {
-    e.preventDefault();
-    const schoolName = document.getElementById('joinSchoolName').value;
-    const schoolCode = document.getElementById('joinSchoolCode').value;
-    const errorBox = document.getElementById('joinSchoolError');
+    // Handle login
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const loading = document.getElementById('loginLoading');
+      const errorBox = document.getElementById('loginError');
 
-    try {
-      // Find school by name and code
-      const schoolsQuery = window.firebase.query(
-        window.firebase.collection(window.firebase.db, 'schools'),
-        window.firebase.where('name', '==', schoolName),
-        window.firebase.where('code', '==', schoolCode)
-      );
-      
-      const querySnapshot = await window.firebase.getDocs(schoolsQuery);
-      
-      if (querySnapshot.empty) {
-        errorBox.querySelector('span').textContent = 'School not found. Please check the name and code.';
-        errorBox.style.display = 'flex';
+      loading.style.display = 'block';
+      errorBox.style.display = 'none';
+
+      // Simulate login process
+      setTimeout(() => {
+        loading.style.display = 'none';
+        
+        // For demo purposes, accept any non-empty credentials
+        if (email && password) {
+          currentUser = { email: email, name: email.split('@')[0] };
+          userName.textContent = currentUser.name;
+          showSection(dashboardSection);
+        } else {
+          errorBox.querySelector('span').textContent = 'Please enter both email and password.';
+          errorBox.style.display = 'flex';
+        }
+      }, 1500);
+    }
+
+    // Handle registration
+    function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      const error = document.getElementById('registerError');
+      const success = document.getElementById('registerSuccess');
+      const loading = document.getElementById('registerLoading');
+
+      error.style.display = 'none';
+      success.style.display = 'none';
+
+      if (password !== confirm) {
+        error.querySelector('span').textContent = 'Passwords do not match.';
+        error.style.display = 'flex';
         return;
       }
-      
-      // School found, add user to school
-      const schoolDoc = querySnapshot.docs[0];
-      currentSchool = {
-        id: schoolDoc.id,
-        ...schoolDoc.data()
-      };
-      
-      // Update user document with school ID
-      await window.firebase.updateDoc(
-        window.firebase.doc(window.firebase.db, 'users', currentUser.uid),
-        {
-          schoolId: schoolDoc.id,
-          role: 'teacher' // Set as teacher when joining a school
-        }
-      );
-      
-      // Update UI
-      currentSchoolName.textContent = currentSchool.name;
-      currentSchoolCode.textContent = currentSchool.code;
-      document.getElementById('schoolInfo').style.display = 'block';
-      manageSchoolCard.style.display = 'block';
-      
-      // Update school card info
-      schoolCardName.textContent = currentSchool.name;
-      schoolCardCode.textContent = currentSchool.code;
-      
-      // Load school logo if available
-      if (currentSchool.logoUrl) {
-        schoolLogoUrl = currentSchool.logoUrl;
-        schoolCardLogo.src = currentSchool.logoUrl;
-        schoolCardLogo.style.display = 'block';
-        
-        // Also set the logo in the management section
-        managementSchoolLogo.src = currentSchool.logoUrl;
-        schoolLogoContainer.style.display = 'block';
-      }
-      
-      // Show management tabs
-      managementTabs.style.display = 'flex';
-      
-      hideFullScreenForm();
-      showSection(dashboardSection);
-    } catch (error) {
-      console.error('Error joining school:', error);
-      errorBox.querySelector('span').textContent = 'Error joining school. Please try again.';
-      errorBox.style.display = 'flex';
-    }
-  }
 
-  // Handle registering a new school
-  async function handleRegisterSchool(e) {
-    e.preventDefault();
-    const schoolName = document.getElementById('registerSchoolName').value;
-    const schoolLocation = document.getElementById('registerSchoolLocation').value;
-    const schoolPhone = document.getElementById('registerSchoolPhone').value;
-    const schoolLevel = document.getElementById('registerSchoolLevel').value;
-    const logoUrl = document.getElementById('logoUrl').value;
-    const errorBox = document.getElementById('registerSchoolError');
-    const successBox = document.getElementById('registerSchoolSuccess');
+      if (password.length < 6) {
+        error.querySelector('span').textContent = 'Password must be at least 6 characters.';
+        error.style.display = 'flex';
+        return;
+      }
 
-    if (!schoolLevel) {
-      errorBox.querySelector('span').textContent = 'Please select a school level.';
-      errorBox.style.display = 'flex';
-      return;
-    }
-
-    try {
-      // Generate a random 6-character code
-      const schoolCode = generateSchoolCode();
+      loading.style.display = 'block';
       
-      // Create school document
-      const schoolRef = await window.firebase.addDoc(
-        window.firebase.collection(window.firebase.db, 'schools'),
-        {
-          name: schoolName,
-          location: schoolLocation,
-          phone: schoolPhone,
-          level: schoolLevel,
-          code: schoolCode,
-          logoUrl: logoUrl,
-          createdBy: currentUser.uid,
-          createdAt: new Date()
-        }
-      );
-      
-      // Update user document with school ID
-      await window.firebase.updateDoc(
-        window.firebase.doc(window.firebase.db, 'users', currentUser.uid),
-        {
-          schoolId: schoolRef.id,
-          role: 'admin' // Set as admin when creating a school
-        }
-      );
-      
-      // Add default subjects based on school level
-      const defaultSubjects = DEFAULT_SUBJECTS[schoolLevel];
-      for (const subjectName of defaultSubjects) {
-        await window.firebase.addDoc(
-          window.firebase.collection(window.firebase.db, 'subjects'),
-          {
-            name: subjectName,
-            schoolId: schoolRef.id,
-            createdAt: new Date()
-          }
-        );
-      }
-      
-      // Add default classes for secondary schools
-      if (schoolLevel === 'secondary') {
-        for (const className of DEFAULT_SECONDARY_CLASSES) {
-          await window.firebase.addDoc(
-            window.firebase.collection(window.firebase.db, 'classes'),
-            {
-              name: className,
-              schoolId: schoolRef.id,
-              createdAt: new Date()
-            }
-          );
-        }
-      }
-      
-      // Set current school
-      currentSchool = {
-        id: schoolRef.id,
-        name: schoolName,
-        location: schoolLocation,
-        phone: schoolPhone,
-        level: schoolLevel,
-        code: schoolCode,
-        logoUrl: logoUrl
-      };
-      
-      // Update UI
-      currentSchoolName.textContent = currentSchool.name;
-      currentSchoolCode.textContent = currentSchool.code;
-      document.getElementById('schoolInfo').style.display = 'block';
-      manageSchoolCard.style.display = 'block';
-      
-      // Update school card info
-      schoolCardName.textContent = currentSchool.name;
-      schoolCardCode.textContent = currentSchool.code;
-      
-      // Load school logo if available
-      if (currentSchool.logoUrl) {
-        schoolLogoUrl = currentSchool.logoUrl;
-        schoolCardLogo.src = currentSchool.logoUrl;
-        schoolCardLogo.style.display = 'block';
-        
-        // Also set the logo in the management section
-        managementSchoolLogo.src = currentSchool.logoUrl;
-        schoolLogoContainer.style.display = 'block';
-      }
-      
-      // Show management tabs
-      managementTabs.style.display = 'flex';
-      
-      successBox.style.display = 'flex';
-      
+      // Simulate registration process
       setTimeout(() => {
-        hideFullScreenForm();
-        showSection(dashboardSection);
-      }, 2000);
-    } catch (error) {
-      console.error('Error registering school:', error);
-      errorBox.querySelector('span').textContent = 'Error registering school. Please try again.';
-      errorBox.style.display = 'flex';
+        loading.style.display = 'none';
+        success.style.display = 'flex';
+        
+        currentUser = { email: email, name: name };
+        userName.textContent = currentUser.name;
+        
+        setTimeout(() => {
+          showSection(dashboardSection);
+        }, 2000);
+      }, 1500);
     }
-  }
 
-  // Generate a random school code
-  function generateSchoolCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  }
-
-  // Handle adding a class
-  async function handleAddClass(e) {
-    e.preventDefault();
-    const className = document.getElementById('className').value;
-    
-    try {
-      // Add class to school
-      await window.firebase.addDoc(
-        window.firebase.collection(window.firebase.db, 'classes'),
-        {
-          name: className,
-          schoolId: currentSchool.id,
-          createdAt: new Date()
-        }
-      );
+    // Handle adding a class
+    function handleAddClass(e) {
+      e.preventDefault();
+      const className = document.getElementById('className').value;
+      
+      // Generate a unique ID for the class
+      const classId = 'class_' + Date.now();
+      
+      // Add class to local storage (in a real app, this would be saved to a database)
+      const newClass = {
+        id: classId,
+        name: className,
+        createdAt: new Date()
+      };
+      
+      currentClasses.push(newClass);
       
       // Clear form and reload classes
       document.getElementById('className').value = '';
       loadClasses();
       populateClassSelectors();
-    } catch (error) {
-      console.error('Error adding class:', error);
-      alert('Error adding class. Please try again.');
     }
-  }
 
-  // Handle adding a subject
-  async function handleAddSubject(e) {
-    e.preventDefault();
-    const subjectName = document.getElementById('subjectName').value;
-    
-    try {
-      // Add subject to school
-      await window.firebase.addDoc(
-        window.firebase.collection(window.firebase.db, 'subjects'),
-        {
-          name: subjectName,
-          schoolId: currentSchool.id,
-          createdAt: new Date()
-        }
-      );
+    // Handle adding a student
+    function handleAddStudent(e) {
+      e.preventDefault();
+      const studentName = document.getElementById('studentName').value;
+      const classId = document.getElementById('studentClassSelect').value;
       
-      // Clear form and reload subjects
-      document.getElementById('subjectName').value = '';
-      loadSubjects();
-    } catch (error) {
-      console.error('Error adding subject:', error);
-      alert('Error adding subject. Please try again.');
+      if (!classId) {
+        alert('Please select a class first.');
+        return;
+      }
+      
+      // Generate a unique ID for the student
+      const studentId = 'student_' + Date.now();
+      
+      // Add student to local storage (in a real app, this would be saved to a database)
+      const newStudent = {
+        id: studentId,
+        name: studentName,
+        classId: classId,
+        createdAt: new Date()
+      };
+      
+      currentStudents.push(newStudent);
+      
+      // Clear form and reload students
+      document.getElementById('studentName').value = '';
+      loadStudents();
     }
-  }
 
-  // Load classes for the current school
-  async function loadClasses() {
-    try {
-      const classesQuery = window.firebase.query(
-        window.firebase.collection(window.firebase.db, 'classes'),
-        window.firebase.where('schoolId', '==', currentSchool.id)
-      );
-      
-      const querySnapshot = await window.firebase.getDocs(classesQuery);
-      currentClasses = [];
+    // Load classes
+    function loadClasses() {
       const classList = document.getElementById('classList');
       classList.innerHTML = '';
       
-      querySnapshot.forEach(doc => {
-        const classData = {
-          id: doc.id,
-          ...doc.data()
-        };
-        currentClasses.push(classData);
-        
-        // Add to UI
+      currentClasses.forEach(classObj => {
         const classCard = document.createElement('div');
         classCard.className = 'class-card';
         classCard.innerHTML = `
-          <h4>${classData.name}</h4>
-          <p>Created: ${classData.createdAt.toDate().toLocaleDateString()}</p>
+          <h4>${classObj.name}</h4>
+          <p>Created: ${classObj.createdAt.toLocaleDateString()}</p>
           <div class="card-actions">
-            <button class="btn btn-success" onclick="viewClass('${doc.id}')"><i class="fas fa-eye"></i> View</button>
-            <button class="btn btn-danger" onclick="deleteClass('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
+            <button class="btn btn-danger" onclick="deleteClass('${classObj.id}')"><i class="fas fa-trash"></i> Delete</button>
           </div>
         `;
         classList.appendChild(classCard);
       });
-    } catch (error) {
-      console.error('Error loading classes:', error);
     }
-  }
 
-  // Load subjects for the current school
-  async function loadSubjects() {
-    try {
-      const subjectsQuery = window.firebase.query(
-        window.firebase.collection(window.firebase.db, 'subjects'),
-        window.firebase.where('schoolId', '==', currentSchool.id)
-      );
-      
-      const querySnapshot = await window.firebase.getDocs(subjectsQuery);
-      currentSubjects = [];
-      const subjectsList = document.getElementById('subjectsList');
-      subjectsList.innerHTML = '';
-      
-      querySnapshot.forEach(doc => {
-        const subjectData = {
-          id: doc.id,
-          ...doc.data()
-        };
-        currentSubjects.push(subjectData);
-        
-        // Add to UI
-        const subjectCard = document.createElement('div');
-        subjectCard.className = 'subject-card';
-        subjectCard.innerHTML = `
-          <h4>${subjectData.name}</h4>
-          <p>Created: ${subjectData.createdAt.toDate().toLocaleDateString()}</p>
-          <div class="card-actions">
-            <button class="btn btn-danger" onclick="deleteSubject('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
-          </div>
-        `;
-        subjectsList.appendChild(subjectCard);
-      });
-    } catch (error) {
-      console.error('Error loading subjects:', error);
-    }
-  }
-
-  // Load students for the selected class
-  async function loadStudents() {
-    const classId = document.getElementById('studentClassSelect').value;
-    if (!classId) return;
-    
-    try {
-      const studentsQuery = window.firebase.query(
-        window.firebase.collection(window.firebase.db, 'students'),
-        window.firebase.where('classId', '==', classId)
-      );
-      
-      const querySnapshot = await window.firebase.getDocs(studentsQuery);
-      currentStudents = [];
+    // Load students for the selected class
+    function loadStudents() {
+      const classId = document.getElementById('studentClassSelect').value;
       const studentList = document.getElementById('studentList');
       studentList.innerHTML = '';
       
-      querySnapshot.forEach(doc => {
-        const studentData = {
-          id: doc.id,
-          ...doc.data()
-        };
-        currentStudents.push(studentData);
-        
-        // Add to UI
+      const classStudents = currentStudents.filter(student => student.classId === classId);
+      
+      classStudents.forEach(student => {
         const studentCard = document.createElement('div');
         studentCard.className = 'student-card';
         studentCard.innerHTML = `
-          <h4>${studentData.name}</h4>
-          <p>Class: ${getClassName(studentData.classId)}</p>
+          <h4>${student.name}</h4>
+          <p>Class: ${getClassName(student.classId)}</p>
           <div class="card-actions">
-            <button class="btn btn-danger" onclick="deleteStudent('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
+            <button class="btn btn-danger" onclick="deleteStudent('${student.id}')"><i class="fas fa-trash"></i> Delete</button>
           </div>
         `;
         studentList.appendChild(studentCard);
       });
-    } catch (error) {
-      console.error('Error loading students:', error);
     }
-  }
 
-  // Get class name by ID
-  function getClassName(classId) {
-    const classObj = currentClasses.find(c => c.id === classId);
-    return classObj ? classObj.name : 'Unknown Class';
-  }
+    // Get class name by ID
+    function getClassName(classId) {
+      const classObj = currentClasses.find(c => c.id === classId);
+      return classObj ? classObj.name : 'Unknown Class';
+    }
 
-  // Populate class selectors in various forms
-  function populateClassSelectors() {
-    const studentClassSelect = document.getElementById('studentClassSelect');
-    const marksClassSelect = document.getElementById('marksClassSelect');
-    const reportClassSelect = document.getElementById('reportClassSelect');
-    
-    // Clear existing options except the first one
-    while (studentClassSelect.options.length > 1) {
-      studentClassSelect.remove(1);
-    }
-    while (marksClassSelect.options.length > 1) {
-      marksClassSelect.remove(1);
-    }
-    while (reportClassSelect.options.length > 1) {
-      reportClassSelect.remove(1);
-    }
-    
-    // Add classes to selectors
-    currentClasses.forEach(classObj => {
-      const option1 = document.createElement('option');
-      option1.value = classObj.id;
-      option1.textContent = classObj.name;
-      studentClassSelect.appendChild(option1);
+    // Populate class selectors in various forms
+    function populateClassSelectors() {
+      const studentClassSelect = document.getElementById('studentClassSelect');
+      const marksClassSelect = document.getElementById('marksClassSelect');
+      const reportClassSelect = document.getElementById('reportClassSelect');
       
-      const option2 = document.createElement('option');
-      option2.value = classObj.id;
-      option2.textContent = classObj.name;
-      marksClassSelect.appendChild(option2);
+      // Clear existing options except the first one
+      while (studentClassSelect.options.length > 1) {
+        studentClassSelect.remove(1);
+      }
+      while (marksClassSelect.options.length > 1) {
+        marksClassSelect.remove(1);
+      }
+      while (reportClassSelect.options.length > 1) {
+        reportClassSelect.remove(1);
+      }
       
-      const option3 = document.createElement('option');
-      option3.value = classObj.id;
-      option3.textContent = classObj.name;
-      reportClassSelect.appendChild(option3);
-    });
-    
-    // Add event listeners
-    studentClassSelect.addEventListener('change', loadStudents);
-  }
-
-  // Handle student upload from Excel file
-  async function handleStudentUpload() {
-    const fileInput = document.getElementById('studentFile');
-    const classId = document.getElementById('studentClassSelect').value;
-    const errorBox = document.getElementById('studentUploadError');
-    const successBox = document.getElementById('studentUploadSuccess');
-    
-    if (!classId) {
-      errorBox.querySelector('span').textContent = 'Please select a class first.';
-      errorBox.style.display = 'flex';
-      return;
+      // Add classes to selectors
+      currentClasses.forEach(classObj => {
+        const option1 = document.createElement('option');
+        option1.value = classObj.id;
+        option1.textContent = classObj.name;
+        studentClassSelect.appendChild(option1);
+        
+        const option2 = document.createElement('option');
+        option2.value = classObj.id;
+        option2.textContent = classObj.name;
+        marksClassSelect.appendChild(option2);
+        
+        const option3 = document.createElement('option');
+        option3.value = classObj.id;
+        option3.textContent = classObj.name;
+        reportClassSelect.appendChild(option3);
+      });
+      
+      // Add event listeners
+      studentClassSelect.addEventListener('change', loadStudents);
     }
-    
-    if (!fileInput.files.length) return;
-    
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = async function(e) {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
+
+    // Logout user
+    function logout() {
+      currentUser = null;
+      showSection(loginSection);
+    }
+
+    // Placeholder functions for class and student deletion
+    window.deleteClass = function(classId) {
+      if (confirm('Are you sure you want to delete this class? This will also delete all students in this class.')) {
+        // Remove class from local storage
+        currentClasses = currentClasses.filter(c => c.id !== classId);
         
-        // Assume first sheet
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        // Remove students in this class
+        currentStudents = currentStudents.filter(s => s.classId !== classId);
         
-        // Process each row (student)
-        for (const row of jsonData) {
-          // Assuming the first column contains student names
-          const studentName = row[Object.keys(row)[0]];
-          
-          if (studentName) {
-            await window.firebase.addDoc(
-              window.firebase.collection(window.firebase.db, 'students'),
-              {
-                name: studentName,
-                classId: classId,
-                schoolId: currentSchool.id,
-                createdAt: new Date()
-              }
-            );
-          }
-        }
-        
-        successBox.style.display = 'flex';
-        fileInput.value = '';
-        loadStudents(); // Refresh student list
-      } catch (error) {
-        console.error('Error processing Excel file:', error);
-        errorBox.querySelector('span').textContent = 'Error processing Excel file. Please check the format.';
-        errorBox.style.display = 'flex';
+        loadClasses();
+        populateClassSelectors();
+        loadStudents();
       }
     };
     
-    reader.readAsArrayBuffer(file);
-  }
-
-  // Logout user
-  async function logout() {
-    try {
-      await window.firebase.signOut(window.firebase.auth);
-      currentUser = null;
-      currentSchool = null;
-      isSchoolPortalOpen = false;
-      showSection(loginSection);
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  }
-
-  // Show alert message
-  function showAlert(elementId, message) {
-    const alert = document.getElementById(elementId);
-    alert.querySelector('span').textContent = message;
-    alert.style.display = 'flex';
-  }
-
-  // Placeholder functions for class, student and subject actions
-  window.viewClass = (classId) => {
-    alert(`View class ${classId}`);
-  };
-  
-  window.deleteClass = async (classId) => {
-    if (confirm('Are you sure you want to delete this class? This will also delete all students in this class.')) {
-      try {
-        await window.firebase.deleteDoc(
-          window.firebase.doc(window.firebase.db, 'classes', classId)
-        );
-        loadClasses();
-        populateClassSelectors();
-      } catch (error) {
-        console.error('Error deleting class:', error);
-        alert('Error deleting class. Please try again.');
-      }
-    }
-  };
-  
-  window.deleteStudent = async (studentId) => {
-    if (confirm('Are you sure you want to delete this student?')) {
-      try {
-        await window.firebase.deleteDoc(
-          window.firebase.doc(window.firebase.db, 'students', studentId)
-        );
+    window.deleteStudent = function(studentId) {
+      if (confirm('Are you sure you want to delete this student?')) {
+        // Remove student from local storage
+        currentStudents = currentStudents.filter(s => s.id !== studentId);
         loadStudents();
-      } catch (error) {
-        console.error('Error deleting student:', error);
-        alert('Error deleting student. Please try again.');
       }
-    }
-  };
-  
-  window.deleteSubject = async (subjectId) => {
-    if (confirm('Are you sure you want to delete this subject?')) {
-      try {
-        await window.firebase.deleteDoc(
-          window.firebase.doc(window.firebase.db, 'subjects', subjectId)
-        );
-        loadSubjects();
-      } catch (error) {
-        console.error('Error deleting subject:', error);
-        alert('Error deleting subject. Please try again.');
-      }
-    }
-  };
-</script>
-</body> 
+    };
+  </script>
+</body>
 </html>
