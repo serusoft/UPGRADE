@@ -135,6 +135,62 @@
       z-index: -1;
     }
 
+    /* Navigation Bar */
+    .navbar {
+      background: var(--darker);
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-size: 24px;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .navbar-nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--light);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      background: rgba(67, 97, 238, 0.1);
+    }
+
+    .nav-link.active {
+      background: var(--primary);
+    }
+
+    .close-portal {
+      background: var(--error);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .close-portal:hover {
+      background: #c53030;
+    }
+
     /* Launch Screen Styles - Centered and Responsive */
     .launch-screen {
       position: fixed;
@@ -159,11 +215,16 @@
     }
 
     .launch-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       position: relative;
       z-index: 2;
       max-width: 800px;
       width: 100%;
+      height: 100%;
     }
 
     .logo-wrapper {
@@ -229,6 +290,7 @@
       font-weight: 300;
       letter-spacing: 2px;
       line-height: 1.4;
+      max-width: 600px;
     }
 
     @keyframes fadeIn {
@@ -755,97 +817,6 @@
       object-fit: contain;
     }
 
-    /* School Registration/Join Styles */
-    .school-setup {
-      display: none;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .setup-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .setup-header h1 {
-      font-size: clamp(24px, 5vw, 32px);
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .setup-header p {
-      color: #a0aec0;
-      font-size: clamp(14px, 3vw, 16px);
-    }
-
-    .setup-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .setup-option {
-      background: var(--card-gradient);
-      border-radius: 12px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: var(--transition);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .setup-option::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--gradient);
-      opacity: 0;
-      transition: var(--transition);
-    }
-
-    .setup-option:hover::before {
-      opacity: 0.05;
-    }
-
-    .setup-option:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .setup-option i {
-      font-size: 50px;
-      margin-bottom: 20px;
-      color: var(--primary-light);
-      position: relative;
-      z-index: 1;
-    }
-
-    .setup-option h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .setup-option p {
-      color: #a0aec0;
-      font-size: 14px;
-      position: relative;
-      z-index: 1;
-    }
-
     /* School Management Styles */
     .school-management {
       display: none;
@@ -1185,46 +1156,6 @@
       font-size: 20px;
     }
 
-    /* Mobile Navigation - Updated to match the image */
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--darker);
-      border-top: 1px solid var(--gray);
-      padding: 10px;
-      z-index: 100;
-    }
-
-    .mobile-nav-items {
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .mobile-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #a0aec0;
-      text-decoration: none;
-      font-size: 12px;
-      transition: var(--transition);
-      padding: 5px 10px;
-      border-radius: 8px;
-    }
-
-    .mobile-nav-item.active {
-      color: var(--primary);
-      background: rgba(67, 97, 238, 0.1);
-    }
-
-    .mobile-nav-item i {
-      font-size: 20px;
-      margin-bottom: 5px;
-    }
-
     /* Logo Upload */
     .logo-upload {
       border: 2px dashed var(--gray);
@@ -1264,88 +1195,123 @@
       border-radius: 8px;
     }
 
-    /* Subject Management */
-    .subjects-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
+    /* Enhanced Report Card Styles */
+    .enhanced-report-card {
+      background: white;
+      color: #333;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
     }
 
-    .subject-card {
-      background: var(--card-gradient);
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: var(--transition);
-    }
-
-    .subject-card h4 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .subject-card p {
-      color: #a0aec0;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
-    /* Profile Picture */
-    .profile-picture {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 20px;
-      display: block;
-      border: 3px solid var(--primary);
-    }
-
-    .profile-upload {
+    .enhanced-report-card .header-section {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #4361ee;
+      padding-bottom: 15px;
     }
 
-    /* Term Selection */
-    .term-selection {
+    .enhanced-report-card .school-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #4361ee;
+      margin-bottom: 5px;
+    }
+
+    .enhanced-report-card .product-info {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .enhanced-report-card .report-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 15px 0;
+      text-transform: uppercase;
+    }
+
+    .enhanced-report-card .student-info {
       display: flex;
-      gap: 10px;
+      justify-content: space-between;
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
 
-    .term-option {
+    .enhanced-report-card .student-details {
       flex: 1;
-      padding: 15px;
+      min-width: 200px;
+    }
+
+    .enhanced-report-card .subject-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+    }
+
+    .enhanced-report-card .subject-table th,
+    .enhanced-report-card .subject-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .enhanced-report-card .subject-table th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+    }
+
+    .enhanced-report-card .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+    }
+
+    .enhanced-report-card .summary-table th,
+    .enhanced-report-card .summary-table td {
+      padding: 12px 15px;
       text-align: center;
-      background: var(--dark);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: var(--transition);
-      border: 1px solid var(--gray);
-      min-width: 120px;
+      border: 1px solid #ddd;
     }
 
-    .term-option.active {
-      background: var(--primary);
-      border-color: var(--primary);
+    .enhanced-report-card .summary-table th {
+      background-color: #f5f5f5;
+      font-weight: 600;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .enhanced-report-card .remarks-section {
+      margin: 25px 0;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0); }
-      100% { transform: rotate(360deg); }
+    .enhanced-report-card .remarks-section h4 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .enhanced-report-card .signature-lines {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .enhanced-report-card .signature-box {
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+      margin: 0 10px;
+    }
+
+    .enhanced-report-card .signature-line {
+      border-top: 1px solid #333;
+      margin-top: 40px;
+      padding-top: 5px;
     }
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      .dashboard-cards, .setup-options {
+      .dashboard-cards {
         grid-template-columns: 1fr;
       }
       
@@ -1372,54 +1338,13 @@
         padding: 8px;
       }
 
-      .mobile-nav {
-        display: block;
+      .enhanced-report-card .student-info {
+        flex-direction: column;
       }
 
-      .dashboard, .school-management, .school-setup {
-        padding-bottom: 80px;
-      }
-      
-      .logo {
-        letter-spacing: 3px;
-      }
-      
-      .tagline {
-        letter-spacing: 1px;
-      }
-      
-      /* Hide top navigation on mobile */
-      .dashboard-header .user-info {
-        display: none;
-      }
-      
-      /* Mobile dashboard cards */
-      .dashboard-cards {
-        gap: 15px;
-      }
-      
-      .card {
-        padding: 20px;
-      }
-      
-      .card i {
-        font-size: 30px;
-      }
-      
-      .card h3 {
-        font-size: 18px;
-      }
-      
-      /* Mobile management tabs */
-      .management-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 5px;
-      }
-      
-      .tab {
-        padding: 8px 15px;
-        font-size: 14px;
+      .enhanced-report-card .signature-lines {
+        flex-direction: column;
+        gap: 20px;
       }
     }
     
@@ -1428,34 +1353,27 @@
         padding: 25px 15px;
       }
       
-      .logo {
-        letter-spacing: 2px;
-      }
-      
-      .tagline {
-        letter-spacing: 0.5px;
-      }
-      
       .dashboard-header h1, .management-header h2 {
         font-size: 22px;
       }
       
-      .card, .setup-option {
+      .card {
         padding: 20px;
       }
       
-      .card i, .setup-option i {
+      .card i {
         font-size: 35px;
       }
-      
-      /* Mobile nav adjustments */
-      .mobile-nav-item {
-        font-size: 10px;
-        padding: 5px;
+
+      .enhanced-report-card {
+        padding: 15px;
       }
-      
-      .mobile-nav-item i {
-        font-size: 18px;
+
+      .enhanced-report-card .subject-table th,
+      .enhanced-report-card .subject-table td,
+      .enhanced-report-card .summary-table th,
+      .enhanced-report-card .summary-table td {
+        padding: 8px 10px;
       }
     }
     
@@ -1495,83 +1413,14 @@
       z-index: 2001;
     }
     
-    /* Secondary School Report Card with Two Tables */
-    .secondary-report-tables {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 20px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    
-    @media (max-width: 768px) {
-      .secondary-report-tables {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .subject-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    
-    .subject-table th,
-    .subject-table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid var(--gray);
-    }
-    
-    .subject-table th {
-      background: var(--gray);
-      font-weight: 600;
-    }
-    
-    .subject-table tr:hover {
-      background: rgba(67, 97, 238, 0.1);
-    }
-    
-    /* Mobile Dashboard Header */
-    .mobile-dashboard-header {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--gray);
-    }
-    
-    .mobile-dashboard-header h1 {
-      font-size: 20px;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-    }
-    
-    .mobile-user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .mobile-profile-picture {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--primary);
-    }
-    
-    @media (max-width: 768px) {
-      .mobile-dashboard-header {
-        display: flex;
-      }
-      
-      .dashboard-header {
-        display: none;
-      }
+
+    @keyframes spin {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -1608,6 +1457,15 @@
       <div class="loading-text">Loading your experience...</div>
     </div>
   </div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="navbar" id="navbar" style="display:none;">
+    <div class="navbar-brand">Skore Point</div>
+    <div class="navbar-nav">
+      <a href="#" class="nav-link" id="userGuideBtn"><i class="fas fa-book"></i> User Guide</a>
+      <button class="close-portal" id="closePortalBtn"><i class="fas fa-times"></i> Close Portal</button>
+    </div>
+  </nav>
 
   <!-- LOGIN SECTION -->
   <div class="container" id="loginSection" style="display:none;">
@@ -1662,12 +1520,6 @@
       <span>Account created successfully! Redirecting...</span>
     </div>
 
-    <div class="profile-upload">
-      <img id="profilePreview" class="profile-picture" src="https://via.placeholder.com/100" alt="Profile Preview">
-      <button type="button" class="btn btn-secondary" id="uploadProfileBtn"><i class="fas fa-camera"></i> Upload Profile Picture</button>
-      <input type="hidden" id="profilePictureUrl">
-    </div>
-
     <form id="registerForm">
       <div class="form-group">
         <label><i class="fas fa-user"></i> Full Name</label>
@@ -1705,20 +1557,9 @@
 
   <!-- DASHBOARD SECTION -->
   <div class="dashboard" id="dashboardSection" style="display:none;">
-    <!-- Mobile Dashboard Header -->
-    <div class="mobile-dashboard-header">
-      <h1>Skore Point</h1>
-      <div class="mobile-user-info">
-        <img id="mobileDashboardProfile" class="mobile-profile-picture" src="https://via.placeholder.com/40" alt="Profile">
-        <button class="logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i></button>
-      </div>
-    </div>
-
-    <!-- Desktop Dashboard Header -->
     <div class="dashboard-header">
       <h1>Skore Point Dashboard</h1>
       <div class="user-info">
-        <img id="dashboardProfile" class="profile-picture" src="https://via.placeholder.com/40" alt="Profile" style="width: 40px; height: 40px;">
         <span id="userName">User Name</span>
         <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
@@ -1734,11 +1575,8 @@
           <h4 id="schoolCardName"></h4>
           <p>Code: <span id="schoolCardCode"></span></p>
           <div style="margin-top: 15px;">
-            <button class="btn btn-success" id="openSchoolPortalBtn" style="margin-bottom: 10px;">
+            <button class="btn btn-success" id="openSchoolPortalBtn">
               <i class="fas fa-door-open"></i> Open School Portal
-            </button>
-            <button class="btn btn-danger" id="closeSchoolPortalBtn" style="display: none;">
-              <i class="fas fa-door-closed"></i> Close School Portal
             </button>
           </div>
         </div>
@@ -1758,27 +1596,6 @@
     <div id="schoolInfo" style="display:none;">
       <h2>Your School: <span id="currentSchoolName"></span></h2>
       <p>School Code: <span id="currentSchoolCode"></span></p>
-    </div>
-  </div>
-
-  <!-- SCHOOL SETUP SECTION -->
-  <div class="school-setup" id="schoolSetupSection" style="display:none;">
-    <div class="setup-header">
-      <h1>School Setup</h1>
-      <p>Choose how you want to proceed with Skore Point</p>
-    </div>
-
-    <div class="setup-options">
-      <div class="setup-option" id="joinSchoolOption">
-        <i class="fas fa-user-plus"></i>
-        <h3>Join a School</h3>
-        <p>Join an existing school using its unique code</p>
-      </div>
-      <div class="setup-option" id="registerSchoolOption">
-        <i class="fas fa-school"></i>
-        <h3>Register a School</h3>
-        <p>Create a new school and get a unique code</p>
-      </div>
     </div>
   </div>
 
@@ -2055,8 +1872,8 @@
         </div>
         <div class="report-actions">
           <button class="btn btn-primary" id="generateReportBtn"><i class="fas fa-chart-bar"></i> Generate Report</button>
-          <button class="btn btn-success" id="exportPDFBtn"><i class="fas fa-file-pdf"></i> Export PDF</button>
-          <button class="btn btn-warning" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Export Excel</button>
+          <button class="btn btn-success" id="exportPDFBtn"><i class="fas fa-file-pdf"></i> Export Report Card</button>
+          <button class="btn btn-warning" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Export Class Analysis</button>
         </div>
       </div>
 
@@ -2082,58 +1899,76 @@
       <div class="report-preview" id="reportPreview" style="display:none;">
         <h3>Report Preview</h3>
         
-        <!-- Primary School Report Table -->
-        <div id="primaryReportTable" style="display: none;">
-          <table class="report-table" id="primaryReportTableContent">
+        <!-- Enhanced Report Card Preview -->
+        <div id="enhancedReportCard" class="enhanced-report-card">
+          <div class="header-section">
+            <div class="school-name">STEM PLUS</div>
+            <div class="product-info">A product of SERUSOFT</div>
+            <div class="school-code">School Code: <span id="previewSchoolCode">6QWAAI</span></div>
+            <div class="report-title">STUDENT PROGRESS REPORT</div>
+          </div>
+          
+          <div class="student-info">
+            <div class="student-details">
+              <div><strong>Student Name:</strong> <span id="previewStudentName">junju</span></div>
+              <div><strong>Class:</strong> <span id="previewStudentClass">Primary Four</span></div>
+            </div>
+            <div class="student-details">
+              <div><strong>Date:</strong> <span id="previewReportDate">11/23/2025</span></div>
+            </div>
+          </div>
+          
+          <table class="subject-table">
             <thead>
               <tr>
-                <th>Student Name</th>
-                <th>Class</th>
-                <th>Math</th>
-                <th>English</th>
-                <th>Science</th>
-                <th>Social Studies</th>
-                <th>Total</th>
-                <th>Average</th>
+                <th>SUBJECT</th>
+                <th>SCORE</th>
+                <th>GRADE</th>
               </tr>
             </thead>
-            <tbody id="primaryReportTableBody">
-              <!-- Primary school report data will be populated here -->
+            <tbody id="previewSubjectScores">
+              <!-- Subject scores will be populated here -->
             </tbody>
           </table>
-        </div>
-        
-        <!-- Secondary School Report Tables -->
-        <div id="secondaryReportTables" style="display: none;" class="secondary-report-tables">
-          <div>
-            <h4>Core Subjects</h4>
-            <table class="subject-table" id="coreSubjectsTable">
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>Score</th>
-                  <th>Grade</th>
-                </tr>
-              </thead>
-              <tbody id="coreSubjectsBody">
-                <!-- Core subjects will be populated here -->
-              </tbody>
-            </table>
+          
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>TOTAL MARKS</th>
+                <th>AVERAGE MARK</th>
+                <th>AGGREGATES</th>
+                <th>FINAL GRADE/DIVISION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="previewTotalMarks">290</td>
+                <td id="previewAverageMark">73</td>
+                <td id="previewAggregates">13</td>
+                <td id="previewFinalGrade">2</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="remarks-section">
+            <h4>Class Teacher's Remarks:</h4>
+            <div class="signature-line"></div>
+            <div class="signature-line"></div>
+            <div class="signature-line"></div>
+            
+            <h4 style="margin-top: 20px;">Head Teacher's Remarks:</h4>
+            <div class="signature-line"></div>
+            <div class="signature-line"></div>
+            <div class="signature-line"></div>
           </div>
-          <div>
-            <h4>Other Subjects</h4>
-            <table class="subject-table" id="otherSubjectsTable">
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>Score</th>
-                  <th>Grade</th>
-                </tr>
-              </thead>
-              <tbody id="otherSubjectsBody">
-                <!-- Other subjects will be populated here -->
-              </tbody>
-            </table>
+          
+          <div class="signature-lines">
+            <div class="signature-box">
+              <div>Class Teacher Signature</div>
+            </div>
+            <div class="signature-box">
+              <div>School Stamp</div>
+            </div>
           </div>
         </div>
       </div>
@@ -2147,32 +1982,6 @@
   </div>
 </div>
 
-<!-- MOBILE NAVIGATION -->
-<div class="mobile-nav" id="mobileNav" style="display:none;">
-  <div class="mobile-nav-items">
-    <a href="#" class="mobile-nav-item active" data-section="dashboard">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="classes">
-      <i class="fas fa-chalkboard"></i>
-      <span>Classes</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="students">
-      <i class="fas fa-users"></i>
-      <span>Students</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="marks">
-      <i class="fas fa-edit"></i>
-      <span>Marks</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-section="reports">
-      <i class="fas fa-chart-bar"></i>
-      <span>Reports</span>
-    </a>
-  </div>
-</div>
-
 <script>
   // Cloudinary Configuration
   const CLOUDINARY_CLOUD_NAME = 'dbtucc6v2';
@@ -2180,12 +1989,11 @@
 
   // DOM Elements
   const launchScreen = document.getElementById('launchScreen');
+  const navbar = document.getElementById('navbar');
   const loginSection = document.getElementById('loginSection');
   const registerSection = document.getElementById('registerSection');
   const dashboardSection = document.getElementById('dashboardSection');
-  const schoolSetupSection = document.getElementById('schoolSetupSection');
   const schoolManagementSection = document.getElementById('schoolManagementSection');
-  const mobileNav = document.getElementById('mobileNav');
   const managementTabs = document.getElementById('managementTabs');
   
   // Navigation buttons
@@ -2194,14 +2002,13 @@
   const joinSchoolCard = document.getElementById('joinSchoolCard');
   const registerSchoolCard = document.getElementById('registerSchoolCard');
   const manageSchoolCard = document.getElementById('manageSchoolCard');
-  const joinSchoolOption = document.getElementById('joinSchoolOption');
-  const registerSchoolOption = document.getElementById('registerSchoolOption');
   const joinSchoolForm = document.getElementById('joinSchoolForm');
   const registerSchoolForm = document.getElementById('registerSchoolForm');
   const closeJoinForm = document.getElementById('closeJoinForm');
   const closeRegisterForm = document.getElementById('closeRegisterForm');
   const logoutBtn = document.getElementById('logoutBtn');
-  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  const closePortalBtn = document.getElementById('closePortalBtn');
+  const userGuideBtn = document.getElementById('userGuideBtn');
   
   // Form elements
   const loginForm = document.getElementById('loginForm');
@@ -2227,7 +2034,17 @@
   
   // Portal buttons
   const openSchoolPortalBtn = document.getElementById('openSchoolPortalBtn');
-  const closeSchoolPortalBtn = document.getElementById('closeSchoolPortalBtn');
+  
+  // Report preview elements
+  const previewSchoolCode = document.getElementById('previewSchoolCode');
+  const previewStudentName = document.getElementById('previewStudentName');
+  const previewStudentClass = document.getElementById('previewStudentClass');
+  const previewReportDate = document.getElementById('previewReportDate');
+  const previewSubjectScores = document.getElementById('previewSubjectScores');
+  const previewTotalMarks = document.getElementById('previewTotalMarks');
+  const previewAverageMark = document.getElementById('previewAverageMark');
+  const previewAggregates = document.getElementById('previewAggregates');
+  const previewFinalGrade = document.getElementById('previewFinalGrade');
   
   // Global variables
   let currentUser = null;
@@ -2238,7 +2055,6 @@
   let selectedStudentId = null;
   let currentMarks = {};
   let schoolLogoUrl = null;
-  let userProfileUrl = null;
   let isSchoolPortalOpen = false;
 
   // Default subjects for different school levels
@@ -2249,8 +2065,7 @@
       'Physics', 'Geography', 'History & Political Education', 'Religious Education',
       'Islamic', 'Kiswahili', 'Entrepreneurship Education', 'Agriculture',
       'Computer / ICT Studies', 'Fine Art / Art & Design', 'Physical Education (PE)',
-      'Luganda', 'French',  'Technology & Design', 
-      
+      'Luganda', 'French',  'Technology & Design'
     ]
   };
 
@@ -2299,13 +2114,6 @@
       if (userDoc.exists()) {
         const userData = userDoc.data();
         userName.textContent = userData.name || userData.email;
-        
-        // Load profile picture if available
-        if (userData.profilePicture) {
-          document.getElementById('dashboardProfile').src = userData.profilePicture;
-          document.getElementById('mobileDashboardProfile').src = userData.profilePicture;
-          userProfileUrl = userData.profilePicture;
-        }
         
         // Check if user has a school
         if (userData.schoolId) {
@@ -2370,16 +2178,14 @@
     joinSchoolCard.onclick = () => showJoinSchoolForm();
     registerSchoolCard.onclick = () => showRegisterSchoolForm();
     manageSchoolCard.onclick = () => showSchoolManagement();
-    joinSchoolOption.onclick = () => showJoinSchoolForm();
-    registerSchoolOption.onclick = () => showRegisterSchoolForm();
     closeJoinForm.onclick = () => hideFullScreenForm();
     closeRegisterForm.onclick = () => hideFullScreenForm();
     logoutBtn.onclick = () => logout();
-    mobileLogoutBtn.onclick = () => logout();
+    closePortalBtn.onclick = () => closeSchoolPortal();
+    userGuideBtn.onclick = () => showUserGuide();
 
     // Portal buttons
     openSchoolPortalBtn.onclick = openSchoolPortal;
-    closeSchoolPortalBtn.onclick = closeSchoolPortal;
 
     // Form submissions
     loginForm.onsubmit = handleLogin;
@@ -2397,9 +2203,6 @@
 
     // Logo upload
     document.getElementById('uploadLogoBtn').onclick = () => openCloudinaryUpload('logo');
-    
-    // Profile picture upload
-    document.getElementById('uploadProfileBtn').onclick = () => openCloudinaryUpload('profile');
 
     // Tab switching
     setupTabs();
@@ -2412,59 +2215,9 @@
 
     // Report generation
     document.getElementById('generateReportBtn').onclick = generateReport;
-    document.getElementById('exportPDFBtn').onclick = exportToPDF;
-    document.getElementById('exportExcelBtn').onclick = exportToExcel;
+    document.getElementById('exportPDFBtn').onclick = exportReportCard;
+    document.getElementById('exportExcelBtn').onclick = exportClassAnalysis;
     document.getElementById('reportClassSelect').onchange = updateStudentDropdown;
-
-    // Mobile navigation
-    setupMobileNavigation();
-  }
-
-  // Open School Portal
-  function openSchoolPortal() {
-    isSchoolPortalOpen = true;
-    
-    // Hide join and register cards
-    joinSchoolCard.style.display = 'none';
-    registerSchoolCard.style.display = 'none';
-    
-    // Show close portal button and hide open portal button
-    openSchoolPortalBtn.style.display = 'none';
-    closeSchoolPortalBtn.style.display = 'block';
-    
-    // Show action options in bottom nav
-    mobileNav.style.display = 'block';
-    
-    // Show management tabs if they exist
-    if (managementTabs) {
-      managementTabs.style.display = 'flex';
-    }
-    
-    // Load students when marks tab is active
-    if (document.getElementById('marksTab').classList.contains('active')) {
-      setupMarksEntry();
-    }
-  }
-
-  // Close School Portal
-  function closeSchoolPortal() {
-    isSchoolPortalOpen = false;
-    
-    // Show join and register cards
-    joinSchoolCard.style.display = 'block';
-    registerSchoolCard.style.display = 'block';
-    
-    // Show open portal button and hide close portal button
-    openSchoolPortalBtn.style.display = 'block';
-    closeSchoolPortalBtn.style.display = 'none';
-    
-    // Hide action options in bottom nav
-    mobileNav.style.display = 'none';
-    
-    // Hide management tabs
-    if (managementTabs) {
-      managementTabs.style.display = 'none';
-    }
   }
 
   // Open Cloudinary upload widget
@@ -2502,10 +2255,6 @@
           document.getElementById('logoPreview').style.display = 'block';
           document.getElementById('logoUrl').value = result.info.secure_url;
           schoolLogoUrl = result.info.secure_url;
-        } else if (type === 'profile') {
-          document.getElementById('profilePreview').src = result.info.secure_url;
-          document.getElementById('profilePictureUrl').value = result.info.secure_url;
-          userProfileUrl = result.info.secure_url;
         }
       }
     });
@@ -2513,19 +2262,62 @@
     widget.open();
   }
 
+  // Open School Portal
+  function openSchoolPortal() {
+    isSchoolPortalOpen = true;
+    
+    // Hide join and register cards
+    joinSchoolCard.style.display = 'none';
+    registerSchoolCard.style.display = 'none';
+    
+    // Show navbar
+    navbar.style.display = 'flex';
+    
+    // Show management tabs if they exist
+    if (managementTabs) {
+      managementTabs.style.display = 'flex';
+    }
+    
+    // Load students when marks tab is active
+    if (document.getElementById('marksTab').classList.contains('active')) {
+      setupMarksEntry();
+    }
+    
+    // Show school management section
+    showSection(schoolManagementSection);
+  }
+
+  // Close School Portal
+  function closeSchoolPortal() {
+    isSchoolPortalOpen = false;
+    
+    // Show join and register cards
+    joinSchoolCard.style.display = 'block';
+    registerSchoolCard.style.display = 'block';
+    
+    // Hide navbar
+    navbar.style.display = 'none';
+    
+    // Hide management tabs
+    if (managementTabs) {
+      managementTabs.style.display = 'none';
+    }
+    
+    // Show dashboard section
+    showSection(dashboardSection);
+  }
+
+  // Show user guide
+  function showUserGuide() {
+    alert("Skore Point User Guide:\n\n1. Register or join a school\n2. Add classes and students\n3. Add subjects\n4. Enter student marks\n5. Generate reports and export them\n\nFor more detailed instructions, please contact support.");
+  }
+
   // Show specific section and hide others
   function showSection(section) {
-    [launchScreen, loginSection, registerSection, dashboardSection, schoolSetupSection, schoolManagementSection].forEach(sec => {
+    [launchScreen, loginSection, registerSection, dashboardSection, schoolManagementSection].forEach(sec => {
       sec.style.display = 'none';
     });
     section.style.display = 'block';
-    
-    // Show/hide mobile nav based on section and portal status
-    if ((section === dashboardSection || section === schoolManagementSection) && isSchoolPortalOpen) {
-      mobileNav.style.display = 'block';
-    } else {
-      mobileNav.style.display = 'none';
-    }
   }
 
   // Show join school form in full screen
@@ -2622,54 +2414,6 @@
           setupMarksEntry();
         } else if (tab.dataset.tab === 'reports') {
           setupReportsTab();
-        }
-      });
-    });
-  }
-
-  // Setup mobile navigation
-  function setupMobileNavigation() {
-    const navItems = document.querySelectorAll('.mobile-nav-item');
-    
-    navItems.forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // Remove active class from all items
-        navItems.forEach(navItem => navItem.classList.remove('active'));
-        
-        // Add active class to clicked item
-        item.classList.add('active');
-        
-        const section = item.dataset.section;
-        
-        if (section === 'dashboard') {
-          showSection(dashboardSection);
-        } else {
-          // Switch to school management and activate the corresponding tab
-          showSection(schoolManagementSection);
-          
-          // Remove active class from all tabs and contents
-          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          
-          // Add active class to the selected tab and content
-          const tab = document.querySelector(`.tab[data-tab="${section}"]`);
-          if (tab) {
-            tab.classList.add('active');
-            document.getElementById(`${section}Tab`).classList.add('active');
-            
-            // Load data for the active tab
-            if (section === 'students') {
-              loadStudents();
-            } else if (section === 'subjects') {
-              loadSubjects();
-            } else if (section === 'marks') {
-              setupMarksEntry();
-            } else if (section === 'reports') {
-              setupReportsTab();
-            }
-          }
         }
       });
     });
@@ -2993,95 +2737,34 @@
 
   // Display report in table
   function displayReport(data) {
-    // Show appropriate report format based on school level
-    if (currentSchool.level === 'primary') {
-      displayPrimaryReport(data);
-    } else {
-      displaySecondaryReport(data);
-    }
-  }
-
-  // Display primary school report
-  function displayPrimaryReport(data) {
-    document.getElementById('primaryReportTable').style.display = 'block';
-    document.getElementById('secondaryReportTables').style.display = 'none';
-    
-    const tbody = document.getElementById('primaryReportTableBody');
-    tbody.innerHTML = '';
-    
-    data.forEach(mark => {
+    // For now, just show the first student's data in the enhanced preview
+    if (data.length > 0) {
+      const mark = data[0];
       const student = currentStudents.find(s => s.id === mark.studentId);
-      if (!student) return;
-      
       const classObj = currentClasses.find(c => c.id === student.classId);
       
-      let total = 0;
-      let count = 0;
+      // Update preview with student data
+      previewSchoolCode.textContent = currentSchool.code;
+      previewStudentName.textContent = student.name;
+      previewStudentClass.textContent = classObj ? classObj.name : 'N/A';
+      previewReportDate.textContent = new Date().toLocaleDateString();
       
+      // Calculate totals and averages
+      let totalMarks = 0;
+      let subjectCount = 0;
+      
+      // Clear previous subject scores
+      previewSubjectScores.innerHTML = '';
+      
+      // Add subject scores to the table
       currentSubjects.forEach(subject => {
-        if (mark[subject.id] !== undefined) {
-          total += mark[subject.id];
-          count++;
-        }
-      });
-      
-      const average = count > 0 ? Math.round(total / count) : 0;
-      
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${student.name}</td>
-        <td>${classObj ? classObj.name : 'N/A'}</td>
-        <td>${mark.Mathematics || '-'}</td>
-        <td>${mark.English || '-'}</td>
-        <td>${mark.Science || '-'}</td>
-        <td>${mark['Social Studies'] || '-'}</td>
-        <td>${total}</td>
-        <td>${average}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  // Display secondary school report with two tables
-  function displaySecondaryReport(data) {
-    document.getElementById('primaryReportTable').style.display = 'none';
-    document.getElementById('secondaryReportTables').style.display = 'grid';
-    
-    const coreSubjectsBody = document.getElementById('coreSubjectsBody');
-    const otherSubjectsBody = document.getElementById('otherSubjectsBody');
-    
-    coreSubjectsBody.innerHTML = '';
-    otherSubjectsBody.innerHTML = '';
-    
-    // Define core subjects for secondary school
-    const coreSubjects = ['English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 'Physics'];
-    
-    data.forEach(mark => {
-      const student = currentStudents.find(s => s.id === mark.studentId);
-      if (!student) return;
-      
-      // Display core subjects
-      coreSubjects.forEach(subjectName => {
-        const subject = currentSubjects.find(s => s.name === subjectName);
-        if (subject) {
-          const score = mark[subject.id] || 0;
-          const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
-          
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${subjectName}</td>
-            <td>${score > 0 ? score : '-'}</td>
-            <td>${grade}</td>
-          `;
-          coreSubjectsBody.appendChild(row);
-        }
-      });
-      
-      // Display other subjects
-      const otherSubjects = currentSubjects.filter(s => !coreSubjects.includes(s.name));
-      otherSubjects.forEach(subject => {
         const score = mark[subject.id] || 0;
-        const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
+        const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
+        
+        if (score > 0) {
+          totalMarks += score;
+          subjectCount++;
+        }
         
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -3089,9 +2772,65 @@
           <td>${score > 0 ? score : '-'}</td>
           <td>${grade}</td>
         `;
-        otherSubjectsBody.appendChild(row);
+        previewSubjectScores.appendChild(row);
       });
-    });
+      
+      // Calculate summary values
+      const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
+      const aggregate = calculateAggregate(mark);
+      const division = calculateDivision(average, aggregate);
+      
+      // Update summary table
+      previewTotalMarks.textContent = totalMarks;
+      previewAverageMark.textContent = average;
+      previewAggregates.textContent = aggregate;
+      previewFinalGrade.textContent = division;
+    }
+  }
+
+  // Calculate aggregate for primary school
+  function calculateAggregate(marks) {
+    // For primary schools, aggregate is calculated based on grades
+    if (currentSchool.level === 'primary') {
+      let aggregate = 0;
+      
+      currentSubjects.forEach(subject => {
+        const score = marks[subject.id] || 0;
+        if (score > 0) {
+          // Convert score to points (1-9 scale)
+          if (score >= 90) aggregate += 1; // D1
+          else if (score >= 80) aggregate += 2; // D2
+          else if (score >= 70) aggregate += 3; // C3
+          else if (score >= 60) aggregate += 4; // C4
+          else if (score >= 50) aggregate += 5; // C5
+          else if (score >= 40) aggregate += 6; // C6
+          else if (score >= 30) aggregate += 7; // P7
+          else if (score >= 20) aggregate += 8; // P8
+          else aggregate += 9; // F9
+        }
+      });
+      
+      return aggregate;
+    } else {
+      // For secondary schools, use a different calculation
+      let totalPoints = 0;
+      let subjectCount = 0;
+      
+      currentSubjects.forEach(subject => {
+        const score = marks[subject.id] || 0;
+        if (score > 0) {
+          // Convert score to points (1-5 scale)
+          if (score >= 80) totalPoints += 1; // A
+          else if (score >= 70) totalPoints += 2; // B
+          else if (score >= 60) totalPoints += 3; // C
+          else if (score >= 50) totalPoints += 4; // D
+          else totalPoints += 5; // E
+          subjectCount++;
+        }
+      });
+      
+      return subjectCount > 0 ? Math.round(totalPoints / subjectCount) : 0;
+    }
   }
 
   // Calculate statistics
@@ -3125,8 +2864,8 @@
     document.getElementById('statLowScore').textContent = lowScore;
   }
 
-  // Export to PDF with individual student reports
-  async function exportToPDF() {
+  // Export to PDF with enhanced report card format
+  async function exportReportCard() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
@@ -3177,14 +2916,29 @@
       
       const classObj = currentClasses.find(c => c.id === student.classId);
       
+      // Calculate totals and averages
+      let totalMarks = 0;
+      let subjectCount = 0;
+      
+      currentSubjects.forEach(subject => {
+        const score = mark[subject.id] || 0;
+        if (score > 0) {
+          totalMarks += score;
+          subjectCount++;
+        }
+      });
+      
+      const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
+      const aggregate = calculateAggregate(mark);
+      const division = calculateDivision(average, aggregate);
+      
       // Add header with logo and school name
       doc.setFontSize(20);
       doc.setTextColor(67, 97, 238);
       doc.text('Skore Point', 20, 30);
       doc.setFontSize(12);
       doc.setTextColor(100, 100, 100);
-      doc.text('skorepoint.com', 20, 38);
-      doc.text('A product of SERUSOFT', 20, 45);
+      doc.text('A product of SERUSOFT', 20, 38);
       
       // Add school logo if available
       if (schoolLogoUrl) {
@@ -3221,150 +2975,62 @@
       
       // Add student info
       doc.setFontSize(14);
-      doc.text('STUDENT PROGRESS REPORT', 105, 110, { align: 'center' });
+      doc.text('STUDENT PROGRESS REPORT', 105, 90, { align: 'center' });
       doc.setFontSize(12);
-      doc.text(`Student Name: ${student.name}`, 20, 130);
-      doc.text(`Class: ${classObj ? classObj.name : 'N/A'}`, 20, 140);
-      doc.text(`Term: ${getTermLabel(term)}`, 20, 150);
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 160);
+      doc.text(`Student Name: ${student.name}`, 20, 110);
+      doc.text(`Class: ${classObj ? classObj.name : 'N/A'}`, 20, 120);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 130);
       
       // Add table header
-      let yPos = 180;
+      let yPos = 150;
+      doc.setFillColor(67, 97, 238);
+      doc.rect(20, yPos, 170, 10, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.text('SUBJECT', 25, yPos + 7);
+      doc.text('SCORE', 120, yPos + 7);
+      doc.text('GRADE', 150, yPos + 7);
       
-      if (currentSchool.level === 'primary') {
-        // Primary school report format
-        doc.setFillColor(67, 97, 238);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
-        doc.text('SUBJECT', 25, yPos + 7);
-        doc.text('SCORE', 120, yPos + 7);
-        doc.text('GRADE', 150, yPos + 7);
-        
-        // Add subject rows
-        yPos += 10;
-        let totalMarks = 0;
-        let subjectCount = 0;
-        
-        currentSubjects.forEach(subject => {
-          const score = mark[subject.id] || 0;
-          totalMarks += score;
-          subjectCount++;
-          
-          doc.setFillColor(240, 240, 240);
-          doc.rect(20, yPos, 170, 10, 'F');
-          doc.setTextColor(0, 0, 0);
-          doc.text(subject.name, 25, yPos + 7);
-          doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
-          
-          // Calculate grade based on school level
-          const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
-          doc.text(grade, 150, yPos + 7);
-          
-          yPos += 10;
-        });
-        
-        // Add total and average
-        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
-        yPos += 5;
-        doc.setFillColor(220, 220, 220);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(0, 0, 0);
-        doc.text('TOTAL MARKS', 25, yPos + 7);
-        doc.text(totalMarks.toString(), 120, yPos + 7);
-        
-        yPos += 10;
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.text('AVERAGE', 25, yPos + 7);
-        doc.text(average.toString(), 120, yPos + 7);
-      } else {
-        // Secondary school report format with two tables
-        // Core subjects table
-        doc.setFillColor(67, 97, 238);
-        doc.rect(20, yPos, 80, 10, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
-        doc.text('CORE SUBJECTS', 25, yPos + 7);
-        
-        doc.setFillColor(67, 97, 238);
-        doc.rect(110, yPos, 80, 10, 'F');
-        doc.text('OTHER SUBJECTS', 115, yPos + 7);
-        
-        yPos += 10;
-        
-        // Define core subjects for secondary school
-        const coreSubjects = ['English Language', 'Literature', 'Mathematics', 'Biology', 'Chemistry', 'Physics'];
-        
-        // Get the maximum number of rows needed
-        const maxRows = Math.max(coreSubjects.length, currentSubjects.length - coreSubjects.length);
-        
-        for (let j = 0; j < maxRows; j++) {
-          // Core subjects column
-          if (j < coreSubjects.length) {
-            const subjectName = coreSubjects[j];
-            const subject = currentSubjects.find(s => s.name === subjectName);
-            if (subject) {
-              const score = mark[subject.id] || 0;
-              const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
-              
-              doc.setFillColor(j % 2 === 0 ? 240 : 220, 240, 240);
-              doc.rect(20, yPos, 80, 10, 'F');
-              doc.setTextColor(0, 0, 0);
-              doc.text(subjectName, 25, yPos + 7);
-              doc.text(score > 0 ? `${score} (${grade})` : '-', 25, yPos + 14);
-            }
-          }
-          
-          // Other subjects column
-          const otherSubjects = currentSubjects.filter(s => !coreSubjects.includes(s.name));
-          if (j < otherSubjects.length) {
-            const subject = otherSubjects[j];
-            const score = mark[subject.id] || 0;
-            const grade = score > 0 ? calculateGrade(score, 'secondary') : '-';
-            
-            doc.setFillColor(j % 2 === 0 ? 240 : 220, 240, 240);
-            doc.rect(110, yPos, 80, 10, 'F');
-            doc.setTextColor(0, 0, 0);
-            doc.text(subject.name, 115, yPos + 7);
-            doc.text(score > 0 ? `${score} (${grade})` : '-', 115, yPos + 14);
-          }
-          
-          yPos += 20;
-        }
-        
-        // Calculate total and average
-        let totalMarks = 0;
-        let subjectCount = 0;
-        
-        currentSubjects.forEach(subject => {
-          const score = mark[subject.id] || 0;
-          if (score > 0) {
-            totalMarks += score;
-            subjectCount++;
-          }
-        });
-        
-        const average = subjectCount > 0 ? Math.round(totalMarks / subjectCount) : 0;
-        
-        yPos += 10;
-        doc.setFillColor(220, 220, 220);
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.setTextColor(0, 0, 0);
-        doc.text('TOTAL MARKS', 25, yPos + 7);
-        doc.text(totalMarks.toString(), 120, yPos + 7);
-        
-        yPos += 10;
-        doc.rect(20, yPos, 170, 10, 'F');
-        doc.text('AVERAGE', 25, yPos + 7);
-        doc.text(average.toString(), 120, yPos + 7);
-      }
-      
-      // Add teacher remarks section
-      yPos += 20;
-      doc.setFontSize(12);
-      doc.text('Teacher\'s Remarks:', 20, yPos);
+      // Add subject rows
       yPos += 10;
-      doc.setDrawColor(0, 0, 0);
+      
+      currentSubjects.forEach(subject => {
+        const score = mark[subject.id] || 0;
+        const grade = score > 0 ? calculateGrade(score, currentSchool.level) : '-';
+        
+        doc.setFillColor(240, 240, 240);
+        doc.rect(20, yPos, 170, 10, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.text(subject.name, 25, yPos + 7);
+        doc.text(score > 0 ? score.toString() : '-', 120, yPos + 7);
+        doc.text(grade, 150, yPos + 7);
+        
+        yPos += 10;
+      });
+      
+      // Add summary table
+      yPos += 15;
+      doc.setFillColor(67, 97, 238);
+      doc.rect(20, yPos, 170, 10, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.text('TOTAL MARKS', 25, yPos + 7);
+      doc.text('AVERAGE MARK', 65, yPos + 7);
+      doc.text('AGGREGATES', 120, yPos + 7);
+      doc.text('FINAL GRADE/DIVISION', 150, yPos + 7);
+      
+      yPos += 10;
+      doc.setFillColor(240, 240, 240);
+      doc.rect(20, yPos, 170, 10, 'F');
+      doc.setTextColor(0, 0, 0);
+      doc.text(totalMarks.toString(), 25, yPos + 7);
+      doc.text(average.toString(), 65, yPos + 7);
+      doc.text(aggregate.toString(), 120, yPos + 7);
+      doc.text(division, 150, yPos + 7);
+      
+      // Add teacher remarks
+      yPos += 20;
+      doc.text('Class Teacher\'s Remarks:', 20, yPos);
+      yPos += 10;
       doc.line(20, yPos, 190, yPos);
       yPos += 15;
       doc.line(20, yPos, 190, yPos);
@@ -3379,10 +3045,15 @@
       doc.line(20, yPos, 190, yPos);
       yPos += 15;
       doc.line(20, yPos, 190, yPos);
+      
+      // Add signatures
+      yPos += 30;
+      doc.text('Class Teacher Signature', 40, yPos);
+      doc.text('School Stamp', 140, yPos);
     }
     
     // Save the PDF
-    doc.save(`Skore_Point_Reports_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`Skore_Point_Report_Cards_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.pdf`);
   }
 
   // Calculate grade based on score and school level
@@ -3409,44 +3080,130 @@
     }
   }
 
-  // Get term label
-  function getTermLabel(term) {
-    switch(term) {
-      case 'beginning': return 'Beginning of Term';
-      case 'mid': return 'Mid Term';
-      case 'end': return 'End of Term';
-      default: return 'Unknown Term';
+  // Calculate division based on average and aggregate
+  function calculateDivision(average, aggregate) {
+    if (currentSchool.level === 'primary') {
+      if (aggregate <= 12) return 'Division 1';
+      if (aggregate <= 24) return 'Division 2';
+      if (aggregate <= 36) return 'Division 3';
+      return 'Division 4';
+    } else {
+      if (average >= 80) return 'Division 1';
+      if (average >= 60) return 'Division 2';
+      if (average >= 40) return 'Division 3';
+      return 'Division 4';
     }
   }
 
-  // Export to Excel
-  function exportToExcel() {
+  // Export to Excel for class analysis
+  function exportClassAnalysis() {
     // Create workbook
     const wb = XLSX.utils.book_new();
     
-    // Create worksheet data
-    const wsData = [
-      ['Skore Point - Student Performance Report'],
-      [`School: ${currentSchool.name}`],
-      [`Generated on: ${new Date().toLocaleDateString()}`],
-      [],
-      ['Student Name', 'Class', 'Math', 'English', 'Science', 'Social Studies', 'Total', 'Average']
-    ];
+    // Get the selected class and term
+    const classId = document.getElementById('reportClassSelect').value;
+    const term = document.getElementById('reportTermSelect').value;
     
-    // Add data rows
-    Array.from(document.querySelectorAll('#reportTableBody tr')).forEach(tr => {
-      const row = Array.from(tr.querySelectorAll('td')).map(td => td.textContent);
-      wsData.push(row);
+    // Get all marks from Firestore
+    const marksQuery = window.firebase.query(
+      window.firebase.collection(window.firebase.db, 'marks'),
+      window.firebase.where('schoolId', '==', currentSchool.id),
+      window.firebase.where('term', '==', term)
+    );
+    
+    window.firebase.getDocs(marksQuery).then(marksSnapshot => {
+      const allMarks = [];
+      
+      marksSnapshot.forEach(doc => {
+        allMarks.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      // Filter based on selection
+      let filteredData = allMarks;
+      
+      if (classId) {
+        const classStudents = currentStudents.filter(s => s.classId === classId);
+        const studentIds = classStudents.map(s => s.id);
+        filteredData = filteredData.filter(mark => studentIds.includes(mark.studentId));
+      }
+
+      // Calculate positions
+      const studentsWithTotals = filteredData.map(mark => {
+        const student = currentStudents.find(s => s.id === mark.studentId);
+        if (!student) return null;
+        
+        const classObj = currentClasses.find(c => c.id === student.classId);
+        
+        let total = 0;
+        let count = 0;
+        
+        currentSubjects.forEach(subject => {
+          const score = mark[subject.id] || 0;
+          if (score > 0) {
+            total += score;
+            count++;
+          }
+        });
+        
+        const average = count > 0 ? Math.round(total / count) : 0;
+        const aggregate = calculateAggregate(mark);
+        
+        return {
+          student,
+          classObj,
+          total,
+          average,
+          aggregate,
+          marks: mark
+        };
+      }).filter(item => item !== null);
+      
+      // Sort by total marks (descending)
+      studentsWithTotals.sort((a, b) => b.total - a.total);
+      
+      // Add positions
+      studentsWithTotals.forEach((item, index) => {
+        item.position = index + 1;
+      });
+
+      // Create worksheet data
+      const subjectNames = currentSubjects.map(s => s.name);
+      const headers = ['Name', ...subjectNames, 'Total', 'Avg', 'Aggregate', 'Position'];
+      
+      const wsData = [headers];
+      
+      // Add data rows
+      studentsWithTotals.forEach(item => {
+        const row = [item.student.name];
+        
+        currentSubjects.forEach(subject => {
+          const score = item.marks[subject.id] || 0;
+          row.push(score > 0 ? score : '-');
+        });
+        
+        row.push(item.total);
+        row.push(item.average);
+        row.push(item.aggregate);
+        row.push(item.position);
+        
+        wsData.push(row);
+      });
+      
+      // Create worksheet
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Class Analysis');
+      
+      // Save the file
+      XLSX.writeFile(wb, `Skore_Point_Class_Analysis_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    }).catch(error => {
+      console.error('Error exporting class analysis:', error);
+      alert('Error exporting class analysis. Please try again.');
     });
-    
-    // Create worksheet
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
-    
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Student Report');
-    
-    // Save the file
-    XLSX.writeFile(wb, `Skore_Point_Report_${currentSchool.name}_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 
   // Handle login
@@ -3518,7 +3275,6 @@
           name: name,
           email: email,
           subject: subject,
-          profilePicture: userProfileUrl,
           role: 'admin', // Set as admin by default
           createdAt: new Date()
         }
@@ -4015,17 +3771,11 @@
       currentUser = null;
       currentSchool = null;
       isSchoolPortalOpen = false;
+      navbar.style.display = 'none';
       showSection(loginSection);
     } catch (error) {
       console.error('Error signing out:', error);
     }
-  }
-
-  // Show alert message
-  function showAlert(elementId, message) {
-    const alert = document.getElementById(elementId);
-    alert.querySelector('span').textContent = message;
-    alert.style.display = 'flex';
   }
 
   // Placeholder functions for class, student and subject actions
