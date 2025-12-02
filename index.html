@@ -20,7 +20,9 @@
       signInWithEmailAndPassword, 
       signOut,
       onAuthStateChanged,
-      updateProfile
+      updateProfile,
+      updatePassword,
+      sendPasswordResetEmail
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { 
       getFirestore, 
@@ -34,7 +36,8 @@
       getDoc,
       updateDoc,
       deleteDoc,
-      arrayUnion
+      arrayUnion,
+      arrayRemove
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { 
       getStorage,
@@ -70,6 +73,8 @@
       signOut, 
       onAuthStateChanged, 
       updateProfile,
+      updatePassword,
+      sendPasswordResetEmail,
       collection, 
       addDoc, 
       getDocs, 
@@ -81,6 +86,7 @@
       updateDoc,
       deleteDoc,
       arrayUnion,
+      arrayRemove,
       ref,
       uploadBytes,
       getDownloadURL
@@ -102,6 +108,7 @@
       --error: #e53e3e;
       --success: #38a169;
       --warning: #dd6b20;
+      --info: #3182ce;
       --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       --transition: all 0.3s ease;
       --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
@@ -624,6 +631,11 @@
       color: var(--light);
     }
 
+    .btn-info {
+      background: var(--info);
+      color: var(--light);
+    }
+
     .btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -656,6 +668,12 @@
       background: rgba(221,107,32,0.15); 
       border: 1px solid var(--warning); 
       color: var(--warning); 
+    }
+    
+    .info { 
+      background: rgba(49,130,206,0.15); 
+      border: 1px solid var(--info); 
+      color: var(--info); 
     }
 
     .loading {
@@ -889,14 +907,14 @@
       display: block;
     }
 
-    .class-list, .student-list {
+    .class-list, .student-list, .teacher-list, .subjects-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 15px;
       margin-top: 20px;
     }
 
-    .class-card, .student-card {
+    .class-card, .student-card, .teacher-card, .subject-card {
       background: var(--card-gradient);
       border-radius: 10px;
       padding: 20px;
@@ -905,17 +923,17 @@
       transition: var(--transition);
     }
 
-    .class-card:hover, .student-card:hover {
+    .class-card:hover, .student-card:hover, .teacher-card:hover, .subject-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
 
-    .class-card h4, .student-card h4 {
+    .class-card h4, .student-card h4, .teacher-card h4, .subject-card h4 {
       font-size: 18px;
       margin-bottom: 10px;
     }
 
-    .class-card p, .student-card p {
+    .class-card p, .student-card p, .teacher-card p, .subject-card p {
       color: #a0aec0;
       font-size: 14px;
       margin-bottom: 15px;
@@ -1157,7 +1175,7 @@
     }
 
     /* Logo Upload */
-    .logo-upload {
+    .logo-upload, .profile-upload {
       border: 2px dashed var(--gray);
       border-radius: 10px;
       padding: 20px;
@@ -1167,32 +1185,67 @@
       transition: var(--transition);
     }
 
-    .logo-upload:hover {
+    .logo-upload:hover, .profile-upload:hover {
       border-color: var(--primary);
     }
 
-    .logo-upload i {
+    .logo-upload i, .profile-upload i {
       font-size: 40px;
       margin-bottom: 15px;
       color: var(--primary-light);
     }
 
-    .logo-upload p {
+    .logo-upload p, .profile-upload p {
       color: #a0aec0;
       margin-bottom: 10px;
     }
 
-    .logo-preview {
+    .logo-preview, .profile-preview {
       max-width: 150px;
       max-height: 150px;
       margin: 0 auto 15px;
       display: none;
     }
 
-    .logo-preview img {
+    .logo-preview img, .profile-preview img {
       max-width: 100%;
       max-height: 100%;
       border-radius: 8px;
+    }
+
+    .profile-preview img {
+      border-radius: 50%;
+    }
+
+    /* Teacher card styles */
+    .teacher-card .profile-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 2px solid var(--primary);
+    }
+
+    .teacher-card .role-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .role-badge.admin {
+      background: rgba(67, 97, 238, 0.2);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .role-badge.teacher {
+      background: rgba(56, 161, 105, 0.2);
+      color: var(--success);
+      border: 1px solid var(--success);
     }
 
     /* Enhanced Report Card Styles - Optimized for A4 */
@@ -1325,6 +1378,83 @@
     .enhanced-report-card .next-term-info {
       margin-top: 15px;
       font-size: 11px;
+    }
+
+    /* Teacher specific view */
+    .teacher-view {
+      background: var(--card-gradient);
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .teacher-view h3 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: var(--primary-light);
+    }
+
+    .permission-note {
+      background: rgba(56, 161, 105, 0.1);
+      border: 1px solid var(--success);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--darker);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      font-size: 20px;
+      color: var(--primary-light);
+    }
+
+    .close-modal {
+      background: var(--error);
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
     }
 
     /* Responsive adjustments */
@@ -1518,7 +1648,8 @@
     </form>
 
     <div class="footer">
-      Don't have an account? <button id="goRegister">Create One</button>
+      <p>Don't have an account? <button id="goRegister">Create One</button></p>
+      <p><button id="forgotPassword" style="font-size: 12px;">Forgot Password?</button></p>
     </div>
   </div>
 
@@ -1526,7 +1657,7 @@
   <div class="container" id="registerSection" style="display:none;">
     <div class="header">
       <h1>Skore Point</h1>
-      <p>Create Admin Account</p>
+      <p>Create Account</p>
     </div>
 
     <div id="registerError" class="alert error" style="display:none;">
@@ -1550,6 +1681,16 @@
       <div class="form-group">
         <label><i class="fas fa-book"></i> Subject</label>
         <input type="text" id="regSubject" placeholder="Enter your subject" required>
+      </div>
+      <div class="profile-upload" id="profileUploadArea">
+        <i class="fas fa-user-circle"></i>
+        <p>Upload Profile Picture</p>
+        <span>Click to upload. Recommended size: 200x200px</span>
+        <div class="profile-preview" id="profilePreview">
+          <img id="profilePreviewImg" src="" alt="Profile Preview">
+        </div>
+        <button type="button" class="btn btn-secondary" id="uploadProfileBtn"><i class="fas fa-upload"></i> Upload Photo</button>
+        <input type="hidden" id="profileUrl">
       </div>
       <div class="form-group">
         <label><i class="fas fa-lock"></i> Password</label>
@@ -1578,7 +1719,9 @@
     <div class="dashboard-header">
       <h1>Skore Point Dashboard</h1>
       <div class="user-info">
+        <img id="userProfileImg" src="" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary); display: none;">
         <span id="userName">User Name</span>
+        <span id="userRoleBadge" class="role-badge" style="display: none;"></span>
         <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
     </div>
@@ -1715,6 +1858,7 @@
       <div class="tab active" data-tab="classes">Classes</div>
       <div class="tab" data-tab="students">Students</div>
       <div class="tab" data-tab="subjects">Subjects</div>
+      <div class="tab" data-tab="teachers">Teachers</div>
       <div class="tab" data-tab="marks">Enter Marks</div>
       <div class="tab" data-tab="reports">Reports</div>
     </div>
@@ -1727,7 +1871,11 @@
           <p>Create and manage classes in your school</p>
         </div>
 
-        <form id="addClassForm">
+        <div id="classPermissionNote" class="permission-note" style="display: none;">
+          <i class="fas fa-info-circle"></i> You have read-only access to classes. Only admins can add or delete classes.
+        </div>
+
+        <form id="addClassForm" style="display: none;">
           <div class="form-group">
             <label><i class="fas fa-chalkboard"></i> Class Name</label>
             <input type="text" id="className" placeholder="e.g., Grade 5A, Form 3, etc." required>
@@ -1749,6 +1897,10 @@
           <p>Upload and manage student lists</p>
         </div>
 
+        <div id="studentPermissionNote" class="permission-note" style="display: none;">
+          <i class="fas fa-info-circle"></i> You have read-only access to students. Only admins can add or delete students.
+        </div>
+
         <div class="form-group">
           <label><i class="fas fa-chalkboard"></i> Select Class</label>
           <select id="studentClassSelect">
@@ -1756,7 +1908,7 @@
           </select>
         </div>
 
-        <div class="file-upload" id="studentUploadArea">
+        <div class="file-upload" id="studentUploadArea" style="display: none;">
           <i class="fas fa-file-excel"></i>
           <p>Upload Excel File with Student Names</p>
           <span>Click or drag & drop to upload. First column should contain student names.</span>
@@ -1787,7 +1939,11 @@
           <p>Add and manage subjects for your school</p>
         </div>
 
-        <form id="addSubjectForm">
+        <div id="subjectPermissionNote" class="permission-note" style="display: none;">
+          <i class="fas fa-info-circle"></i> You have read-only access to subjects. Only admins can add or delete subjects.
+        </div>
+
+        <form id="addSubjectForm" style="display: none;">
           <div class="form-group">
             <label><i class="fas fa-book"></i> Subject Name</label>
             <input type="text" id="subjectName" placeholder="Enter subject name" required>
@@ -1801,12 +1957,38 @@
       </div>
     </div>
 
+    <!-- Teachers Tab -->
+    <div class="tab-content" id="teachersTab">
+      <div class="container">
+        <div class="header">
+          <h3>Manage Teachers</h3>
+          <p>View and manage teachers in your school</p>
+        </div>
+
+        <div id="teacherPermissionNote" class="permission-note" style="display: none;">
+          <i class="fas fa-info-circle"></i> You have read-only access to teachers. Only admins can add or promote teachers.
+        </div>
+
+        <div id="teacherActions" style="margin-bottom: 20px; display: none;">
+          <button class="btn btn-primary" id="addTeacherBtn"><i class="fas fa-user-plus"></i> Add New Teacher</button>
+        </div>
+
+        <div class="teacher-list" id="teacherList">
+          <!-- Teachers will be populated here -->
+        </div>
+      </div>
+    </div>
+
     <!-- Marks Tab -->
     <div class="tab-content" id="marksTab">
       <div class="container">
         <div class="header">
           <h3>Enter Student Marks</h3>
           <p>Select class and enter marks for students</p>
+        </div>
+
+        <div id="marksPermissionNote" class="permission-note" style="display: none;">
+          <i class="fas fa-info-circle"></i> You can only enter marks for your assigned subjects.
         </div>
 
         <div class="form-group">
@@ -1837,172 +2019,242 @@
             </div>
           </div>
 
-        <div id="currentStudentInfo" style="display:none; margin-bottom: 20px; padding: 15px; background: var(--gray); border-radius: 8px;">
-          <h4>Selected Student: <span id="selectedStudentName"></span></h4>
-          <p style="font-size: 14px; color: #a0aec0; margin-top: 5px;">Enter marks for each subject below</p>
+          <div id="currentStudentInfo" style="display:none; margin-bottom: 20px; padding: 15px; background: var(--gray); border-radius: 8px;">
+            <h4>Selected Student: <span id="selectedStudentName"></span></h4>
+            <p style="font-size: 14px; color: #a0aec0; margin-top: 5px;">Enter marks for each subject below</p>
+          </div>
+
+          <div class="marks-grid" id="marksGrid">
+            <!-- Mark inputs will be generated here -->
+          </div>
+
+          <div id="marksAlert" class="alert" style="display:none;">
+            <i class="fas fa-info-circle"></i>
+            <span></span>
+          </div>
+
+          <button class="btn btn-primary" id="saveMarksBtn" disabled><i class="fas fa-save"></i> Save Marks</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Tab -->
+    <div class="tab-content" id="reportsTab">
+      <div class="container">
+        <div class="header">
+          <h3>Generate Reports</h3>
+          <p>View and export student performance reports</p>
         </div>
 
-        <div class="marks-grid" id="marksGrid">
-          <!-- Mark inputs will be generated here -->
+        <div id="reportPermissionNote" class="permission-note" style="display: none;">
+          <i class="fas fa-info-circle"></i> You have read-only access to reports. Only admins can export reports.
         </div>
 
-        <div id="marksAlert" class="alert" style="display:none;">
-          <i class="fas fa-info-circle"></i>
-          <span></span>
+        <div class="report-filters">
+          <h4 style="margin-bottom: 15px;">Report Filters</h4>
+          <div class="filter-grid">
+            <div class="form-group">
+              <label><i class="fas fa-chalkboard"></i> Select Class</label>
+              <select id="reportClassSelect">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Select Student</label>
+              <select id="reportStudentSelect">
+                <option value="">All Students</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-calendar-alt"></i> Select Term</label>
+              <select id="reportTermSelect">
+                <option value="beginning">Beginning of Term</option>
+                <option value="mid">Mid Term</option>
+                <option value="end" selected>End of Term</option>
+              </select>
+            </div>
+          </div>
+          <div class="report-actions">
+            <button class="btn btn-primary" id="generateReportBtn"><i class="fas fa-chart-bar"></i> Generate Report</button>
+            <button class="btn btn-success" id="exportPDFBtn" style="display: none;"><i class="fas fa-file-pdf"></i> Export Report Card</button>
+            <button class="btn btn-warning" id="exportExcelBtn" style="display: none;"><i class="fas fa-file-excel"></i> Export Class Analysis</button>
+          </div>
         </div>
 
-        <button class="btn btn-primary" id="saveMarksBtn" disabled><i class="fas fa-save"></i> Save Marks</button>
+        <div class="stats-grid" id="statsGrid" style="display:none;">
+          <div class="stat-card">
+            <h4>Total Students</h4>
+            <p id="statTotalStudents">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Average Score</h4>
+            <p id="statAvgScore">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Highest Score</h4>
+            <p id="statHighScore">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Lowest Score</h4>
+            <p id="statLowScore">0</p>
+          </div>
+        </div>
+
+        <div class="report-preview" id="reportPreview" style="display:none;">
+          <h3>Report Preview</h3>
+          
+          <!-- Enhanced Report Card Preview -->
+          <div id="enhancedReportCard" class="enhanced-report-card">
+            <div class="header-section">
+              <div class="school-name">STEM PLUS</div>
+              <div class="product-info">A product of SERUSOFT</div>
+              <div class="school-code">School Code: <span id="previewSchoolCode">6QWAAI</span></div>
+              <div class="report-title" id="previewReportTitle">STUDENT PROGRESS REPORT</div>
+            </div>
+            
+            <div class="student-info">
+              <div class="student-details">
+                <div><strong>Student Name:</strong> <span id="previewStudentName">junju</span></div>
+                <div><strong>Class:</strong> <span id="previewStudentClass">Primary Four</span></div>
+              </div>
+              <div class="student-details">
+                <div><strong>Date:</strong> <span id="previewReportDate">11/23/2025</span></div>
+              </div>
+            </div>
+            
+            <table class="subject-table">
+              <thead>
+                <tr>
+                  <th>SUBJECT</th>
+                  <th>SCORE</th>
+                  <th>GRADE</th>
+                </tr>
+              </thead>
+              <tbody id="previewSubjectScores">
+                <!-- Subject scores will be populated here -->
+              </tbody>
+            </table>
+            
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th>TOTAL MARKS</th>
+                  <th>AVERAGE MARK</th>
+                  <th>AGGREGATES</th>
+                  <th>FINAL GRADE/DIVISION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="previewTotalMarks">290</td>
+                  <td id="previewAverageMark">73</td>
+                  <td id="previewAggregates">13</td>
+                  <td id="previewFinalGrade">2</td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="remarks-section">
+              <h4>Class Teacher's Remarks:</h4>
+              <div class="signature-line"></div>
+              <div class="signature-line"></div>
+              
+              <h4 style="margin-top: 15px;">Head Teacher's Remarks:</h4>
+              <div class="signature-line"></div>
+              
+              <div class="next-term-info">
+                <p><strong>Next Term Begins On:</strong> ________________________________</p>
+              </div>
+            </div>
+            
+            <div class="signature-lines">
+              <div class="signature-box">
+                <div>Class Teacher Signature</div>
+              </div>
+              <div class="signature-box">
+                <div>Head Teacher Signature</div>
+              </div>
+              <div class="signature-box">
+                <div>School Stamp</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" id="reportsEmptyState">
+          <i class="fas fa-chart-line"></i>
+          <h3>No Data Available</h3>
+          <p>Please add students and marks to generate reports</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Reports Tab -->
-  <div class="tab-content" id="reportsTab">
-    <div class="container">
-      <div class="header">
-        <h3>Generate Reports</h3>
-        <p>View and export student performance reports</p>
+  <!-- Add Teacher Modal -->
+  <div class="modal" id="addTeacherModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Teacher</h3>
+        <button class="close-modal" id="closeAddTeacherModal"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <div id="addTeacherError" class="alert error" style="display:none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span></span>
       </div>
 
-      <div class="report-filters">
-        <h4 style="margin-bottom: 15px;">Report Filters</h4>
-        <div class="filter-grid">
-          <div class="form-group">
-            <label><i class="fas fa-chalkboard"></i> Select Class</label>
-            <select id="reportClassSelect">
-              <option value="">All Classes</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-user"></i> Select Student</label>
-            <select id="reportStudentSelect">
-              <option value="">All Students</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-calendar-alt"></i> Select Term</label>
-            <select id="reportTermSelect">
-              <option value="beginning">Beginning of Term</option>
-              <option value="mid">Mid Term</option>
-              <option value="end" selected>End of Term</option>
-            </select>
-          </div>
+      <form id="addTeacherForm">
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Full Name</label>
+          <input type="text" id="teacherName" placeholder="Enter teacher's full name" required>
         </div>
-        <div class="report-actions">
-          <button class="btn btn-primary" id="generateReportBtn"><i class="fas fa-chart-bar"></i> Generate Report</button>
-          <button class="btn btn-success" id="exportPDFBtn"><i class="fas fa-file-pdf"></i> Export Report Card</button>
-          <button class="btn btn-warning" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Export Class Analysis</button>
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" id="teacherEmail" placeholder="Enter teacher's email" required>
         </div>
-      </div>
-
-      <div class="stats-grid" id="statsGrid" style="display:none;">
-        <div class="stat-card">
-          <h4>Total Students</h4>
-          <p id="statTotalStudents">0</p>
+        <div class="form-group">
+          <label><i class="fas fa-book"></i> Subject</label>
+          <input type="text" id="teacherSubject" placeholder="Enter teacher's subject" required>
         </div>
-        <div class="stat-card">
-          <h4>Average Score</h4>
-          <p id="statAvgScore">0</p>
+        <div class="form-group">
+          <label><i class="fas fa-user-tag"></i> Role</label>
+          <select id="teacherRole">
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
-        <div class="stat-card">
-          <h4>Highest Score</h4>
-          <p id="statHighScore">0</p>
-        </div>
-        <div class="stat-card">
-          <h4>Lowest Score</h4>
-          <p id="statLowScore">0</p>
-        </div>
-      </div>
-
-      <div class="report-preview" id="reportPreview" style="display:none;">
-        <h3>Report Preview</h3>
-        
-        <!-- Enhanced Report Card Preview -->
-        <div id="enhancedReportCard" class="enhanced-report-card">
-          <div class="header-section">
-            <div class="school-name">STEM PLUS</div>
-            <div class="product-info">A product of SERUSOFT</div>
-            <div class="school-code">School Code: <span id="previewSchoolCode">6QWAAI</span></div>
-            <div class="report-title" id="previewReportTitle">STUDENT PROGRESS REPORT</div>
-          </div>
-          
-          <div class="student-info">
-            <div class="student-details">
-              <div><strong>Student Name:</strong> <span id="previewStudentName">junju</span></div>
-              <div><strong>Class:</strong> <span id="previewStudentClass">Primary Four</span></div>
-            </div>
-            <div class="student-details">
-              <div><strong>Date:</strong> <span id="previewReportDate">11/23/2025</span></div>
-            </div>
-          </div>
-          
-          <table class="subject-table">
-            <thead>
-              <tr>
-                <th>SUBJECT</th>
-                <th>SCORE</th>
-                <th>GRADE</th>
-              </tr>
-            </thead>
-            <tbody id="previewSubjectScores">
-              <!-- Subject scores will be populated here -->
-            </tbody>
-          </table>
-          
-          <table class="summary-table">
-            <thead>
-              <tr>
-                <th>TOTAL MARKS</th>
-                <th>AVERAGE MARK</th>
-                <th>AGGREGATES</th>
-                <th>FINAL GRADE/DIVISION</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td id="previewTotalMarks">290</td>
-                <td id="previewAverageMark">73</td>
-                <td id="previewAggregates">13</td>
-                <td id="previewFinalGrade">2</td>
-              </tr>
-            </tbody>
-          </table>
-          
-          <div class="remarks-section">
-            <h4>Class Teacher's Remarks:</h4>
-            <div class="signature-line"></div>
-            <div class="signature-line"></div>
-            
-            <h4 style="margin-top: 15px;">Head Teacher's Remarks:</h4>
-            <div class="signature-line"></div>
-            
-            <div class="next-term-info">
-              <p><strong>Next Term Begins On:</strong> ________________________________</p>
-            </div>
-          </div>
-          
-          <div class="signature-lines">
-            <div class="signature-box">
-              <div>Class Teacher Signature</div>
-            </div>
-            <div class="signature-box">
-              <div>Head Teacher Signature</div>
-            </div>
-            <div class="signature-box">
-              <div>School Stamp</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="empty-state" id="reportsEmptyState">
-        <i class="fas fa-chart-line"></i>
-        <h3>No Data Available</h3>
-        <p>Please add students and marks to generate reports</p>
-      </div>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-user-plus"></i> Add Teacher</button>
+      </form>
     </div>
   </div>
-</div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal" id="forgotPasswordModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Reset Password</h3>
+        <button class="close-modal" id="closeForgotPasswordModal"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <div id="forgotPasswordError" class="alert error" style="display:none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span></span>
+      </div>
+      
+      <div id="forgotPasswordSuccess" class="alert success" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span>Password reset email sent! Check your inbox.</span>
+      </div>
+
+      <form id="forgotPasswordForm">
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" id="forgotPasswordEmail" placeholder="Enter your email address" required>
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-key"></i> Send Reset Link</button>
+      </form>
+    </div>
+  </div>
 
 <script>
   // Cloudinary Configuration
@@ -2031,6 +2283,9 @@
   const logoutBtn = document.getElementById('logoutBtn');
   const closePortalBtn = document.getElementById('closePortalBtn');
   const userGuideBtn = document.getElementById('userGuideBtn');
+  const forgotPassword = document.getElementById('forgotPassword');
+  const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+  const closeForgotPasswordModal = document.getElementById('closeForgotPasswordModal');
   
   // Form elements
   const loginForm = document.getElementById('loginForm');
@@ -2039,9 +2294,16 @@
   const registerSchoolFormFields = document.getElementById('registerSchoolFormFields');
   const addClassForm = document.getElementById('addClassForm');
   const addSubjectForm = document.getElementById('addSubjectForm');
+  const addTeacherForm = document.getElementById('addTeacherForm');
+  const addTeacherBtn = document.getElementById('addTeacherBtn');
+  const addTeacherModal = document.getElementById('addTeacherModal');
+  const closeAddTeacherModal = document.getElementById('closeAddTeacherModal');
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
   
   // User info
   const userName = document.getElementById('userName');
+  const userProfileImg = document.getElementById('userProfileImg');
+  const userRoleBadge = document.getElementById('userRoleBadge');
   const currentSchoolName = document.getElementById('currentSchoolName');
   const currentSchoolCode = document.getElementById('currentSchoolCode');
   const managementSchoolName = document.getElementById('managementSchoolName');
@@ -2069,16 +2331,27 @@
   const previewAggregates = document.getElementById('previewAggregates');
   const previewFinalGrade = document.getElementById('previewFinalGrade');
   
+  // Permission notes
+  const classPermissionNote = document.getElementById('classPermissionNote');
+  const studentPermissionNote = document.getElementById('studentPermissionNote');
+  const subjectPermissionNote = document.getElementById('subjectPermissionNote');
+  const teacherPermissionNote = document.getElementById('teacherPermissionNote');
+  const marksPermissionNote = document.getElementById('marksPermissionNote');
+  const reportPermissionNote = document.getElementById('reportPermissionNote');
+  
   // Global variables
   let currentUser = null;
+  let currentUserData = null;
   let currentSchool = null;
   let currentClasses = [];
   let currentStudents = [];
   let currentSubjects = [];
+  let currentTeachers = [];
   let selectedStudentId = null;
   let currentMarks = {};
   let schoolLogoUrl = null;
   let isSchoolPortalOpen = false;
+  let userProfileUrl = null;
 
   // Default subjects for different school levels
   const DEFAULT_SUBJECTS = {
@@ -2088,7 +2361,7 @@
       'Physics', 'Geography', 'History & Political Education', 'Religious Education',
       'Islamic', 'Kiswahili', 'Entrepreneurship Education', 'Agriculture',
       'Computer / ICT Studies', 'Fine Art / Art & Design', 'Physical Education (PE)',
-      'Luganda', 'French',  'Technology & Design'
+      'Luganda', 'French', 'Technology & Design'
     ]
   };
 
@@ -2135,12 +2408,26 @@
       );
       
       if (userDoc.exists()) {
-        const userData = userDoc.data();
-        userName.textContent = userData.name || userData.email;
+        currentUserData = userDoc.data();
+        userName.textContent = currentUserData.name || currentUserData.email;
+        
+        // Update role badge
+        if (currentUserData.role) {
+          userRoleBadge.textContent = currentUserData.role.toUpperCase();
+          userRoleBadge.className = `role-badge ${currentUserData.role}`;
+          userRoleBadge.style.display = 'inline-block';
+        }
+        
+        // Update profile picture
+        if (currentUserData.profileUrl) {
+          userProfileUrl = currentUserData.profileUrl;
+          userProfileImg.src = currentUserData.profileUrl;
+          userProfileImg.style.display = 'block';
+        }
         
         // Check if user has a school
-        if (userData.schoolId) {
-          await loadSchoolData(userData.schoolId);
+        if (currentUserData.schoolId) {
+          await loadSchoolData(currentUserData.schoolId);
         }
       }
     } catch (error) {
@@ -2184,6 +2471,7 @@
         // Load school data
         await loadClasses();
         await loadSubjects();
+        await loadTeachers();
         
         // Show management tabs
         managementTabs.style.display = 'flex';
@@ -2206,6 +2494,10 @@
     logoutBtn.onclick = () => logout();
     closePortalBtn.onclick = () => closeSchoolPortal();
     userGuideBtn.onclick = () => showUserGuide();
+    forgotPassword.onclick = () => showModal(forgotPasswordModal);
+    closeForgotPasswordModal.onclick = () => hideModal(forgotPasswordModal);
+    addTeacherBtn.onclick = () => showModal(addTeacherModal);
+    closeAddTeacherModal.onclick = () => hideModal(addTeacherModal);
 
     // Portal buttons
     openSchoolPortalBtn.onclick = openSchoolPortal;
@@ -2217,6 +2509,8 @@
     registerSchoolFormFields.onsubmit = handleRegisterSchool;
     addClassForm.onsubmit = handleAddClass;
     addSubjectForm.onsubmit = handleAddSubject;
+    addTeacherForm.onsubmit = handleAddTeacher;
+    forgotPasswordForm.onsubmit = handleForgotPassword;
 
     // Password toggles
     setupPasswordToggles();
@@ -2226,6 +2520,7 @@
 
     // Logo upload
     document.getElementById('uploadLogoBtn').onclick = () => openCloudinaryUpload('logo');
+    document.getElementById('uploadProfileBtn').onclick = () => openCloudinaryUpload('profile');
 
     // Tab switching
     setupTabs();
@@ -2278,6 +2573,11 @@
           document.getElementById('logoPreview').style.display = 'block';
           document.getElementById('logoUrl').value = result.info.secure_url;
           schoolLogoUrl = result.info.secure_url;
+        } else if (type === 'profile') {
+          document.getElementById('profilePreviewImg').src = result.info.secure_url;
+          document.getElementById('profilePreview').style.display = 'block';
+          document.getElementById('profileUrl').value = result.info.secure_url;
+          userProfileUrl = result.info.secure_url;
         }
       }
     });
@@ -2308,6 +2608,9 @@
     
     // Show school management section
     showSection(schoolManagementSection);
+    
+    // Update permissions based on user role
+    updatePermissions();
   }
 
   // Close School Portal
@@ -2330,9 +2633,45 @@
     showSection(dashboardSection);
   }
 
+  // Update permissions based on user role
+  function updatePermissions() {
+    const isAdmin = currentUserData && currentUserData.role === 'admin';
+    
+    // Show/hide add forms
+    addClassForm.style.display = isAdmin ? 'block' : 'none';
+    addSubjectForm.style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('studentUploadArea').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('teacherActions').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('exportPDFBtn').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('exportExcelBtn').style.display = isAdmin ? 'block' : 'none';
+    
+    // Show/hide permission notes
+    classPermissionNote.style.display = isAdmin ? 'none' : 'block';
+    studentPermissionNote.style.display = isAdmin ? 'none' : 'block';
+    subjectPermissionNote.style.display = isAdmin ? 'none' : 'block';
+    teacherPermissionNote.style.display = isAdmin ? 'none' : 'block';
+    marksPermissionNote.style.display = isAdmin ? 'none' : 'block';
+    reportPermissionNote.style.display = isAdmin ? 'none' : 'block';
+    
+    // Update management section header with role
+    if (!isAdmin) {
+      managementSchoolName.textContent = `${currentSchool.name} (Teacher View)`;
+    }
+  }
+
   // Show user guide
   function showUserGuide() {
-    alert("Skore Point User Guide:\n\n1. Register or join a school\n2. Add classes and students\n3. Add subjects\n4. Enter student marks\n5. Generate reports and export them\n\nFor more detailed instructions, please contact support.");
+    alert("Skore Point User Guide:\n\nADMIN RIGHTS:\n- Full control over school portal\n- Manage classes, students, subjects\n- Add/remove teachers\n- Export reports and report cards\n- Promote teachers to admin\n\nTEACHER RIGHTS:\n- View assigned subjects\n- Enter marks for assigned subjects\n- View student data (read-only)\n- View reports (read-only)\n\nFor more detailed instructions, please contact support.");
+  }
+
+  // Show modal
+  function showModal(modal) {
+    modal.style.display = 'flex';
+  }
+
+  // Hide modal
+  function hideModal(modal) {
+    modal.style.display = 'none';
   }
 
   // Show specific section and hide others
@@ -2372,7 +2711,11 @@
     
     await loadClasses();
     await loadSubjects();
+    await loadTeachers();
     populateClassSelectors();
+    
+    // Update permissions
+    updatePermissions();
   }
 
   // Setup password visibility toggles
@@ -2395,24 +2738,26 @@
     const uploadArea = document.getElementById('studentUploadArea');
     const fileInput = document.getElementById('studentFile');
 
-    uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.style.borderColor = 'var(--primary)';
-    });
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.style.borderColor = 'var(--gray)';
-    });
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.style.borderColor = 'var(--gray)';
-      if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        handleStudentUpload();
-      }
-    });
+    if (uploadArea && fileInput) {
+      uploadArea.addEventListener('click', () => fileInput.click());
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--primary)';
+      });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = 'var(--gray)';
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--gray)';
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          handleStudentUpload();
+        }
+      });
 
-    fileInput.addEventListener('change', handleStudentUpload);
+      fileInput.addEventListener('change', handleStudentUpload);
+    }
   }
 
   // Setup tab switching
@@ -2433,6 +2778,8 @@
           loadStudents();
         } else if (tab.dataset.tab === 'subjects') {
           loadSubjects();
+        } else if (tab.dataset.tab === 'teachers') {
+          loadTeachers();
         } else if (tab.dataset.tab === 'marks') {
           setupMarksEntry();
         } else if (tab.dataset.tab === 'reports') {
@@ -2447,51 +2794,53 @@
     const studentSearch = document.getElementById('studentSearch');
     const suggestions = document.getElementById('studentSuggestions');
 
-    studentSearch.addEventListener('input', () => {
-      const searchTerm = studentSearch.value.toLowerCase();
-      const classId = document.getElementById('marksClassSelect').value;
-      
-      if (!classId || searchTerm.length < 2) {
-        suggestions.style.display = 'none';
-        return;
-      }
+    if (studentSearch && suggestions) {
+      studentSearch.addEventListener('input', () => {
+        const searchTerm = studentSearch.value.toLowerCase();
+        const classId = document.getElementById('marksClassSelect').value;
+        
+        if (!classId || searchTerm.length < 2) {
+          suggestions.style.display = 'none';
+          return;
+        }
 
-      // Filter students by class and search term
-      const filteredStudents = currentStudents.filter(student => 
-        student.classId === classId && 
-        student.name.toLowerCase().includes(searchTerm)
-      );
+        // Filter students by class and search term
+        const filteredStudents = currentStudents.filter(student => 
+          student.classId === classId && 
+          student.name.toLowerCase().includes(searchTerm)
+        );
 
-      // Display suggestions
-      suggestions.innerHTML = '';
-      if (filteredStudents.length > 0) {
-        filteredStudents.forEach(student => {
-          const div = document.createElement('div');
-          div.className = 'student-suggestion';
-          div.textContent = student.name;
-          div.addEventListener('click', async () => {
-            studentSearch.value = student.name;
-            suggestions.style.display = 'none';
-            selectedStudentId = student.id;
-            document.getElementById('selectedStudentName').textContent = student.name;
-            document.getElementById('currentStudentInfo').style.display = 'block';
-            document.getElementById('saveMarksBtn').disabled = false;
-            await loadStudentMarks(student.id);
+        // Display suggestions
+        suggestions.innerHTML = '';
+        if (filteredStudents.length > 0) {
+          filteredStudents.forEach(student => {
+            const div = document.createElement('div');
+            div.className = 'student-suggestion';
+            div.textContent = student.name;
+            div.addEventListener('click', async () => {
+              studentSearch.value = student.name;
+              suggestions.style.display = 'none';
+              selectedStudentId = student.id;
+              document.getElementById('selectedStudentName').textContent = student.name;
+              document.getElementById('currentStudentInfo').style.display = 'block';
+              document.getElementById('saveMarksBtn').disabled = false;
+              await loadStudentMarks(student.id);
+            });
+            suggestions.appendChild(div);
           });
-          suggestions.appendChild(div);
-        });
-        suggestions.style.display = 'block';
-      } else {
-        suggestions.style.display = 'none';
-      }
-    });
+          suggestions.style.display = 'block';
+        } else {
+          suggestions.style.display = 'none';
+        }
+      });
 
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!studentSearch.contains(e.target) && !suggestions.contains(e.target)) {
-        suggestions.style.display = 'none';
-      }
-    });
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', (e) => {
+        if (studentSearch && suggestions && !studentSearch.contains(e.target) && !suggestions.contains(e.target)) {
+          suggestions.style.display = 'none';
+        }
+      });
+    }
   }
 
   // Setup marks entry section
@@ -2499,21 +2848,23 @@
     const classSelect = document.getElementById('marksClassSelect');
     const marksSection = document.getElementById('marksEntrySection');
     
-    classSelect.addEventListener('change', async () => {
-      if (classSelect.value) {
-        marksSection.style.display = 'block';
-        generateMarkInputs();
-        document.getElementById('studentSearch').value = '';
-        document.getElementById('currentStudentInfo').style.display = 'none';
-        selectedStudentId = null;
-        document.getElementById('saveMarksBtn').disabled = true;
-        
-        // Load students for the selected class
-        await loadStudentsForMarks(classSelect.value);
-      } else {
-        marksSection.style.display = 'none';
-      }
-    });
+    if (classSelect && marksSection) {
+      classSelect.addEventListener('change', async () => {
+        if (classSelect.value) {
+          marksSection.style.display = 'block';
+          generateMarkInputs();
+          document.getElementById('studentSearch').value = '';
+          document.getElementById('currentStudentInfo').style.display = 'none';
+          selectedStudentId = null;
+          document.getElementById('saveMarksBtn').disabled = true;
+          
+          // Load students for the selected class
+          await loadStudentsForMarks(classSelect.value);
+        } else {
+          marksSection.style.display = 'none';
+        }
+      });
+    }
   }
 
   // Load students for marks entry
@@ -2542,9 +2893,18 @@
   // Generate mark input fields based on subjects
   function generateMarkInputs() {
     const marksGrid = document.getElementById('marksGrid');
+    if (!marksGrid) return;
+    
     marksGrid.innerHTML = '';
     
-    currentSubjects.forEach(subject => {
+    // Teachers can only see their assigned subjects
+    const subjectsToShow = currentUserData && currentUserData.role === 'admin' 
+      ? currentSubjects 
+      : currentSubjects.filter(subject => 
+          subject.name.toLowerCase().includes(currentUserData.subject.toLowerCase())
+        );
+    
+    subjectsToShow.forEach(subject => {
       const div = document.createElement('div');
       div.className = 'mark-input';
       div.innerHTML = `
@@ -2569,7 +2929,7 @@
           const input = document.querySelector(`input[data-subject="${subject.id}"]`);
           if (input && marks[subject.id] !== undefined) {
             input.value = marks[subject.id];
-          } else {
+          } else if (input) {
             input.value = '';
           }
         });
@@ -2600,12 +2960,21 @@
     const marks = {};
     let hasMarks = false;
     
-    currentSubjects.forEach(subject => {
+    // Teachers can only save marks for their assigned subjects
+    const subjectsToSave = currentUserData && currentUserData.role === 'admin' 
+      ? currentSubjects 
+      : currentSubjects.filter(subject => 
+          subject.name.toLowerCase().includes(currentUserData.subject.toLowerCase())
+        );
+    
+    subjectsToSave.forEach(subject => {
       const input = document.querySelector(`input[data-subject="${subject.id}"]`);
-      const value = parseInt(input.value);
-      if (!isNaN(value) && value >= 0 && value <= 100) {
-        marks[subject.id] = value;
-        hasMarks = true;
+      if (input) {
+        const value = parseInt(input.value);
+        if (!isNaN(value) && value >= 0 && value <= 100) {
+          marks[subject.id] = value;
+          hasMarks = true;
+        }
       }
     });
 
@@ -2623,7 +2992,8 @@
           schoolId: currentSchool.id,
           term: term,
           ...marks,
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          updatedBy: currentUser.uid
         }
       );
 
@@ -2648,13 +3018,15 @@
   // Show alert in marks section
   function showMarksAlert(message, type) {
     const alert = document.getElementById('marksAlert');
-    alert.className = `alert ${type}`;
-    alert.querySelector('span').textContent = message;
-    alert.style.display = 'flex';
-    
-    setTimeout(() => {
-      alert.style.display = 'none';
-    }, 3000);
+    if (alert) {
+      alert.className = `alert ${type}`;
+      alert.querySelector('span').textContent = message;
+      alert.style.display = 'flex';
+      
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 3000);
+    }
   }
 
   // Setup reports tab
@@ -2668,6 +3040,8 @@
   // Populate class selector in reports
   async function populateReportClassSelector() {
     const select = document.getElementById('reportClassSelect');
+    if (!select) return;
+    
     while (select.options.length > 1) {
       select.remove(1);
     }
@@ -2684,6 +3058,8 @@
   async function updateStudentDropdown() {
     const classId = document.getElementById('reportClassSelect').value;
     const select = document.getElementById('reportStudentSelect');
+    
+    if (!select) return;
     
     // Clear existing options except first one
     while (select.options.length > 1) {
@@ -3310,6 +3686,7 @@
     const subject = document.getElementById('regSubject').value;
     const password = document.getElementById('regPassword').value;
     const confirm = document.getElementById('confirmPassword').value;
+    const profileUrl = document.getElementById('profileUrl').value;
     const error = document.getElementById('registerError');
     const success = document.getElementById('registerSuccess');
     const loading = document.getElementById('registerLoading');
@@ -3338,7 +3715,8 @@
       
       // Update user profile with name
       await window.firebase.updateProfile(window.firebase.auth.currentUser, {
-        displayName: name
+        displayName: name,
+        photoURL: profileUrl || null
       });
       
       // Create user document in Firestore
@@ -3348,7 +3726,8 @@
           name: name,
           email: email,
           subject: subject,
-          role: 'admin', // Set as admin by default
+          profileUrl: profileUrl || null,
+          role: 'teacher', // Default role is teacher
           createdAt: new Date()
         }
       );
@@ -3400,8 +3779,8 @@
       await window.firebase.updateDoc(
         window.firebase.doc(window.firebase.db, 'users', currentUser.uid),
         {
-          schoolId: schoolDoc.id,
-          role: 'teacher' // Set as teacher when joining a school
+          schoolId: schoolDoc.id
+          // Role remains as teacher when joining a school
         }
       );
       
@@ -3470,11 +3849,13 @@
           code: schoolCode,
           logoUrl: logoUrl,
           createdBy: currentUser.uid,
+          admins: [currentUser.uid], // Add creator as admin
+          teachers: [currentUser.uid], // Add creator as teacher
           createdAt: new Date()
         }
       );
       
-      // Update user document with school ID
+      // Update user document with school ID and set as admin
       await window.firebase.updateDoc(
         window.firebase.doc(window.firebase.db, 'users', currentUser.uid),
         {
@@ -3542,6 +3923,11 @@
         schoolLogoContainer.style.display = 'block';
       }
       
+      // Update user role badge
+      currentUserData.role = 'admin';
+      userRoleBadge.textContent = 'ADMIN';
+      userRoleBadge.className = 'role-badge admin';
+      
       // Show management tabs
       managementTabs.style.display = 'flex';
       
@@ -3580,7 +3966,8 @@
         {
           name: className,
           schoolId: currentSchool.id,
-          createdAt: new Date()
+          createdAt: new Date(),
+          createdBy: currentUser.uid
         }
       );
       
@@ -3606,7 +3993,8 @@
         {
           name: subjectName,
           schoolId: currentSchool.id,
-          createdAt: new Date()
+          createdAt: new Date(),
+          createdBy: currentUser.uid
         }
       );
       
@@ -3616,6 +4004,121 @@
     } catch (error) {
       console.error('Error adding subject:', error);
       alert('Error adding subject. Please try again.');
+    }
+  }
+
+  // Handle adding a teacher
+  async function handleAddTeacher(e) {
+    e.preventDefault();
+    const teacherName = document.getElementById('teacherName').value;
+    const teacherEmail = document.getElementById('teacherEmail').value;
+    const teacherSubject = document.getElementById('teacherSubject').value;
+    const teacherRole = document.getElementById('teacherRole').value;
+    const errorBox = document.getElementById('addTeacherError');
+
+    try {
+      // First, check if user with this email already exists
+      const usersQuery = window.firebase.query(
+        window.firebase.collection(window.firebase.db, 'users'),
+        window.firebase.where('email', '==', teacherEmail)
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(usersQuery);
+      let teacherUserId = null;
+      
+      if (!querySnapshot.empty) {
+        // User already exists, update their school and role
+        const userDoc = querySnapshot.docs[0];
+        teacherUserId = userDoc.id;
+        
+        await window.firebase.updateDoc(
+          window.firebase.doc(window.firebase.db, 'users', teacherUserId),
+          {
+            schoolId: currentSchool.id,
+            role: teacherRole,
+            subject: teacherSubject,
+            updatedAt: new Date()
+          }
+        );
+      } else {
+        // Create a new user account (they'll need to set password via email)
+        // For now, just create a user document without Firebase Auth account
+        const newTeacherRef = await window.firebase.addDoc(
+          window.firebase.collection(window.firebase.db, 'users'),
+          {
+            name: teacherName,
+            email: teacherEmail,
+            subject: teacherSubject,
+            role: teacherRole,
+            schoolId: currentSchool.id,
+            createdAt: new Date(),
+            status: 'pending' // They need to complete registration
+          }
+        );
+        
+        teacherUserId = newTeacherRef.id;
+        
+        // Send invitation email (in a real app, you would send an actual email)
+        alert(`Teacher ${teacherName} has been added. They will receive an invitation email to complete their registration.`);
+      }
+      
+      // Update school's teachers list
+      await window.firebase.updateDoc(
+        window.firebase.doc(window.firebase.db, 'schools', currentSchool.id),
+        {
+          teachers: window.firebase.arrayUnion(teacherUserId)
+        }
+      );
+      
+      // If teacher is admin, add to admins list
+      if (teacherRole === 'admin') {
+        await window.firebase.updateDoc(
+          window.firebase.doc(window.firebase.db, 'schools', currentSchool.id),
+          {
+            admins: window.firebase.arrayUnion(teacherUserId)
+          }
+        );
+      }
+      
+      // Hide modal and reload teachers
+      hideModal(addTeacherModal);
+      loadTeachers();
+      
+      // Clear form
+      document.getElementById('teacherName').value = '';
+      document.getElementById('teacherEmail').value = '';
+      document.getElementById('teacherSubject').value = '';
+      document.getElementById('teacherRole').value = 'teacher';
+      
+    } catch (error) {
+      console.error('Error adding teacher:', error);
+      errorBox.querySelector('span').textContent = 'Error adding teacher. Please try again.';
+      errorBox.style.display = 'flex';
+    }
+  }
+
+  // Handle forgot password
+  async function handleForgotPassword(e) {
+    e.preventDefault();
+    const email = document.getElementById('forgotPasswordEmail').value;
+    const errorBox = document.getElementById('forgotPasswordError');
+    const successBox = document.getElementById('forgotPasswordSuccess');
+
+    errorBox.style.display = 'none';
+    successBox.style.display = 'none';
+
+    try {
+      await window.firebase.sendPasswordResetEmail(window.firebase.auth, email);
+      successBox.style.display = 'flex';
+      
+      // Clear form and hide modal after delay
+      setTimeout(() => {
+        document.getElementById('forgotPasswordEmail').value = '';
+        hideModal(forgotPasswordModal);
+      }, 3000);
+    } catch (error) {
+      errorBox.querySelector('span').textContent = error.message;
+      errorBox.style.display = 'flex';
     }
   }
 
@@ -3630,6 +4133,8 @@
       const querySnapshot = await window.firebase.getDocs(classesQuery);
       currentClasses = [];
       const classList = document.getElementById('classList');
+      if (!classList) return;
+      
       classList.innerHTML = '';
       
       querySnapshot.forEach(doc => {
@@ -3642,12 +4147,18 @@
         // Add to UI
         const classCard = document.createElement('div');
         classCard.className = 'class-card';
+        
+        // Only show delete button for admins
+        const deleteButton = currentUserData && currentUserData.role === 'admin' 
+          ? `<button class="btn btn-danger" onclick="deleteClass('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>`
+          : '';
+        
         classCard.innerHTML = `
           <h4>${classData.name}</h4>
-          <p>Created: ${classData.createdAt.toDate().toLocaleDateString()}</p>
+          <p>Created: ${classData.createdAt?.toDate ? classData.createdAt.toDate().toLocaleDateString() : 'N/A'}</p>
           <div class="card-actions">
             <button class="btn btn-success" onclick="viewClass('${doc.id}')"><i class="fas fa-eye"></i> View</button>
-            <button class="btn btn-danger" onclick="deleteClass('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
+            ${deleteButton}
           </div>
         `;
         classList.appendChild(classCard);
@@ -3668,6 +4179,8 @@
       const querySnapshot = await window.firebase.getDocs(subjectsQuery);
       currentSubjects = [];
       const subjectsList = document.getElementById('subjectsList');
+      if (!subjectsList) return;
+      
       subjectsList.innerHTML = '';
       
       querySnapshot.forEach(doc => {
@@ -3680,17 +4193,90 @@
         // Add to UI
         const subjectCard = document.createElement('div');
         subjectCard.className = 'subject-card';
+        
+        // Only show delete button for admins
+        const deleteButton = currentUserData && currentUserData.role === 'admin' 
+          ? `<button class="btn btn-danger" onclick="deleteSubject('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>`
+          : '';
+        
         subjectCard.innerHTML = `
           <h4>${subjectData.name}</h4>
-          <p>Created: ${subjectData.createdAt.toDate().toLocaleDateString()}</p>
+          <p>Created: ${subjectData.createdAt?.toDate ? subjectData.createdAt.toDate().toLocaleDateString() : 'N/A'}</p>
           <div class="card-actions">
-            <button class="btn btn-danger" onclick="deleteSubject('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
+            ${deleteButton}
           </div>
         `;
         subjectsList.appendChild(subjectCard);
       });
     } catch (error) {
       console.error('Error loading subjects:', error);
+    }
+  }
+
+  // Load teachers for the current school
+  async function loadTeachers() {
+    try {
+      // Get all users in the school
+      const usersQuery = window.firebase.query(
+        window.firebase.collection(window.firebase.db, 'users'),
+        window.firebase.where('schoolId', '==', currentSchool.id)
+      );
+      
+      const querySnapshot = await window.firebase.getDocs(usersQuery);
+      currentTeachers = [];
+      const teacherList = document.getElementById('teacherList');
+      if (!teacherList) return;
+      
+      teacherList.innerHTML = '';
+      
+      querySnapshot.forEach(doc => {
+        const teacherData = {
+          id: doc.id,
+          ...doc.data()
+        };
+        currentTeachers.push(teacherData);
+        
+        // Add to UI
+        const teacherCard = document.createElement('div');
+        teacherCard.className = 'teacher-card';
+        
+        // Role badge
+        const roleBadge = teacherData.role === 'admin' 
+          ? '<span class="role-badge admin">ADMIN</span>' 
+          : '<span class="role-badge teacher">TEACHER</span>';
+        
+        // Profile image or placeholder
+        const profileImg = teacherData.profileUrl 
+          ? `<img src="${teacherData.profileUrl}" alt="${teacherData.name}" class="profile-img">`
+          : `<div style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; color: white; font-size: 24px;">${teacherData.name.charAt(0)}</div>`;
+        
+        // Admin actions (only for current admin)
+        const adminActions = currentUserData && currentUserData.role === 'admin' && teacherData.id !== currentUser.uid
+          ? `
+            <div class="card-actions">
+              <button class="btn btn-info" onclick="promoteTeacher('${doc.id}', '${teacherData.role}')">
+                <i class="fas fa-user-shield"></i> ${teacherData.role === 'admin' ? 'Demote' : 'Make Admin'}
+              </button>
+              <button class="btn btn-danger" onclick="removeTeacher('${doc.id}')">
+                <i class="fas fa-user-minus"></i> Remove
+              </button>
+            </div>
+          `
+          : '';
+        
+        teacherCard.innerHTML = `
+          ${profileImg}
+          ${roleBadge}
+          <h4>${teacherData.name}</h4>
+          <p><strong>Email:</strong> ${teacherData.email}</p>
+          <p><strong>Subject:</strong> ${teacherData.subject || 'Not specified'}</p>
+          <p><strong>Joined:</strong> ${teacherData.createdAt?.toDate ? teacherData.createdAt.toDate().toLocaleDateString() : 'N/A'}</p>
+          ${adminActions}
+        `;
+        teacherList.appendChild(teacherCard);
+      });
+    } catch (error) {
+      console.error('Error loading teachers:', error);
     }
   }
 
@@ -3708,6 +4294,8 @@
       const querySnapshot = await window.firebase.getDocs(studentsQuery);
       currentStudents = [];
       const studentList = document.getElementById('studentList');
+      if (!studentList) return;
+      
       studentList.innerHTML = '';
       
       querySnapshot.forEach(doc => {
@@ -3720,11 +4308,17 @@
         // Add to UI
         const studentCard = document.createElement('div');
         studentCard.className = 'student-card';
+        
+        // Only show delete button for admins
+        const deleteButton = currentUserData && currentUserData.role === 'admin' 
+          ? `<button class="btn btn-danger" onclick="deleteStudent('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>`
+          : '';
+        
         studentCard.innerHTML = `
           <h4>${studentData.name}</h4>
           <p>Class: ${getClassName(studentData.classId)}</p>
           <div class="card-actions">
-            <button class="btn btn-danger" onclick="deleteStudent('${doc.id}')"><i class="fas fa-trash"></i> Delete</button>
+            ${deleteButton}
           </div>
         `;
         studentList.appendChild(studentCard);
@@ -3747,36 +4341,36 @@
     const reportClassSelect = document.getElementById('reportClassSelect');
     
     // Clear existing options except the first one
-    while (studentClassSelect.options.length > 1) {
-      studentClassSelect.remove(1);
-    }
-    while (marksClassSelect.options.length > 1) {
-      marksClassSelect.remove(1);
-    }
-    while (reportClassSelect.options.length > 1) {
-      reportClassSelect.remove(1);
-    }
+    [studentClassSelect, marksClassSelect, reportClassSelect].forEach(select => {
+      if (select) {
+        while (select.options.length > 1) {
+          select.remove(1);
+        }
+      }
+    });
     
     // Add classes to selectors
     currentClasses.forEach(classObj => {
       const option1 = document.createElement('option');
       option1.value = classObj.id;
       option1.textContent = classObj.name;
-      studentClassSelect.appendChild(option1);
+      if (studentClassSelect) studentClassSelect.appendChild(option1);
       
       const option2 = document.createElement('option');
       option2.value = classObj.id;
       option2.textContent = classObj.name;
-      marksClassSelect.appendChild(option2);
+      if (marksClassSelect) marksClassSelect.appendChild(option2);
       
       const option3 = document.createElement('option');
       option3.value = classObj.id;
       option3.textContent = classObj.name;
-      reportClassSelect.appendChild(option3);
+      if (reportClassSelect) reportClassSelect.appendChild(option3);
     });
     
     // Add event listeners
-    studentClassSelect.addEventListener('change', loadStudents);
+    if (studentClassSelect) {
+      studentClassSelect.addEventListener('change', loadStudents);
+    }
   }
 
   // Handle student upload from Excel file
@@ -3792,7 +4386,7 @@
       return;
     }
     
-    if (!fileInput.files.length) return;
+    if (!fileInput || !fileInput.files.length) return;
     
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -3818,14 +4412,15 @@
                 name: studentName,
                 classId: classId,
                 schoolId: currentSchool.id,
-                createdAt: new Date()
+                createdAt: new Date(),
+                createdBy: currentUser.uid
               }
             );
           }
         }
         
         successBox.style.display = 'flex';
-        fileInput.value = '';
+        if (fileInput) fileInput.value = '';
         loadStudents(); // Refresh student list
       } catch (error) {
         console.error('Error processing Excel file:', error);
@@ -3842,6 +4437,7 @@
     try {
       await window.firebase.signOut(window.firebase.auth);
       currentUser = null;
+      currentUserData = null;
       currentSchool = null;
       isSchoolPortalOpen = false;
       navbar.style.display = 'none';
@@ -3895,6 +4491,99 @@
       } catch (error) {
         console.error('Error deleting subject:', error);
         alert('Error deleting subject. Please try again.');
+      }
+    }
+  };
+
+  // Promote or demote teacher
+  window.promoteTeacher = async (teacherId, currentRole) => {
+    const newRole = currentRole === 'admin' ? 'teacher' : 'admin';
+    const action = currentRole === 'admin' ? 'demote from admin' : 'promote to admin';
+    
+    if (confirm(`Are you sure you want to ${action} this teacher?`)) {
+      try {
+        // Update teacher's role in users collection
+        await window.firebase.updateDoc(
+          window.firebase.doc(window.firebase.db, 'users', teacherId),
+          {
+            role: newRole,
+            updatedAt: new Date()
+          }
+        );
+        
+        // Update school's admins list
+        const schoolDoc = await window.firebase.getDoc(
+          window.firebase.doc(window.firebase.db, 'schools', currentSchool.id)
+        );
+        
+        if (schoolDoc.exists()) {
+          const schoolData = schoolDoc.data();
+          const admins = schoolData.admins || [];
+          
+          if (newRole === 'admin') {
+            // Add to admins list
+            if (!admins.includes(teacherId)) {
+              await window.firebase.updateDoc(
+                window.firebase.doc(window.firebase.db, 'schools', currentSchool.id),
+                {
+                  admins: window.firebase.arrayUnion(teacherId)
+                }
+              );
+            }
+          } else {
+            // Remove from admins list
+            if (admins.includes(teacherId)) {
+              await window.firebase.updateDoc(
+                window.firebase.doc(window.firebase.db, 'schools', currentSchool.id),
+                {
+                  admins: window.firebase.arrayRemove(teacherId)
+                }
+              );
+            }
+          }
+        }
+        
+        // Reload teachers
+        loadTeachers();
+        
+        alert(`Teacher ${action} successfully!`);
+      } catch (error) {
+        console.error(`Error ${action} teacher:`, error);
+        alert(`Error ${action} teacher. Please try again.`);
+      }
+    }
+  };
+
+  // Remove teacher from school
+  window.removeTeacher = async (teacherId) => {
+    if (confirm('Are you sure you want to remove this teacher from the school?')) {
+      try {
+        // Update teacher's user document
+        await window.firebase.updateDoc(
+          window.firebase.doc(window.firebase.db, 'users', teacherId),
+          {
+            schoolId: null,
+            role: 'teacher', // Reset to default role
+            updatedAt: new Date()
+          }
+        );
+        
+        // Update school's teachers list
+        await window.firebase.updateDoc(
+          window.firebase.doc(window.firebase.db, 'schools', currentSchool.id),
+          {
+            teachers: window.firebase.arrayRemove(teacherId),
+            admins: window.firebase.arrayRemove(teacherId)
+          }
+        );
+        
+        // Reload teachers
+        loadTeachers();
+        
+        alert('Teacher removed from school successfully!');
+      } catch (error) {
+        console.error('Error removing teacher:', error);
+        alert('Error removing teacher. Please try again.');
       }
     }
   };
