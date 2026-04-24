@@ -1,286 +1,250 @@
 // Service Worker for Skore Point PWA
 
-const CACHE_VERSION = '1.4.6'; // Increment version to force cache refresh
-const CACHE_NAME = `skore-point-v${CACHE_VERSION}`;
+// IMPORTANT:
+// Update VERSION only when deploying a new release.
+// Do NOT use timestamps or Date.now() for PWA stability.
+const VERSION = 'v2.1.9';
+const CACHE_NAME = `skore-point-${VERSION}`;
 const urlsToCache = [
-    'index.html',
+  './',
+  './?source=pwa',
+  './index.html',
+  './manifest.json',
 
-    // Shared resources
-    'shared/css/base.css',
-    'shared/css/variables.css',
-    'shared/css/components.css',
-    'shared/js/app.js',
-    'shared/js/router.js',
-    'shared/js/auth-guard.js',
-    'shared/js/ui.js',
+  // Shared CSS/JS
+  './shared/css/base.css',
+  './shared/css/variables.css',
+  './shared/css/components.css',
+  './shared/js/app.js',
 
-    // Pages
-    'pages/launch/launch.html',
-    'pages/launch/launch.css',
-    'pages/launch/launch.js',
+  // Launch page
+  './pages/launch/launch.html',
+  './pages/launch/launch.css',
+  './pages/launch/launch.js',
 
-    'pages/auth/login.html',
-    'pages/auth/login.css',
-    'pages/auth/login.js',
+  // Auth
+  './pages/auth/login.html',
+  './pages/auth/login.css',
+  './pages/auth/login.js',
 
-    'pages/auth/register.html',
-    'pages/auth/register.css',
-    'pages/auth/register.js',
+  // Dashboard
+  './pages/dashboard/dashboard.html',
+  './pages/dashboard/dashboard.js',
 
-    'pages/dashboard/dashboard.html',
-    'pages/dashboard/dashboard.css',
-    'pages/dashboard/dashboard.js',
+  // School
+  './pages/school/school.html',
+  './pages/school/school.css',
+  './pages/school/school.js',
 
-    'pages/school/school.html',
-    'pages/school/school.css',
-    'pages/school/school.js',
+  // Marks & Reports
+  './pages/marks/marks.html',
+  './pages/marks/marks.css',
+  './pages/marks/marks.js',
+  './pages/reports/reports.html',
+  './pages/reports/reports.css',
+  './pages/reports/reports.js',
 
-    'pages/marks/marks.html',
-    'pages/marks/marks.css',
-    'pages/marks/marks.js',
+  // Services and utils
+  './services/report.service.js',
+  './services/school.service.js',
+  './services/cloudinary.service.js',
+  './utils/grading.js',
+  './utils/helpers.js',
 
-    'pages/reports/reports.html',
-    'pages/reports/reports.css',
-    'pages/reports/reports.js',
+  // Offline fallback
+  './offline.html',
 
-    'services/report.service.js',
-    'services/school.service.js',
-    'utils/grading.js',
-    'utils/helpers.js',
+  // Icons & screenshots
+  './assets/icons/skore-icon-96.png',
+  './assets/icons/skore-icon-144.png',
+  './assets/icons/skore-icon-192.png',
+  './assets/icons/skore-icon-512-maskable.png',
+  './assets/icons/skore-icon-512.jpg',
+  './assets/icons/skore-icon.jpg',
+  './assets/screenshot/skore-dashboard-wide.png',
+  './assets/screenshot/skore-dashboard-mobile.png',
 
-    'pages/offline/offline.html',
-
-    // Assets
-    'assets/icons/icon-192x192.png',
-    'assets/icons/icon-512x512.png',
-    'assets/icons/skore-icon.jpg',
-    'assets/screenshot/skore-dashboard-wide.png',
-    'assets/screenshot/skore-dashboard-mobile.png',
-    
-    // External libraries
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-regular-400.woff2',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2',
-    
-    'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js',
-    'https://cdn.jsdelivr.net/npm/chart.js'
+  // Favicons
+  // Note: canonical favicons not present; using available skore-icon files instead
+  './assets/icons/skore-icon-96.png',
+  './assets/icons/skore-icon-192.png'
 ];
 
-// Install event
-self.addEventListener('install', event => {
-    console.log('Service Worker installing...');
-    
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Cache opened');
-                return cache.addAll(urlsToCache);
-            })
-            .then(() => {
-                console.log('All resources cached');
-                return self.skipWaiting();
-            })
-            .catch(error => {
-                console.error('Cache installation failed:', error);
-            })
-    );
+// Install - populate cache
+self.addEventListener('install', (event) => {
+  console.log(`[sw] Installing service worker version: ${VERSION}...`);
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // Cache files one by one to avoid failing the whole cache if one file fails
+      const cachePromises = urlsToCache.map(async (url) => {
+        try {
+          await cache.add(new Request(url, { cache: 'reload' }));
+          console.log(`[sw] Cached: ${url}`);
+        } catch (err) {
+          console.warn('[sw] Failed to cache', url, err);
+        }
+      });
+      await Promise.all(cachePromises);
+    }).then(() => {
+      console.log('[sw] Installation complete, skipping waiting');
+      return self.skipWaiting();
+    })
+  );
 });
 
-// Activate event
-self.addEventListener('activate', event => {
-    console.log('Service Worker activating...');
-    
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
+// Activate - cleanup old caches
+self.addEventListener('activate', (event) => {
+  console.log(`[sw] Activating service worker version: ${VERSION}...`);
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log('[sw] Deleting cache', key);
+            return caches.delete(key);
+          }
         })
-        .then(() => {
-            console.log('Service Worker activated');
-            return self.clients.claim();
-        })
-    );
+      );
+    }).then(() => {
+      console.log('[sw] Activation complete, claiming clients');
+      return self.clients.claim();
+    })
+  );
 });
 
-// Fetch event
-self.addEventListener('fetch', event => {
-    // Skip non-GET requests
+// Fetch - network-first for HTML/CSS/JS, cache-first for others
+self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
-    
-    // Skip Chrome extensions and Firebase/Google API requests
-    const requestUrl = event.request.url;
-    if (requestUrl.startsWith('chrome-extension://') || 
-        requestUrl.includes('firebasestorage.googleapis.com') ||
-        requestUrl.includes('firebaseapp.com') ||
-        requestUrl.includes('googleapis.com') ||
-        requestUrl.includes('res.cloudinary.com') ||
-        requestUrl.includes('api.cloudinary.com')) {
+
+    const requestUrl = new URL(event.request.url);
+
+    // Ignore chrome-extension and external API calls
+    if (requestUrl.protocol.startsWith('chrome-extension') || requestUrl.hostname.includes('firebaseapp.com') || requestUrl.hostname.includes('googleapis.com') || requestUrl.hostname.includes('cloudinary.com')) {
         return;
     }
-    
-    // Determine if this is an HTML, CSS, or JS file that should be network-first
-    const isHTMLRequest = event.request.headers.get('Accept').includes('text/html');
-    const isCSSRequest = requestUrl.endsWith('.css');
-    const isJSRequest = requestUrl.endsWith('.js');
-    
-    if (isHTMLRequest || isCSSRequest || isJSRequest) {
-        // Network-first strategy for HTML, CSS, and JS
+
+    const isNavigation = event.request.mode === 'navigate';
+    const isHtml = (event.request.headers.get('accept') || '').includes('text/html');
+    const isJsOrCss = requestUrl.pathname.endsWith('.js') || requestUrl.pathname.endsWith('.css');
+    const isImageOrFont = ['.png', '.jpg', '.jpeg', '.svg', '.webp', '.woff2', '.woff', '.ico'].some(ext => requestUrl.pathname.endsWith(ext));
+
+    // Strategy 1: Network-first for HTML, JS, and CSS to ensure freshness
+    if (isNavigation || isHtml || isJsOrCss) {
         event.respondWith(
             fetch(event.request)
-                .then(response => {
-                    if (!response || response.status !== 200) {
-                        return response;
+            .then((response) => {
+                // If successful, cache the response and return it
+                if (response && response.status === 200) {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, copy);
+                    });
+                }
+                return response;
+            })
+            .catch(() => {
+                // If network fails, try to get it from the cache
+                return caches.match(event.request).then((cachedResponse) => {
+                    // If it's a navigation request and not in cache, show offline page
+                    if (isNavigation && !cachedResponse) {
+                        console.log('[sw] Navigation failed, showing offline page');
+                        return caches.match('./offline.html');
                     }
-                    
-                    // Clone and cache the response
-                    const responseToCache = response.clone();
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseToCache);
-                        });
-                    
-                    return response;
-                })
-                .catch(error => {
-                    // Fall back to cache if network fails
-                    console.log('Network failed, trying cache:', event.request.url);
-                    return caches.match(event.request)
-                        .then(cachedResponse => {
-                            if (cachedResponse) {
-                                return cachedResponse;
-                            }
-                            
-                            // If it's a page request, return offline page
-                            if (isHTMLRequest) {
-                                return caches.match('pages/offline/offline.html')
-                                    .then(response => {
-                                        return response || new Response('You are offline.', {
-                                            status: 503,
-                                            headers: { 'Content-Type': 'text/plain' }
-                                        });
-                                    });
-                            }
-                            
-                            return new Response('Resource not available', {
-                                status: 404,
-                                headers: { 'Content-Type': 'text/plain' }
-                            });
-                        });
-                })
+                    return cachedResponse;
+                });
+            })
         );
-    } else {
-        // Cache-first strategy for assets
+        return;
+    }
+
+    // Strategy 2: Cache-first for images and fonts
+    if (isImageOrFont) {
         event.respondWith(
-            caches.match(event.request)
-                .then(cachedResponse => {
-                    // Return cached response if found
-                    if (cachedResponse) {
-                        console.log('Serving from cache:', event.request.url);
-                        return cachedResponse;
-                    }
-                    
-                    // Otherwise fetch from network
-                    return fetch(event.request)
-                        .then(response => {
-                            // Check if we received a valid response
-                            if (!response || response.status !== 200 || response.type !== 'basic') {
-                                return response;
-                            }
-                            
-                            // Clone the response
-                            const responseToCache = response.clone();
-                            
-                            // Cache the new resource
-                            caches.open(CACHE_NAME)
-                                .then(cache => {
-                                    cache.put(event.request, responseToCache);
-                                });
-                            
-                            return response;
-                        })
-                        .catch(error => {
-                            console.log('Fetch failed:', error);
-                            return caches.match('pages/offline/offline.html')
-                                .then(response => {
-                                    return response || new Response('You are offline.', {
-                                        status: 503,
-                                        headers: { 'Content-Type': 'text/plain' }
-                                    });
-                                });
+            caches.match(event.request).then((cachedResponse) => {
+                return cachedResponse || fetch(event.request).then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const copy = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, copy);
                         });
-                })
+                    }
+                    return networkResponse;
+                });
+            }).catch((error) => {
+                console.log(`[sw] Failed to fetch image/font ${event.request.url}`, error);
+                // Return a fallback image if available
+                if (isImageOrFont) {
+                    return caches.match('./assets/icons/skore-icon-96.png');
+                }
+            })
         );
+        return;
     }
-});
 
-// Background sync for offline data
-self.addEventListener('sync', event => {
-    console.log('Background sync:', event.tag);
-    
-    if (event.tag === 'sync-marks') {
-        event.waitUntil(syncMarks());
-    }
-});
-
-// Push notification event
-self.addEventListener('push', event => {
-    console.log('Push notification received:', event);
-    
-    const options = {
-        body: event.data ? event.data.text() : 'New notification from Skore Point',
-        icon: 'assets/icons/icon-192x192.png',
-        badge: 'assets/icons/icon-192x192.png',
-        vibrate: [100, 50, 100],
-        data: {
-            dateOfArrival: Date.now(),
-            primaryKey: '1'
-        },
-        actions: [
-            {
-                action: 'open',
-                title: 'Open App'
-            },
-            {
-                action: 'close',
-                title: 'Close'
-            }
-        ]
-    };
-    
-    event.waitUntil(
-        self.registration.showNotification('Skore Point', options)
+    // Strategy 3: Default (Network then cache fallback) for everything else
+    event.respondWith(
+        fetch(event.request).catch(() => caches.match(event.request))
     );
 });
 
-// Notification click event
-self.addEventListener('notificationclick', event => {
-    console.log('Notification click:', event);
-    
-    event.notification.close();
-    
-    if (event.action === 'open') {
-        event.waitUntil(
-            clients.openWindow('index.html')
-        );
-    }
+// Listen for skipWaiting message to allow immediate activation
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[sw] Skip waiting message received');
+    self.skipWaiting();
+  }
 });
 
-// Sync marks function
-async function syncMarks() {
-    // This function would sync offline marks data
-    // Implementation depends on your offline data strategy
-    console.log('Syncing marks data...');
-    
-    // Example: Get offline marks from IndexedDB and sync to Firebase
-    // const offlineMarks = await getOfflineMarks();
-    // await syncMarksToFirebase(offlineMarks);
-}
+// Handle push notifications
+self.addEventListener('push', (event) => {
+  console.log('[sw] Push notification received');
+  
+  let data = { title: 'Skore Point', body: 'New update available', icon: './assets/icons/skore-icon-192.png' };
+  
+  if (event.data) {
+    try {
+      data = JSON.parse(event.data.text());
+    } catch (e) {
+      data.body = event.data.text();
+    }
+  }
+  
+  const options = {
+    body: data.body,
+    icon: data.icon || './assets/icons/skore-icon-192.png',
+    badge: './assets/icons/skore-icon-96.png',
+    vibrate: [200, 100, 200],
+    data: {
+      url: data.url || '/'
+    }
+  };
+  
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// Handle notification click
+self.addEventListener('notificationclick', (event) => {
+  console.log('[sw] Notification click received');
+  
+  event.notification.close();
+  
+  const urlToOpen = event.notification.data?.url || '/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((windowClients) => {
+        // Check if there's already a window open
+        for (let client of windowClients) {
+          if (client.url === urlToOpen && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // If not, open a new window
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
