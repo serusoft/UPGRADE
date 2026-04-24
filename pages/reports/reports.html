@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4361ee">
     <title>Reports & Analytics | Skore Point</title>
+    <link rel="icon" href="../../assets/icons/skore-icon.jpg">
+    <link rel="manifest" href="../../manifest.json">
     
     <!-- Shared CSS -->
     <link rel="stylesheet" href="../../shared/css/base.css">
@@ -23,6 +26,73 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <style>
+        /* Ensure level selection cards are visible even if external CSS fails */
+        .level-options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+        }
+        
+        .level-option-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .level-option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            border-color: #4361ee;
+        }
+        
+        .level-option-card i {
+            font-size: 48px;
+            color: #4361ee;
+            margin-bottom: 20px;
+        }
+        
+        .level-option-card h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .level-option-card p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* Fallback styles for level selection prompt */
+        .level-selection-prompt {
+            background: #1e293b;
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        /* Spinner for level options */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .spinner-border {
+            width: 30px; height: 30px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #4361ee;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation will be injected by shared/js/ui.js -->
@@ -214,14 +284,18 @@
         </div>
 
         <!-- Level Selection Prompt -->
-        <div class="level-selection-prompt" id="levelSelectionPrompt">
+        <div class="level-selection-prompt" id="levelSelectionPrompt" style="display: block;">
             <div class="prompt-content">
                 <i class="fas fa-graduation-cap"></i>
                 <h2>Select Academic Level</h2>
                 <p>Please select the academic level to generate reports for:</p>
                 
-                <div class="level-options-container" id="levelOptionsPrompt">
+                <div class="level-options-container" id="levelOptionsPrompt" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; width: 100%;">
                     <!-- Options will be populated by JavaScript -->
+                    <div style="text-align: center; width: 100%; padding: 20px;">
+                        <div class="spinner-border"></div>
+                        <div style="color: #cbd5e1;">Loading options...</div>
+                    </div>
                 </div>
                 
                 <p class="prompt-note">
@@ -241,20 +315,20 @@
     </div>
 
     <!-- Shared JavaScript -->
-    <script type="module" src="../../shared/js/app.js"></script>
-    <script type="module" src="../../shared/js/router.js"></script>
-    <script type="module" src="../../shared/js/auth-guard.js"></script>
-    <script src="../../shared/js/ui.js"></script>
+    <script type="module" src="../../shared/js/app.js?v=20260217"></script>
+    <script type="module" src="../../shared/js/router.js?v=20260217"></script>
+    <script type="module" src="../../shared/js/auth-guard.js?v=20260217"></script>
+    <script src="../../shared/js/ui.js?v=20260217"></script>
 
     <!-- Services -->
-    <script type="module" src="../../services/report.service.js"></script>
-    <script type="module" src="../../services/school.service.js"></script>
+    <script type="module" src="../../services/report.service.js?v=20260217"></script>
+    <script type="module" src="../../services/school.service.js?v=20260217"></script>
 
     <!-- Utils -->
-    <script type="module" src="../../utils/grading.js"></script>
-    <script type="module" src="../../utils/helpers.js"></script>
+    <script type="module" src="../../utils/grading.js?v=20260217"></script>
+    <script type="module" src="../../utils/helpers.js?v=20260217"></script>
 
     <!-- Page-specific JavaScript -->
-    <script type="module" src="reports.js"></script>
+    <script type="module" src="reports.js?v=20260217"></script>
 </body>
 </html>

@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4361ee">
     <title>Skore Point - Dashboard</title>
+    <link rel="icon" href="../../assets/icons/skore-icon.jpg">
+    <link rel="manifest" href="../../manifest.json">
     <link rel="stylesheet" href="../../shared/css/variables.css">
     <link rel="stylesheet" href="../../shared/css/base.css">
     <link rel="stylesheet" href="../../shared/css/components.css">
@@ -11,6 +14,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+        <!-- Offline Indicator -->
+        <div id="offlineIndicator">
+            <i class="fas fa-wifi-slash"></i> You are currently offline
+        </div>
         <div id="navbar-container"></div>
 
         <div class="container" id="dashboardSection">
@@ -79,9 +86,9 @@
                 </div>
             </div>
         </div>
-    <script src="../../services/cloudinary.service.js" defer></script>
-    <script src="../../shared/js/app.js" defer></script>
-    <script src="../../shared/js/ui.js" defer></script>
-    <script src="./dashboard.js" defer></script>
+    <script src="../../services/cloudinary.service.js?v=20260218" defer></script>
+    <script src="../../shared/js/app.js?v=20260218" defer></script>
+    <script src="../../shared/js/ui.js?v=20260218" defer></script>
+    <script src="./dashboard.js?v=20260218" defer></script>
 </body>
 </html>

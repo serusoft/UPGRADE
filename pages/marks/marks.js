@@ -98,11 +98,17 @@ async function initializeMarksPage(level) {
     const badge = document.getElementById('marksLevelBadge');
     if (badge) badge.textContent = getLevelDisplayName(level);
     
+    // Update instruction text based on level
+    updateMarksInstruction(level);
+    
     // Populate level filter
     populateLevelFilter(level);
     
     // Setup event listeners
     setupMarksEventListeners();
+    
+    // Setup mobile save button layout
+    setupMobileSaveButton();
     
     // Load initial data
     await loadMarksData(level);
@@ -110,13 +116,38 @@ async function initializeMarksPage(level) {
 
 function setupMarksEventListeners() {
     // Back to School
-    document.getElementById('backToSchoolBtn')?.addEventListener('click', () => {
-        if (typeof window.navigateTo === 'function') {
-            window.navigateTo('school');
-        } else {
-            window.location.href = '../school/school.html';
+    const backBtn = document.getElementById('backToSchoolBtn');
+    if (backBtn) {
+        // Add blinking animation style if not present
+        if (!document.getElementById('blink-animation-style')) {
+            const styleSheet = document.createElement("style");
+            styleSheet.id = 'blink-animation-style';
+            styleSheet.innerText = `
+                @keyframes blink-red {
+                    0% { background-color: #dc2626; box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); transform: scale(1); }
+                    50% { background-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); transform: scale(1.05); }
+                    100% { background-color: #dc2626; box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(styleSheet);
         }
-    });
+
+        // Apply red blinking style
+        Object.assign(backBtn.style, {
+            backgroundColor: '#dc2626',
+            color: 'white',
+            animation: 'blink-red 2s infinite',
+            border: 'none'
+        });
+
+        backBtn.addEventListener('click', () => {
+            if (typeof window.navigateTo === 'function') {
+                window.navigateTo('school');
+            } else {
+                window.location.href = '../school/school.html';
+            }
+        });
+    }
 
     // Level selection
     document.getElementById('marksLevel')?.addEventListener('change', async (e) => {
@@ -125,6 +156,7 @@ function setupMarksEventListeners() {
             AppState.currentAcademicLevel = level;
             const badge = document.getElementById('marksLevelBadge');
             if (badge) badge.textContent = getLevelDisplayName(level);
+            updateMarksInstruction(level);
             clearMarksForm();
             await loadMarksData(level);
         }
@@ -186,6 +218,35 @@ function setupMarksEventListeners() {
     if (marksGrid) {
         marksGrid.addEventListener('click', (e) => {
             // Mismatch warning removed to allow entry
+        });
+    }
+
+    // Keyboard shortcut for Save (Ctrl+S)
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            const saveBtn = document.getElementById('saveMarksBtn');
+            // Check if button exists and is visible/enabled
+            if (saveBtn && !saveBtn.disabled && saveBtn.offsetParent !== null) {
+                saveMarks();
+            }
+        }
+    });
+
+    // Collapsible Summary
+    const summaryHeader = document.getElementById('summaryHeader');
+    if (summaryHeader) {
+        summaryHeader.addEventListener('click', () => {
+            const stats = document.getElementById('summaryStats');
+            const icon = document.getElementById('summaryToggleIcon');
+            
+            if (stats.style.display === 'none') {
+                stats.style.display = ''; // Revert to CSS default
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                stats.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            }
         });
     }
 }
@@ -301,8 +362,18 @@ async function loadSubjectsForMarks(level) {
                 { field: 'schoolId', op: '==', value: AppState.currentSchool.id }
             ]);
 
-            // Filter to get only the teacher's assigned subjects
-            subjects = allSchoolSubjects.filter(s => userSubjectIds.includes(s.id));
+            // 1. Get names of assigned subjects (resolving IDs to names)
+            const assignedSubjectNames = new Set();
+            allSchoolSubjects.forEach(s => {
+                if (userSubjectIds.includes(s.id)) {
+                    assignedSubjectNames.add(s.name.trim());
+                }
+            });
+
+            // 2. Filter subjects for the CURRENT level that match assigned NAMES
+            subjects = allSchoolSubjects.filter(s => 
+                s.category === level && assignedSubjectNames.has(s.name.trim())
+            );
         }
 
         if (subjects.length === 0 && !isAdmin) {
@@ -313,8 +384,7 @@ async function loadSubjectsForMarks(level) {
         const defaultOption = isAdmin ? 'All Subjects' : 'Select Subject';
         subjectSelect.innerHTML = `<option value="">${defaultOption}</option>` + 
             subjects.map(s => {
-                const isMismatched = s.category !== level;
-                return `<option value="${s.id}" data-mismatched="${isMismatched}">${s.name}</option>`;
+                return `<option value="${s.id}">${s.name}</option>`;
             }).join('');
             
     } catch (error) {
@@ -521,7 +591,7 @@ function handleStudentSearch(query) {
     }
 }
 
-function selectStudent(student) {
+async function selectStudent(student) {
     // Update selected student display
     document.getElementById('selectedStudentName').textContent = student.name;
     document.getElementById('selectedStudentClass').textContent = getClassFromId(student.classId);
@@ -531,7 +601,15 @@ function selectStudent(student) {
     window.selectedStudent = student;
     
     // Load marks for this student
-    loadStudentMarks(student.id);
+    await loadStudentMarks(student.id);
+
+    // Scroll to marks form on mobile for convenience
+    if (window.innerWidth <= 768) {
+        const marksForm = document.getElementById('marksEntryForm');
+        if (marksForm && marksForm.style.display !== 'none') {
+            marksForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 }
 
 async function loadStudentMarks(studentId) {
@@ -634,12 +712,6 @@ function generateRegularInput(subject, existingMark, isMismatched) {
                       if(this.value>100){ this.value = 100; }
                       else if(this.value<0){ this.value = 0; }
                    "
-                   maxlength="3"
-                   onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
-                   onkeyup="
-                      if(this.value>100){ this.value = 100; }
-                      else if(this.value<0){ this.value = 0; }
-                   "
                    oninput="updateMarksSummary()"
                    ${disabledAttr}>
         </div>
@@ -648,7 +720,8 @@ function generateRegularInput(subject, existingMark, isMismatched) {
 
 function generateALevelInputs(subject, existingMark, isMismatched) {
     const disabledAttr = '';
-    const paperCount = subject.paperCount || 1;
+    // Default to 2 papers for principal subjects if not specified, otherwise 1
+    const paperCount = subject.paperCount || (subject.type === 'principal' ? 2 : 1);
     const isGeneralPaper = subject.type === 'general';
     const isSubsidiary = subject.type === 'subsidiary';
     
@@ -659,13 +732,7 @@ function generateALevelInputs(subject, existingMark, isMismatched) {
         for (let i = 1; i <= paperCount; i++) {
             const paperMark = existingMark && existingMark[`paper${i}`] ? existingMark[`paper${i}`] : '';
             inputs += `
-                <div class="paper-input">100"
-                           maxlength="3"
-                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
-                           onkeyup="
-                              if(this.value>100){ this.value = ; }
-                              else if(this.value<0){ this.value = 0; }
-                           
+                <div class="paper-input">
                     <span class="paper-label">Paper ${i}:</span>
                     <input type="number" class="mark-input paper-mark" 
                            data-paper="${i}"
@@ -676,13 +743,7 @@ function generateALevelInputs(subject, existingMark, isMismatched) {
                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
                            onkeyup="
                               if(this.value>100){ this.value = 100; }
-                              else if(this.valu" 
-                   maxlength="3"
-                   onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
-                   onkeyup=e
-                   <  if(this.value>100){ this.value = 100; }
                       else if(this.value<0){ this.value = 0; }
-                   "0){ this.value = 0; }
                            "
                            oninput="updateMarksSummary()"
                            ${disabledAttr}>
@@ -710,10 +771,13 @@ function generateALevelInputs(subject, existingMark, isMismatched) {
     return `
         <div class="mark-input-group ${isMismatched ? 'mismatched' : ''}" data-subject-id="${subject.id}" 
              data-subject-type="${subject.type}">
-            <label>
-                ${subject.name}
-                ${isGeneralPaper ? '<span class="badge">GP</span>' : ''}
-                ${isSubsidiary ? '<span class="badge">Sub</span>' : ''}
+            <label style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="subject-name-text" style="margin-right: 8px;">${subject.name}</span>
+                <div class="badges">
+                    ${isGeneralPaper ? '<span class="badge gp-badge">GP</span>' : ''}
+                    ${isSubsidiary ? '<span class="badge sub-badge">Sub</span>' : ''}
+                    ${subject.type === 'principal' ? '<span class="badge principal-badge">Principal</span>' : ''}
+                </div>
             </label>
             <div class="paper-inputs">
                 ${inputs}
@@ -1038,6 +1102,40 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+function setupMobileSaveButton() {
+    const saveBtn = document.getElementById('saveMarksBtn');
+    if (!saveBtn) return;
+    
+    // Only apply on mobile devices
+    if (window.innerWidth > 768) return;
+
+    const btnRow = saveBtn.parentElement;
+    if (btnRow) {
+        // Make the button row sticky at the bottom
+        Object.assign(btnRow.style, {
+            position: 'sticky',
+            bottom: '0',
+            backgroundColor: '#0f172a', // Dark background to cover content
+            padding: '15px',
+            zIndex: '999',
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 -4px 10px rgba(0,0,0,0.3)',
+            marginTop: '20px' // Ensure separation from content
+        });
+    }
+}
+
+function updateMarksInstruction(level) {
+    const instructionEl = document.getElementById('marksEntryInstruction');
+    if (!instructionEl) return;
+
+    if (level === 'alevel') {
+        instructionEl.textContent = 'Enter marks below. For A-Level subjects, enter marks for each paper separately.';
+    } else {
+        instructionEl.textContent = 'Enter marks below (0-100).';
+    }
 }
 
 // Export for inline event handlers

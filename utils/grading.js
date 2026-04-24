@@ -27,9 +27,6 @@ const GradingUtils = {
     // O-Level Grade Calculation
     calculateOLevelGrade(score) {
         if (score >= 80) return 'A';
-        if (score >= 70) return 'B';
-        if (score >= 60) return 'C';
-        if (score >= 50) return 'D';
         if (score >= 40) return 'E';
         return 'F';
     },
@@ -87,7 +84,7 @@ const GradingUtils = {
     },
     
     // Calculate division
-    calculateDivision(average, aggregate, level) {
+    calculateDivision(average, aggregate, level, subjectCount) {
         if (level === 'alevel') {
             if (aggregate <= 12) return 'Division 1';
             if (aggregate <= 24) return 'Division 2';
@@ -100,10 +97,12 @@ const GradingUtils = {
             if (average >= 50) return 'Division 4';
             return 'Fail';
         } else if (level === 'upper-primary') {
-            if (aggregate <= 8) return 'Division 1';
-            if (aggregate <= 16) return 'Division 2';
-            if (aggregate <= 24) return 'Division 3';
-            return 'Division 4';
+            if (subjectCount !== undefined && subjectCount < 4) return 'U';
+            if (aggregate <= 12) return 'Division 1';
+            if (aggregate <= 23) return 'Division 2';
+            if (aggregate <= 28) return 'Division 3';
+            if (aggregate <= 34) return 'Division 4';
+            return 'U';
         }
         return 'N/A';
     },
@@ -139,6 +138,19 @@ const GradingUtils = {
         return remarks[grade] || 'N/A';
     },
     
+    // A-Level Paper Score to Grade (1-9)
+    calculateALevelPaperScoreToGrade(score) {
+        if (score >= 75) return '1';
+        if (score >= 70) return '2';
+        if (score >= 65) return '3';
+        if (score >= 60) return '4';
+        if (score >= 55) return '5';
+        if (score >= 50) return '6';
+        if (score >= 45) return '7';
+        if (score >= 40) return '8';
+        return '9';
+    },
+
     // Get primary remarks
     getPrimaryRemark(score) {
         if (score >= 90) return 'Excellent';

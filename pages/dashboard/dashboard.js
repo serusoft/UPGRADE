@@ -130,6 +130,36 @@ function renderUserProfileCard() {
         userRoleElement.className = `user-role ${userRole}`; // Add role-specific class for styling
         userEmailElement.textContent = user.email;
 
+        // Add Edit Profile Button if not exists
+        if (!document.getElementById('editProfileBtn')) {
+            const editBtn = document.createElement('button');
+            editBtn.id = 'editProfileBtn';
+            editBtn.innerHTML = '<i class="fas fa-pen"></i>';
+            editBtn.title = 'Edit Profile';
+            Object.assign(editBtn.style, {
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--light)',
+                cursor: 'pointer',
+                marginLeft: 'auto',
+                transition: 'background 0.2s'
+            });
+            editBtn.addEventListener('mouseenter', () => editBtn.style.background = 'rgba(255, 255, 255, 0.2)');
+            editBtn.addEventListener('mouseleave', () => editBtn.style.background = 'rgba(255, 255, 255, 0.1)');
+            editBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showEditProfileModal();
+            });
+            
+            userDashboardDetails.appendChild(editBtn);
+        }
+
         // Ensure the card is visible (if it was hidden initially)
         userDashboardDetails.style.display = 'flex'; // Assuming flex display for the card
 
@@ -167,27 +197,12 @@ function setupEventListeners() {
     // Enter Portal button
     document.getElementById('openSchoolPortalBtn')?.addEventListener('click', () => {
         if (AppState.currentSchool) {
-            const school = AppState.currentSchool;
-            if (school.level === 'primary' || school.level === 'secondary') {
-                showLevelSelection(school.level).then(academicLevel => {
-                    if (academicLevel) {
-                        setAcademicLevel(academicLevel);
-                        navigateTo('school');
-                    }
-                });
-            } else {
-                navigateTo('school');
-            }
+            navigateTo('school');
         } else {
             showToast('Please join or create a school first.', 'warning');
         }
     });
     
-    // Switch School button
-    document.getElementById('switchSchoolBtn')?.addEventListener('click', () => {
-        showSchoolSwitchModal();
-    });
-
     // Logout button
     document.getElementById('dashboardLogoutBtn')?.addEventListener('click', async () => {
         try {
@@ -273,7 +288,7 @@ function showJoinSchoolModal() {
     });
     
     schoolNameInput.addEventListener('input', () => {
-        const searchTerm = schoolNameInput.value.toLowerCase();
+        const searchTerm = schoolNameInput.value.toLowerCase().trim();
         suggestions.innerHTML = '';
         
         if (searchTerm.length < 2) {
@@ -283,15 +298,31 @@ function showJoinSchoolModal() {
         
         const filtered = schoolsCache.filter(school => 
             school.name.toLowerCase().includes(searchTerm)
-        );
+        ).slice(0, 8); // Limit to 8 results
         
         if (filtered.length > 0) {
             filtered.forEach(school => {
                 const suggestion = document.createElement('div');
                 suggestion.className = 'school-suggestion';
+                
+                // Highlight matching text
+                const safeSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`(${safeSearchTerm})`, 'gi');
+                const highlightedName = school.name.replace(regex, '<span class="highlight">$1</span>');
+                
+                const logoHtml = school.logoUrl 
+                    ? `<img src="${school.logoUrl}" alt="${school.name}">` 
+                    : `<i class="fas fa-school"></i>`;
+
                 suggestion.innerHTML = `
-                    <span>${school.name}</span>
-                    <small>${school.location || ''}</small>
+                    <div class="school-icon">${logoHtml}</div>
+                    <div class="school-info">
+                        <div class="school-name">${highlightedName}</div>
+                        <div class="school-meta">
+                            <span class="school-code-badge"><i class="fas fa-key"></i> ${school.code}</span>
+                            ${school.location ? `<span class="school-location"><i class="fas fa-map-marker-alt"></i> ${school.location}</span>` : ''}
+                        </div>
+                    </div>
                 `;
                 suggestion.addEventListener('click', () => {
                     schoolNameInput.value = school.name;
@@ -302,6 +333,13 @@ function showJoinSchoolModal() {
             });
             suggestions.style.display = 'block';
         } else {
+            suggestions.style.display = 'none';
+        }
+    });
+    
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (suggestions && !suggestions.contains(e.target) && e.target !== schoolNameInput) {
             suggestions.style.display = 'none';
         }
     });
@@ -363,10 +401,18 @@ function showJoinSchoolModal() {
             if (subjectName) {
                 try {
                     // More efficient: Directly query for the lowercase subject name.
-                    const matchedSubjects = await Firebase.db.query('subjects', [
+                    let matchedSubjects = await Firebase.db.query('subjects', [
                         { field: 'schoolId', op: '==', value: school.id },
                         { field: 'name_lowercase', op: '==', value: subjectName.toLowerCase() }
                     ]);
+
+                    // Fallback: Try exact name match if lowercase failed (for legacy data)
+                    if (matchedSubjects.length === 0) {
+                        matchedSubjects = await Firebase.db.query('subjects', [
+                            { field: 'schoolId', op: '==', value: school.id },
+                            { field: 'name', op: '==', value: subjectName }
+                        ]);
+                    }
 
                     assignedSubjects = matchedSubjects.map(s => s.id);
                     
@@ -601,10 +647,19 @@ function showRegisterSchoolModal() {
             modal.querySelector('#registerSchoolError').style.display = 'none';
             modal.querySelector('#registerSchoolSuccess').style.display = 'flex';
             
-            // Close modal and reload dashboard after 2 seconds
+            // Reload user schools and close modal
+            try {
+                await loadUserSchools();
+                console.log('School registration: User schools reloaded successfully');
+            } catch (error) {
+                console.error('School registration: Failed to reload user schools:', error);
+                // Continue anyway since local state is updated
+            }
+            
+            // Close modal after 2 seconds
             setTimeout(() => {
                 document.body.removeChild(modal);
-                loadUserSchools();
+                navigateTo('school');
             }, 2000);
             
         } catch (error) {
@@ -652,15 +707,31 @@ async function createDefaultStructure(schoolId, level) {
         }
         : {
             'olevel': [
-                'Entrepreneurship', 'Biology', 'History', 'Agriculture', 'Chemistry',
-                'Physics', 'Mathematics', 'French', 'Kiswahili', 'Geography',
-                'English Language', 'ICT', 'Religious Education'
+                'Entrepreneurship', 'Biology', 'History', 'Agriculture', 'Chemistry', 'Physics', 
+                'Mathematics', 'French', 'Kiswahili', 'Geography', 'English Language', 'ICT', 
+                'Religious Education', 'Islamic Religious Education', 'Luganda', 'Art', 'Physical education'
             ],
             'alevel': [
-                'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Agriculture',
-                'Economics', 'History', 'Geography', 'Divinity', 'Islamic Religious Education',
-                'Literature in English', 'Fine Art', 'Entrepreneurship Education', 'Luganda',
-                'General Paper', 'Subsidiary Mathematics', 'Subsidiary ICT'
+                // Principal Pass Subjects
+                { name: 'Mathematics', type: 'principal', paperCount: 2 },
+                { name: 'Physics', type: 'principal', paperCount: 2 },
+                { name: 'Chemistry', type: 'principal', paperCount: 2 },
+                { name: 'Biology', type: 'principal', paperCount: 2 },
+                { name: 'Agriculture', type: 'principal', paperCount: 2 },
+                { name: 'Economics', type: 'principal', paperCount: 2 },
+                { name: 'History', type: 'principal', paperCount: 2 },
+                { name: 'Geography', type: 'principal', paperCount: 2 },
+                { name: 'Divinity', type: 'principal', paperCount: 2 },
+                { name: 'Islamic Religious Education', type: 'principal', paperCount: 2 },
+                { name: 'Literature in English', type: 'principal', paperCount: 2 },
+                { name: 'Art', type: 'principal', paperCount: 2 },
+                { name: 'Entrepreneurship Education', type: 'principal', paperCount: 2 },
+                { name: 'Luganda', type: 'principal', paperCount: 2 },
+                // Subsidiary Subjects
+                { name: 'Subsidiary Math (Sub math)', type: 'subsidiary' },
+                { name: 'Sub ICT', type: 'subsidiary' },
+                // Compulsory Subject
+                { name: 'General paper (GP)', type: 'general' }
             ]
         };
     
@@ -682,14 +753,25 @@ async function createDefaultStructure(schoolId, level) {
     
     for (const category of subjectCategories) {
         const subjects = defaultSubjects[category];
-        for (const subjectName of subjects) {
-            await Firebase.db.addDoc('subjects', {
+        for (const subject of subjects) {
+            const isAlevelObject = typeof subject === 'object';
+            const subjectName = isAlevelObject ? subject.name : subject;
+
+            const subjectData = {
                 name: subjectName,
+                name_lowercase: subjectName.toLowerCase(),
                 schoolId: schoolId,
                 level: level,
                 category: category,
                 createdAt: Firebase.db.serverTimestamp()
-            });
+            };
+
+            if (isAlevelObject) {
+                subjectData.type = subject.type;
+                if (subject.paperCount) subjectData.paperCount = subject.paperCount;
+            }
+
+            await Firebase.db.addDoc('subjects', subjectData);
         }
     }
 }
@@ -708,4 +790,89 @@ function getClassCategory(className, level) {
 function getInitials(name) {
     if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+}
+
+function showEditProfileModal() {
+    const user = AppState.currentUser;
+    const userData = AppState.currentUserData || {};
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="editName" value="${userData.name || user.displayName || ''}" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="editEmail" value="${user.email || ''}" required>
+                    <small style="display:block; margin-top:5px; color:var(--gray-light); font-size:0.85em;">
+                        <i class="fas fa-info-circle"></i> Changing email may require re-login.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-book"></i> Subject</label>
+                    <input type="text" id="editSubject" value="${userData.subject || ''}" placeholder="e.g. Mathematics">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const closeModal = () => document.body.removeChild(modal);
+    modal.querySelector('.close-modal').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    modal.querySelector('#editProfileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newName = document.getElementById('editName').value.trim();
+        const newEmail = document.getElementById('editEmail').value.trim();
+        const newSubject = document.getElementById('editSubject').value.trim();
+        
+        if (!newName || !newEmail) {
+            showToast('Name and Email are required', 'error');
+            return;
+        }
+        
+        try {
+            showLoading('Updating profile...');
+            
+            // Update Firestore Data
+            const updates = {
+                name: newName,
+                subject: newSubject,
+                email: newEmail
+            };
+            
+            await Firebase.db.updateDoc('users', user.uid, updates);
+            
+            // Update local state
+            AppState.currentUserData = { ...AppState.currentUserData, ...updates };
+            
+            // Refresh UI
+            renderUserProfileCard();
+            
+            hideLoading();
+            showToast('Profile updated successfully', 'success');
+            closeModal();
+            
+        } catch (error) {
+            hideLoading();
+            console.error('Profile update error:', error);
+            showToast('Failed to update profile: ' + error.message, 'error');
+        }
+    });
 }

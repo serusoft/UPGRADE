@@ -429,6 +429,7 @@
 /* Forms */
 .form-group {
     margin-bottom: 20px;
+    position: relative;
 }
 
 .form-group label {
@@ -562,16 +563,58 @@ select option:checked {
 }
 
 /* Specific styling to ensure auth page inputs look clear and professional */
+.auth-container {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-radius: var(--border-radius);
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 420px;
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 30px 20px;
+        margin: 20px auto;
+        width: 95%;
+    }
+}
+
 .auth-container input,
 .auth-container select,
 .auth-container textarea {
-    background: var(--input-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 15px;
     border-radius: var(--border-radius-sm);
     box-sizing: border-box;
-    font-size: 15px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    transition: all 0.3s ease;
+}
+
+.auth-container input:focus,
+.auth-container select:focus,
+.auth-container textarea:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+    outline: none;
+}
+
+.auth-container label {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
 }
 
 /* Ensure auth forms are constrained and inputs don't stretch full viewport */
@@ -590,6 +633,48 @@ select option:checked {
     max-width: 540px;
     width: 100%;
     display: block;
+}
+
+/* Auth Footer Links - High Visibility & Premium Look */
+.footer-links {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer-links p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.footer-links button,
+.footer-links a {
+    background: transparent;
+    border: none;
+    color: #60a5fa; /* Premium blue */
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0;
+    font-size: inherit;
+    transition: all 0.2s ease;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.footer-links button:hover,
+.footer-links a:hover {
+    background: transparent;
+    color: #93c5fd;
+    border-color: transparent;
+    box-shadow: none;
+    text-decoration: underline;
+    transform: none;
 }
 
 .form-text {
@@ -984,6 +1069,33 @@ select option:checked {
 /* Utility Classes */
 .text-center {
     text-align: center;
+}
+
+/* --- Window Controls Overlay for PWA on Desktop --- */
+@media (display-mode: window-controls-overlay) {
+    /* Make the navbar a draggable region, like a native title bar */
+    #navbar-container .navbar {
+        app-region: drag;
+        /* These paddings create a "safe area" for content, pushing it away from
+           the window controls (minimize, maximize, close) on either left or right. */
+        padding-left: env(titlebar-area-x, 20px);
+        padding-right: calc(100vw - env(titlebar-area-width, 100vw) - env(titlebar-area-x, 0px));
+    }
+
+    /* Make all interactive elements within the navbar non-draggable so they remain clickable */
+    .navbar-brand,
+    .navbar-nav,
+    .nav-link,
+    .navbar-toggle,
+    .navbar-controls,
+    .user-profile,
+    .logout-btn,
+    .nav-auth-btn,
+    .btn,
+    .dropdown-toggle,
+    .profile-placeholder {
+        app-region: no-drag;
+    }
 }
 
 .text-right {
@@ -1485,9 +1597,10 @@ select option:checked {
 /* Offline Indicator */
 #offlineIndicator {
     position: fixed;
-    top: 80px;
+    top: var(--navbar-height, 60px); /* Position it right below the navbar */
     left: 0;
     right: 0;
+    width: 100%;
     background: var(--warning);
     color: var(--dark);
     text-align: center;
@@ -1495,7 +1608,12 @@ select option:checked {
     font-weight: 600;
     z-index: var(--z-fixed);
     display: none;
-    animation: slideDown 0.3s ease-out;
+    animation: slideDown 0.5s ease-out;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#offlineIndicator i {
+    margin-right: 8px;
 }
 
 #offlineIndicator.active {
@@ -1859,4 +1977,264 @@ select option:checked {
 
 .how-to-use-link-desktop.hidden {
     display: none !important;
+}
+
+/* Premium Navbar Auth Buttons */
+.nav-auth-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.nav-auth-btn.login {
+    color: var(--light);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-auth-btn.login:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-auth-btn.register {
+    background: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
+}
+
+.nav-auth-btn.register:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
+}
+
+@media (max-width: 768px) {
+    .nav-auth-btn.register {
+        display: none;
+    }
+    
+    .nav-auth-btn.login {
+        border: none;
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* --- Auth Wizard (Multi-step Form) Styles --- */
+
+.wizard-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+    padding: 0 10px;
+}
+
+.wizard-progress::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 0;
+    transform: translateY(-50%);
+}
+
+.progress-step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--darker);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.2);
+}
+
+.progress-step.completed {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+}
+
+.wizard-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.wizard-step {
+    display: none;
+    animation: fadeInSlide 0.4s ease forwards;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.wizard-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.5rem;
+}
+
+.wizard-actions .btn {
+    flex: 1;
+}
+
+.step-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--light);
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+/* School Search Suggestions */
+.school-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    margin-top: 5px;
+    background-color: #1e293b; /* Ensure solid background to cover input */
+}
+
+.school-suggestion {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.school-suggestion:last-child {
+    border-bottom: none;
+}
+
+.school-suggestion:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+    border-left: 3px solid var(--primary);
+    padding-left: 13px;
+}
+
+.school-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(67, 97, 238, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    flex-shrink: 0;
+    overflow: hidden;
+    font-size: 16px;
+}
+
+.school-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.school-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.school-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+.school-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.school-code-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.school-location {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.school-suggestion .highlight {
+    font-weight: 800;
+    color: var(--primary);
+    background: rgba(67, 97, 238, 0.1);
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .school-suggestion {
+        padding: 14px 16px;
+    }
+    .school-name {
+        font-size: 16px;
+    }
 }

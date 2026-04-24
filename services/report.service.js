@@ -1,6 +1,75 @@
 // Report Generation Service
 import GradingUtils from '../utils/grading.js';
 
+/**
+ * Get the current Ugandan school term based on the month.
+ * @returns {string} 'I', 'II', or 'III'
+ */
+function getUgandanTerm() {
+    const month = new Date().getMonth() + 1; // getMonth() is 0-indexed
+    if (month >= 2 && month <= 4) return 'I';      // Term I: Feb - Apr
+    if (month >= 5 && month <= 8) return 'II';     // Term II: May - Aug
+    return 'III';                                  // Term III: Sep - Dec (and Jan holidays)
+}
+
+// A-Level Combination Mapping - Maps subject sets to their exact codes
+const ALEVEL_COMBINATIONS = {
+    'Physics,Mathematics,Chemistry': 'PCM',
+    'Physics,Mathematics,Biology': 'PMB',
+    'Physics,Chemistry,Biology': 'PCB',
+    'Physics,Mathematics,Economics': 'PEM',
+    'Physics,Mathematics,Geography': 'PMG',
+    'Physics,Mathematics,Entrepreneurship': 'PEM',
+    'Biology,Chemistry,Mathematics': 'BCM',
+    'Biology,Chemistry,Geography': 'BCG',
+    'Biology,Chemistry,Economics': 'BCE',
+    'Biology,Chemistry,Agriculture': 'BCA',
+    'Mathematics,Economics,Geography': 'MEG',
+    'Mathematics,Economics,Entrepreneurship': 'MEE',
+    'Economics,Geography,History': 'HEG',
+    'Economics,Geography,Divinity': 'EGD',
+    'Economics,Geography,Entrepreneurship': 'GEE',
+    'Economics,Geography,Literature': 'LEG',
+    'History,Economics,Geography': 'HEG',
+    'History,Economics,Divinity': 'HED',
+    'History,Economics,Literature': 'HEL',
+    'History,Geography,Divinity': 'HDG',
+    'History,Geography,Literature': 'HGL',
+    'Literature,Economics,Geography': 'LEG',
+    'Literature,Economics,Divinity': 'LED',
+    'Literature,History,Geography': 'LHG',
+    'Divinity,Economics,Geography': 'DEG',
+    'Divinity,History,Geography': 'DHG',
+    'Divinity,Literature,Geography': 'DLG',
+    'Art,Economics,Geography': 'GEA',
+    'Art,History,Geography': 'HAG',
+    'Music,Economics,Geography': 'MEG',
+    'Music,History,Geography': 'MGH',
+    'Agriculture,Chemistry,Biology': 'BAC',
+    'Agriculture,Economics,Geography': 'GEA',
+    'Agriculture,Biology,Geography': 'BAG',
+    'Art,Economics,Mathematics': 'MEA',
+    'Art,Entrepreneurship,Mathematics': 'MEA'
+};
+
+// A-Level Subject Codes - For generating combinations not in the standard list
+const ALEVEL_SUBJECT_CODES = {
+    'Physics': 'P', 'Mathematics': 'M', 'Chemistry': 'C', 'Biology': 'B',
+    'Economics': 'E', 'Geography': 'G', 'History': 'H', 'Entrepreneurship': 'E',
+    'Agriculture': 'A', 'Art': 'A', 'Music': 'M', 'Literature': 'L', 'Divinity': 'D'
+};
+
+// Helper function to get A-Level combination code
+function getALevelCombination(subjectNames) {
+    if (!subjectNames || subjectNames.length === 0) return 'N/A';
+    if (subjectNames.length === 3) {
+        const sorted = subjectNames.sort().join(',');
+        if (ALEVEL_COMBINATIONS[sorted]) return ALEVEL_COMBINATIONS[sorted];
+    }
+    const codes = subjectNames.map(name => ALEVEL_SUBJECT_CODES[name] || name.charAt(0).toUpperCase()).sort();
+    return codes.join('');
+}
+
 // Helper to use global Firebase instance
 const db = {
     get: async (collection, id) => {
@@ -39,8 +108,49 @@ const ReportService = {
                 const mark = marks[subject.id];
                 if (mark !== undefined) {
                     const score = this.calculateScore(mark, subject);
-                    const grade = GradingUtils.calculateGrade(score, level);
-                    const gradePoints = GradingUtils.getGradePoints(grade, level);
+                    let grade, gradePoints;
+                    let paperDetails = [];
+                    
+                    if (level === 'olevel') {
+                        if (score >= 90) grade = 'A';
+                        else if (score >= 80) grade = 'B';
+                        else if (score >= 70) grade = 'C';
+                        else if (score >= 55) grade = 'D';
+                        else grade = 'E';
+                        gradePoints = 0;
+                    } else if (level === 'alevel') {
+                        if (subject.type === 'principal') {
+                            // Principal Subject Logic
+                            if (typeof mark === 'object') {
+                                const paperGrades = [];
+                                Object.keys(mark).sort().forEach(key => {
+                                    if (key.startsWith('paper') && typeof mark[key] === 'number') {
+                                        const pScore = mark[key];
+                                        const pGrade = GradingUtils.calculateALevelPaperScoreToGrade(pScore);
+                                        paperGrades.push(pGrade);
+                                        paperDetails.push(`${key.replace('paper', 'P')}: ${pScore}`);
+                                    }
+                                });
+                                
+                                if (paperGrades.length > 0) {
+                                    grade = GradingUtils.calculateALevelPaperGrade(paperGrades);
+                                    gradePoints = GradingUtils.getGradePoints(grade, level);
+                                } else {
+                                    grade = 'F'; gradePoints = 0;
+                                }
+                            } else {
+                                grade = GradingUtils.calculateGrade(score, level);
+                                gradePoints = GradingUtils.getGradePoints(grade, level);
+                            }
+                        } else {
+                            // Subsidiary / GP
+                            grade = score >= 50 ? 'Pass' : 'Fail';
+                            gradePoints = score >= 50 ? 1 : 0;
+                        }
+                    } else {
+                        grade = GradingUtils.calculateGrade(score, level);
+                        gradePoints = GradingUtils.getGradePoints(grade, level);
+                    }
                     
                     processedMarks.push({
                         subjectId: subject.id,
@@ -49,6 +159,7 @@ const ReportService = {
                         grade: grade,
                         gradePoints: gradePoints,
                         papers: typeof mark === 'object' ? mark : null,
+                        paperDetails: paperDetails,
                         type: subject.type || 'regular'
                     });
                 }
@@ -273,6 +384,11 @@ const ReportService = {
                     fileName = `Subject_Analysis_${reportData.subject.name.replace(/\s+/g, '_')}.xlsx`;
                     break;
                     
+                case 'school':
+                    ws = this.createSchoolWorksheet(reportData);
+                    fileName = `School_Summary_${reportData.term.replace(/\s+/g, '_')}.xlsx`;
+                    break;
+                    
                 default:
                     throw new Error('Unsupported report type');
             }
@@ -336,14 +452,36 @@ const ReportService = {
         const lowest = Math.min(...marks.map(m => m.score));
         
         let aggregate = 0;
+        let division;
         
         if (level === 'alevel') {
             aggregate = GradingUtils.calculateALevelAggregate(marks);
+        } else if (level === 'olevel') {
+            // O-Level Result Logic
+            if (marks.length === 0) division = '4';
+            else if (marks.length < 9) division = '2';
+            else {
+                const hasPassing = marks.some(m => m.score >= 55);
+                const allE = marks.every(m => m.score < 55);
+                if (allE) division = '3';
+                else if (hasPassing) division = '1';
+                else division = '3';
+            }
+            aggregate = totalMarks; // Use Total Score for O-Level
+            return {
+                totalSubjects: marks.length,
+                totalMarks: totalMarks,
+                average: average,
+                highest: highest,
+                lowest: lowest,
+                aggregate: aggregate,
+                division: division
+            };
         } else {
             aggregate = marks.reduce((sum, mark) => sum + mark.gradePoints, 0);
         }
         
-        const division = GradingUtils.calculateDivision(average, aggregate, level);
+        division = GradingUtils.calculateDivision(average, aggregate, level, marks.length);
         
         return {
             totalSubjects: marks.length,
@@ -377,27 +515,33 @@ const ReportService = {
     },
     
     createStudentWorksheet(reportData) {
+        const schoolName = reportData.school ? reportData.school.name.toUpperCase() : 'STUDENT REPORT';
+        const termName = reportData.term.toUpperCase();
+        const year = new Date().getFullYear();
+        const termNum = getUgandanTerm();
+        const analysisTitle = `STUDENT PROGRESS REPORT - ${termName} TERM ${termNum} ${year}`;
+        
+        const isALevel = reportData.level === 'alevel';
+
         const data = [
-            ['SKORE POINT - STUDENT REPORT'],
-            ['Generated with Skore Point - Professional Report Card Generator'],
+            [schoolName],
+            ['Generated with Skore Point'],
             [''],
-            ['Student Information'],
-            ['Name:', reportData.student.name],
-            ['Class:', reportData.student.className],
-            ['Term:', reportData.term],
-            ['Generated:', new Date().toLocaleDateString()],
+            ['STUDENT INFORMATION'],
+            ['Name:', reportData.student.name, '', 'Term:', `${reportData.term} (TERM ${termNum}, ${year})`],
+            ['Class:', reportData.student.className, '', 'Date:', new Date().toLocaleDateString()],
             [''],
-            ['Performance Summary'],
-            ['Total Subjects', 'Average Score', 'Aggregate', 'Division'],
+            ['PERFORMANCE SUMMARY'],
+            ['Total Marks', 'Average', isALevel ? 'Points' : 'Aggregate', 'Division'],
             [
-                reportData.summary.totalSubjects,
+                reportData.summary.totalMarks,
                 `${reportData.summary.average}%`,
                 reportData.summary.aggregate,
                 reportData.summary.division
             ],
             [''],
-            ['Subject Performance'],
-            ['Subject', 'Score', 'Grade', 'Grade Points', 'Remarks']
+            ['SUBJECT PERFORMANCE'],
+            ['Subject', 'Score', 'Grade', 'Points', 'Remarks']
         ];
         
         reportData.marks.forEach(mark => {
@@ -410,52 +554,244 @@ const ReportService = {
             ]);
         });
         
+        data.push(['']);
+        data.push(['Generated by Skore Point']);
+        
         return XLSX.utils.aoa_to_sheet(data);
     },
     
     createClassWorksheet(reportData) {
+        const isALevel = reportData.level === 'alevel';
+        // Collect all unique subjects across all students
+        const allSubjects = new Set();
+        reportData.studentReports.forEach(report => {
+            report.marks.forEach(mark => {
+                allSubjects.add(mark.subjectName);
+            });
+        });
+        const sortedSubjects = Array.from(allSubjects).sort();
+        const schoolName = reportData.school ? reportData.school.name.toUpperCase() : 'CLASS REPORT';
+        const className = reportData.class.name.toUpperCase();
+        const termName = reportData.term.toUpperCase();
+        
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        let termNumber = 'III';
+        if (month >= 2 && month <= 4) termNumber = 'I';
+        if (month >= 5 && month <= 8) termNumber = 'II';
+        
+        const analysisTitle = `${className} CLASS PERFORMANCE ANALYSIS ${termName} ${termNumber} ${year}`;
+
         const data = [
-            ['SKORE POINT - CLASS PERFORMANCE REPORT'],
-            ['Generated with Skore Point - Professional Report Card Generator'],
-            [''],
-            ['Class Information'],
-            ['Class:', reportData.class.name],
-            ['Term:', reportData.term],
-            ['Total Students:', reportData.statistics.totalStudents],
-            ['Class Average:', `${reportData.statistics.classAverage}%`],
-            ['Generated:', new Date().toLocaleDateString()],
-            [''],
-            ['Student Performance Ranking'],
-            ['Rank', 'Student Name', 'Average Score', 'Grade', 'Division', 'Aggregate']
+            [schoolName],
+            [analysisTitle],
+            [`Generated: ${date.toLocaleDateString()}`],
+            ['']
         ];
         
-        reportData.studentReports.forEach((report, index) => {
+        // Build Header Row
+        const headerRow = ['Position', 'Student Name'];
+        if (isALevel) headerRow.push('Combination');
+        sortedSubjects.forEach(subject => {
+            headerRow.push(subject);
+            headerRow.push('Grade');
+        });
+        headerRow.push('Total');
+        headerRow.push('Average');
+        headerRow.push(isALevel ? 'Points' : 'Aggregate');
+        headerRow.push('Division');
+        
+        data.push(headerRow);
+        
+        // Build Student Rows
+        // Ensure sorted by average descending for ranking
+        const sortedReports = [...reportData.studentReports].sort((a, b) => b.summary.average - a.summary.average);
+
+        sortedReports.forEach((report, index) => {
+            const row = [
+                index + 1, // Position
+                report.student.name
+            ];
+
+            if (isALevel) {
+                const principalSubjects = report.marks.filter(m => m.type === 'principal');
+                const principalSubjectNames = principalSubjects.map(m => m.subjectName);
+                row.push(getALevelCombination(principalSubjectNames));
+            }
+
+            // Map marks to sorted subjects
+            const marksMap = new Map();
+            report.marks.forEach(m => marksMap.set(m.subjectName, m));
+
+            sortedSubjects.forEach(subject => {
+                const mark = marksMap.get(subject);
+                if (mark) {
+                    row.push(mark.score);
+                    row.push(mark.grade);
+                } else {
+                    row.push('-');
+                    row.push('-');
+                }
+            });
+
+            row.push(report.summary.totalMarks);
+            row.push(report.summary.average);
+            row.push(report.summary.aggregate);
+            row.push(report.summary.division);
+
+            data.push(row);
+        });
+        
+        const ws = XLSX.utils.aoa_to_sheet(data);
+
+        // Compact Column Widths
+        const colWidths = [];
+        colWidths.push({ wch: 11 });  // Position
+        colWidths.push({ wch: 33 }); // Student Name
+        if (isALevel) colWidths.push({ wch: 12 }); // Combination
+        
+        // Subjects (Score & Grade)
+        sortedSubjects.forEach(() => {
+            colWidths.push({ wch: 7 }); // Score
+            colWidths.push({ wch: 6 }); // Grade
+        });
+        
+        // Summary
+        colWidths.push({ wch: 8 }); // Total
+        colWidths.push({ wch: 8 }); // Avg
+        colWidths.push({ wch: 8 }); // Agg
+        colWidths.push({ wch: 13 }); // Division
+        
+        ws['!cols'] = colWidths;
+
+        // Merge Headers (Center School Name & Title)
+        const totalCols = headerRow.length;
+        ws['!merges'] = [
+            { s: { r: 0, c: 0 }, e: { r: 0, c: totalCols - 1 } }, // School Name
+            { s: { r: 1, c: 0 }, e: { r: 1, c: totalCols - 1 } }, // Title
+            { s: { r: 2, c: 0 }, e: { r: 2, c: totalCols - 1 } }  // Date
+        ];
+
+        // Attempt to set styles (works if library supports it)
+        if (ws['A1']) ws['A1'].s = { font: { name: "Arial Black", sz: 26, bold: true }, alignment: { horizontal: "center" } };
+        if (ws['A2']) ws['A2'].s = { font: { name: "Algerian", sz: 20, bold: true }, alignment: { horizontal: "center" } };
+        if (ws['A3']) ws['A3'].s = { alignment: { horizontal: "center" } };
+        
+        const headerRowIndex = 4;
+
+        // Apply Styles & Zebra Striping
+        if (ws['!ref']) {
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            
+            // Header Row Styles (Arial Narrow, 12)
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cell_ref = XLSX.utils.encode_cell({c: C, r: headerRowIndex});
+                if (ws[cell_ref]) {
+                    if (!ws[cell_ref].s) ws[cell_ref].s = {};
+                    ws[cell_ref].s.font = { name: "Arial Narrow", sz: 12, bold: true };
+                }
+            }
+
+            for (let R = headerRowIndex + 1; R <= range.e.r; ++R) {
+                // Bold Student Names (Column B / Index 1)
+                const name_cell_ref = XLSX.utils.encode_cell({c: 1, r: R});
+                if (ws[name_cell_ref]) {
+                    if (!ws[name_cell_ref].s) ws[name_cell_ref].s = {};
+                    if (!ws[name_cell_ref].s.font) ws[name_cell_ref].s.font = {};
+                    ws[name_cell_ref].s.font.bold = true;
+                }
+                
+                // Center Combination (Column C / Index 2) if A-Level
+                if (isALevel) {
+                    const combo_cell_ref = XLSX.utils.encode_cell({c: 2, r: R});
+                    if (ws[combo_cell_ref]) {
+                        if (!ws[combo_cell_ref].s) ws[combo_cell_ref].s = {};
+                        ws[combo_cell_ref].s.alignment = { horizontal: "center" };
+                    }
+                }
+
+                // Zebra Striping (Odd rows relative to data start)
+                if ((R - (headerRowIndex + 1)) % 2 !== 0) {
+                    for (let C = range.s.c; C <= range.e.c; ++C) {
+                        const cell_ref = XLSX.utils.encode_cell({c: C, r: R});
+                        if (ws[cell_ref]) {
+                            if (!ws[cell_ref].s) ws[cell_ref].s = {};
+                            ws[cell_ref].s.fill = { patternType: "solid", fgColor: { rgb: "E6F2FF" } };
+                        }
+                    }
+                }
+            }
+        }
+        
+        return ws;
+    },
+
+    createSchoolWorksheet(reportData) {
+        const schoolName = reportData.school ? reportData.school.name.toUpperCase() : 'SCHOOL REPORT';
+        const termName = reportData.term.toUpperCase();
+        const year = new Date().getFullYear();
+        const termNum = getUgandanTerm();
+        const title = `SCHOOL PERFORMANCE SUMMARY - ${termName} TERM ${termNum} ${year}`;
+        
+        const data = [
+            [schoolName],
+            [title],
+            [`Generated: ${new Date().toLocaleDateString()}`],
+            [''],
+            ['SCHOOL STATISTICS'],
+            ['Statistic', 'Value'],
+            ['School Average', `${reportData.statistics.schoolAverage}%`],
+            ['Total Classes', reportData.statistics.totalClasses],
+            ['Classes with Data', reportData.statistics.classesWithData],
+            ['Best Performing Class', reportData.statistics.bestPerformingClass ? `${reportData.statistics.bestPerformingClass.className} (${reportData.statistics.bestPerformingClass.average}%)` : 'N/A'],
+            ['Lowest Performing Class', reportData.statistics.lowestPerformingClass ? `${reportData.statistics.lowestPerformingClass.className} (${reportData.statistics.lowestPerformingClass.average}%)` : 'N/A'],
+            [''],
+            ['CLASS PERFORMANCE RANKING'],
+            ['Rank', 'Class', 'Total Students', 'With Marks', 'Average']
+        ];
+        
+        reportData.classReports.forEach((report, index) => {
             data.push([
                 index + 1,
-                report.student.name,
-                `${report.summary.average}%`,
-                GradingUtils.calculateGrade(report.summary.average, reportData.level),
-                report.summary.division,
-                report.summary.aggregate
+                report.className,
+                report.totalStudents,
+                report.studentsWithMarks,
+                `${report.average}%`
             ]);
         });
         
+        data.push(['']);
+        data.push(['SUBJECT PERFORMANCE RANKING']);
+        data.push(['Rank', 'Subject', 'Average Score']);
+        
+        if (reportData.subjectRankings) {
+            reportData.subjectRankings.forEach((subj, index) => {
+                data.push([index + 1, subj.name, `${subj.average}%`]);
+            });
+        }
+        
         return XLSX.utils.aoa_to_sheet(data);
     },
-    
+
     createSubjectWorksheet(reportData) {
+        const schoolName = reportData.school ? reportData.school.name.toUpperCase() : 'SUBJECT REPORT';
+        const subjectName = reportData.subject ? reportData.subject.name.toUpperCase() : 'SUBJECT';
+        const termName = reportData.term.toUpperCase();
+        const year = new Date().getFullYear();
+        const termNum = getUgandanTerm();
+        const analysisTitle = `${subjectName} SUBJECT ANALYSIS ${termName} ${termNum} ${year}`;
+        
         const data = [
-            ['SKORE POINT - SUBJECT ANALYSIS REPORT'],
-            ['Generated with Skore Point - Professional Report Card Generator'],
+            [schoolName],
+            [analysisTitle],
+            ['Generated with Skore Point'],
+            ['SUBJECT INFORMATION'],
+            ['Subject:', reportData.subject.name, '', 'Term:', `${reportData.term} (TERM ${termNum}, ${year})`],
+            ['Class:', reportData.class?.name || 'All Classes', '', 'Date:', new Date().toLocaleDateString()],
             [''],
-            ['Subject Information'],
-            ['Subject:', reportData.subject.name],
-            ['Class:', reportData.class?.name || 'All Classes'],
-            ['Term:', reportData.term],
-            ['Generated:', new Date().toLocaleDateString()],
-            [''],
-            ['Subject Statistics'],
-            ['Total Students', 'Average Score', 'Highest Score', 'Lowest Score', 'Pass Rate'],
+            ['STATISTICS'],
+            ['Students', 'Average', 'Highest', 'Lowest', 'Pass Rate'],
             [
                 reportData.statistics.totalStudents,
                 `${reportData.statistics.averageScore}%`,
@@ -464,7 +800,7 @@ const ReportService = {
                 `${reportData.statistics.passRate}%`
             ],
             [''],
-            ['Grade Distribution'],
+            ['GRADE DISTRIBUTION'],
             ['Grade', 'Count', 'Percentage']
         ];
         
@@ -475,18 +811,39 @@ const ReportService = {
             data.push([grade, count, `${percentage}%`]);
         });
         
-        data.push([''], ['Top Performers'], ['Rank', 'Student Name', 'Score', 'Grade']);
+        data.push(['']);
+        data.push(['STUDENT RANKING']);
+        data.push(['Rank', 'Student Name', 'Score', 'Grade', 'Remarks']);
         
-        reportData.marks.slice(0, 20).forEach((mark, index) => {
+        // Sort marks by score descending
+        const sortedMarks = [...reportData.marks].sort((a, b) => b.score - a.score);
+        
+        sortedMarks.forEach((mark, index) => {
             data.push([
                 index + 1,
                 mark.student.name,
                 `${mark.score}%`,
-                mark.grade
+                mark.grade,
+                GradingUtils.getGradeRemark(mark.grade)
             ]);
         });
         
-        return XLSX.utils.aoa_to_sheet(data);
+        data.push(['']);
+        data.push(['Generated by Skore Point']);
+        
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        // Merge Headers
+        ws['!merges'] = [
+            { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, // School Name
+            { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } }  // Title
+        ];
+
+        // Set styles for bigger fonts
+        if (ws['A1']) ws['A1'].s = { font: { name: "Arial Black", sz: 26, bold: true }, alignment: { horizontal: "center" } };
+        if (ws['A2']) ws['A2'].s = { font: { name: "Algerian", sz: 20, bold: true }, alignment: { horizontal: "center" } };
+
+        return ws;
     }
 };
 
